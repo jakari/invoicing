@@ -28,12 +28,17 @@ class PhinxCommand extends ContainerAwareCommand
     {
         $c = $this->getContainer();
 
+        $commandsThatRequireEnvironment = ['migrate', 'rollback'];
         $config = $c->getParameter('kernel.root_dir')
             . '/config/phinx.php';
 
         $args = $input->getArgument('args');
         $args[] = '-c ' . $config;
-        $args[] = '-e ' . $c->getParameter('kernel.environment');
+
+
+        if (in_array($args[0], $commandsThatRequireEnvironment)) {
+            $args[] = '-e ' . $c->getParameter('kernel.environment');
+        }
 
         $phinx = new PhinxApplication();
         return $phinx->run(new StringInput(implode(' ', $args)), $output);

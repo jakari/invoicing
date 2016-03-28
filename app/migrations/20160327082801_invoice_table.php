@@ -14,9 +14,7 @@ class InvoiceTable extends AbstractMigration
             reference_number INT NOT NULL,
             created TIMESTAMP NOT NULL,
             due TIMESTAMP NOT NULL,
-            status invoice_status NOT NULL,
-            customer_name VARCHAR(255) NOT NULL,
-            customer_address VARCHAR(255) NOT NULL
+            status invoice_status NOT NULL
         )');
     }
 

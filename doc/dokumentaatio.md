@@ -31,3 +31,51 @@ Laskun luonnissa käyttäjä kirjaa uuden laskun lisäämällä asiakastiedot, t
 ### Laskun tulostus
 
 Käyttäjä voi tulostaa luomansa laskun.
+
+## Järjestelmän tietosisältö
+
+![kasitekaavio](kasitekaavio.png)
+
+### Customer
+
+| Attribuutti | Arvojoukko                 | Kuvailu          |
+|-------------|----------------------------|------------------|
+| id          | Kokonaisluku               | Primääriavain    |
+| name        | Merkkijono max 255 merkkiä | Asiakkaan nimi   |
+| address     | Merkkijono max 255 merkkiä | Asiakkaan osoite |
+
+Customer on asiakas jotka ovat laskujen maksajia.
+
+### Item
+
+| Attribuutti | Arvojoukko                 | Kuvailu                               |
+|-------------|----------------------------|---------------------------------------|
+| id          | Kokonaisluku               | Primääriavain                         |
+| invoice     | Kokonaisluku               | Foreign key, lasku jolle rivi kuuluu  |
+| description | Merkkijono max 255 merkkiä | Tuotteen kuvaus                       |
+| amount      | Kokonaisluku               | Tuotteiden määrä                      |
+| price       | Kokonaisluku               | Tuotteen hinta ALV 0% /kpl, sentteinä |
+| tax         | Kokonaisluku               | Maksettava ALV                        |
+
+Item on laskurivi.
+
+
+### Invoice
+
+| Attribuutti      | Arvojoukko   | Kuvailu                            |
+|------------------|--------------|------------------------------------|
+| id               | Kokonaisluku | Primääriavain                      |
+| invoice_number   | Kokonaisluku | Laskun numero                      |
+| reference_number | Kokonaisluku | Laskun viitenumero                 |
+| created          | Aikaleima    | Aika jolloin lasku luotu           |
+| due              | Aikaleima    | Laskun eräpäivä                    |
+| status           | Enum         | Laskun tila                        |
+| customer         | Kokonaisluku | Foreign key, viittaus asiakkaaseen |
+
+Invoice on lasku, joka luodaan asiakkaalle. Status tarkoittaa laskun tilaa, 
+vaihtoehtoina on PENDING tai PAID.
+
+
+## Relaatiotietokantakaavio
+
+![Relaatiotietokantakaavio](relaatiotietokantakaavio.png)
