@@ -27,6 +27,8 @@ gulp.task('copy:assets', ['clean:app'], function() {
 // copy dependencies
 gulp.task('copy:libs', ['clean:lib'], function() {
     return gulp.src([
+            'node_modules/intl/dist/Intl.complete.js',
+            'node_modules/intl/dist/Intl.min.js',
             'node_modules/angular2/bundles/angular2-polyfills.js',
             'node_modules/systemjs/dist/system.src.js',
             'node_modules/rxjs/bundles/Rx.js',
