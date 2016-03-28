@@ -1,0 +1,26 @@
+<div class="ui main container">
+    <h1>Invoices</h1>
+    <table class="ui single line table">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Reference number</th>
+                <th>Invoice number</th>
+                <th>Created</th>
+                <th>Due</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="#invoice of invoices" [routerLink]="['ViewInvoice', {id: 123}]">
+                <td>{{ invoice.customer }}</td>
+                <td>{{ invoice.invoiceNumber }}</td>
+                <td>{{ invoice.referenceNumber }}</td>
+                <td>{{ invoice.created |date:"d" }}.{{ invoice.created |date:"M" }}.{{ invoice.created |date:"y" }}</td>
+                <td>{{ invoice.due |date:"d" }}.{{ invoice.due |date:"M" }}.{{ invoice.due |date:"y" }}</td>
+            </tr>
+            <tr *ngIf="invoices.length == 0">
+                <td colspan="5">Ei laskuja</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

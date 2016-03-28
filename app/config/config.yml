@@ -32,7 +32,7 @@ framework:
     http_method_override: true
     assets: ~
 
-invoicing:
+invoicing_app:
     database_host: "%database_host%"
     database_name: "%database_name%"
     database_user: "%database_user%"

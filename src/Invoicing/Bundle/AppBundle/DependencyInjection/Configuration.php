@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('invoicing');
+        $rootNode = $treeBuilder->root('invoicing_app');
         $rootNode->children()
             ->scalarNode('database_host')->end()
             ->scalarNode('database_name')->end()

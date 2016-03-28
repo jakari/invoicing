@@ -1,0 +1,10 @@
+<div class="ui attached inverted stackable menu">
+    <div class="ui container">
+        <div class="header item">
+            Invoicing
+        </div>
+        <a [routerLink]="['CreateInvoice']" class="item" [class.active]="isRouteActive(['CreateInvoice'])">Create</a>
+        <a [routerLink]="['ListInvoices']" class="item" [class.active]="isRouteActive(['ListInvoices'])">List</a>
+    </div>
+</div>
+<router-outlet></router-outlet>

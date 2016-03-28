@@ -1,0 +1,8 @@
+services:
+    invoicing.database.connection:
+        class: Invoicing\Database\Connection\Connection
+        arguments:
+            - '%invoicing.database_host%'
+            - '%invoicing.database_user%'
+            - '%invoicing.database_password%'
+            - '%invoicing.database_name%'
