@@ -229,5 +229,129 @@ pre.editor-colors.is-focused .line.cursor-line {
 <h3 id="laskun-luonti">Laskun luonti</h3>
 <p>Laskun luonnissa käyttäjä kirjaa uuden laskun lisäämällä asiakastiedot, tuotteet ja niiden hinnat. Järjestelmä laskee laskun loppusumman, generoi laskulle laskunumeron ja viitenumeron.</p>
 <h3 id="laskun-tulostus">Laskun tulostus</h3>
-<p>Käyttäjä voi tulostaa luomansa laskun.</p></body>
+<p>Käyttäjä voi tulostaa luomansa laskun.</p>
+<h2 id="j-rjestelm-n-tietosis-lt-">Järjestelmän tietosisältö</h2>
+<p><img src="/Users/jani/projects/invoicing/doc/kasitekaavio.png" alt="kasitekaavio"></p>
+<h3 id="customer">Customer</h3>
+<table>
+<thead>
+<tr>
+<th>Attribuutti</th>
+<th>Arvojoukko</th>
+<th>Kuvailu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Kokonaisluku</td>
+<td>Primääriavain</td>
+</tr>
+<tr>
+<td>name</td>
+<td>Merkkijono max 255 merkkiä</td>
+<td>Asiakkaan nimi</td>
+</tr>
+<tr>
+<td>address</td>
+<td>Merkkijono max 255 merkkiä</td>
+<td>Asiakkaan osoite</td>
+</tr>
+</tbody>
+</table>
+<p>Customer on asiakas jotka ovat laskujen maksajia.</p>
+<h3 id="item">Item</h3>
+<table>
+<thead>
+<tr>
+<th>Attribuutti</th>
+<th>Arvojoukko</th>
+<th>Kuvailu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Kokonaisluku</td>
+<td>Primääriavain</td>
+</tr>
+<tr>
+<td>invoice</td>
+<td>Kokonaisluku</td>
+<td>Foreign key, lasku jolle rivi kuuluu</td>
+</tr>
+<tr>
+<td>description</td>
+<td>Merkkijono max 255 merkkiä</td>
+<td>Tuotteen kuvaus</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>Kokonaisluku</td>
+<td>Tuotteiden määrä</td>
+</tr>
+<tr>
+<td>price</td>
+<td>Kokonaisluku</td>
+<td>Tuotteen hinta ALV 0% /kpl, sentteinä</td>
+</tr>
+<tr>
+<td>tax</td>
+<td>Kokonaisluku</td>
+<td>Maksettava ALV</td>
+</tr>
+</tbody>
+</table>
+<p>Item on laskurivi.</p>
+<h3 id="invoice">Invoice</h3>
+<table>
+<thead>
+<tr>
+<th>Attribuutti</th>
+<th>Arvojoukko</th>
+<th>Kuvailu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Kokonaisluku</td>
+<td>Primääriavain</td>
+</tr>
+<tr>
+<td>invoice_number</td>
+<td>Kokonaisluku</td>
+<td>Laskun numero</td>
+</tr>
+<tr>
+<td>reference_number</td>
+<td>Kokonaisluku</td>
+<td>Laskun viitenumero</td>
+</tr>
+<tr>
+<td>created</td>
+<td>Aikaleima</td>
+<td>Aika jolloin lasku luotu</td>
+</tr>
+<tr>
+<td>due</td>
+<td>Aikaleima</td>
+<td>Laskun eräpäivä</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Enum</td>
+<td>Laskun tila</td>
+</tr>
+<tr>
+<td>customer</td>
+<td>Kokonaisluku</td>
+<td>Foreign key, viittaus asiakkaaseen</td>
+</tr>
+</tbody>
+</table>
+<p>Invoice on lasku, joka luodaan asiakkaalle. Status tarkoittaa laskun tilaa,
+vaihtoehtoina on PENDING tai PAID.</p>
+<h2 id="relaatiotietokantakaavio">Relaatiotietokantakaavio</h2>
+<p><img src="/Users/jani/projects/invoicing/doc/relaatiotietokantakaavio.png" alt="Relaatiotietokantakaavio"></p></body>
 </html>

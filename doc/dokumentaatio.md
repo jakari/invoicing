@@ -72,7 +72,7 @@ Item on laskurivi.
 | status           | Enum         | Laskun tila                        |
 | customer         | Kokonaisluku | Foreign key, viittaus asiakkaaseen |
 
-Invoice on lasku, joka luodaan asiakkaalle. Status tarkoittaa laskun tilaa, 
+Invoice on lasku, joka luodaan asiakkaalle. Status tarkoittaa laskun tilaa,
 vaihtoehtoina on PENDING tai PAID.
 
 
