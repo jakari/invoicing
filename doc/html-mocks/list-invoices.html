@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="semantic.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        System.config({
+            packages: {
+                app: {
+                    format: 'register',
+                    defaultExtension: 'js'
+                },
+                'node-uuid': {
+                    map: {
+                        crypto: '@empty'
+                    }
+                }
+            },
+            map: {
+                immutable: 'lib/immutable.js',
+                'node-uuid': 'lib/uuid.js'
+            }
+        });
+        System.import('app/boot')
+                .then(null, console.error.bind(console));
+    </script>
+</head>
+<body>
+<div class="ui attached inverted stackable menu">
+    <div class="ui container">
+        <div class="header item">
+            Invoicing
+        </div>
+        <a class="item" href="create-invoice.html">Create</a>
+        <a class="item active router-link-active" href="#">List</a>
+    </div>
+</div>
+<div class="ui main container">
+    <h1>Invoices</h1>
+    <table class="ui single line table">
+        <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Reference number</th>
+            <th>Invoice number</th>
+            <th>Created</th>
+            <th>Due</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr href="#/invoice/view/123">
+                <td>
+                    <a href="view-invoice.html">Asiakas Oy</a>
+                </td>
+                <td>123</td>
+                <td>1234</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

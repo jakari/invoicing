@@ -1,0 +1,31 @@
+.ui.main.container {
+    padding: 20px 0;
+}
+
+.ui.invoice.items.table .price {
+    width: 110px;
+}
+
+.ui.invoice.items.table .tax {
+    width: 58px;
+}
+
+.ui.invoice.items.table .amount {
+    width: 60px;
+}
+
+.ui.invoice.items.table .total {
+    width: 110px;
+}
+
+.ui.invoice.items.table .price input,
+.ui.invoice.items.table .tax input,
+.ui.invoice.items.table .amount input,
+.ui.invoice.items.table .total {
+    text-align: right;
+}
+
+.ui.invoice.items.table .footer.header,
+.ui.invoice.items.table .footer.value {
+    text-align: right;
+}

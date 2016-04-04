@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="semantic.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ui attached inverted stackable menu">
+    <div class="ui container">
+        <div class="header item">
+            Invoicing
+        </div>
+        <a class="item active" href="create-invoice.html">Create</a>
+        <a class="item" href="list-invoices.html">List</a>
+    </div>
+</div>
+<div class="ui main container">
+    <h1 class="ui header">Edit invoice</h1>
+    <invoice-form><div class="ui form">
+        <div class="ui grid">
+            <div class="eight wide column">
+                <h5 class="ui top attached header">
+                    Customer Information
+                </h5>
+                <div class="ui attached segment">
+                    <div class="field">
+                        <label>Name</label>
+                        <input class="ng-untouched ng-pristine ng-valid" placeholder="Customer name" name="name" type="text">
+                    </div>
+                    <div class="field">
+                        <label>Customer address</label>
+                        <textarea rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide column">
+                <h5 class="ui top attached header">
+                    Invoice information
+                </h5>
+                <div class="ui attached segment">
+                    <div class="field">
+                        <label>Invoice date</label>
+                        <input placeholder="yyyy-mm-dd" type="text">
+                    </div>
+                    <div class="field">
+                        <label>Invoice due</label>
+                        <input placeholder="yyyy-mm-dd" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <table class="ui celled invoice items table">
+            <thead>
+            <tr><th>Item name</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Tax %</th>
+                <th>Total</th>
+            </tr></thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="ui fluid transparent action input">
+                        <input value="Tuote 1" class="ui input" type="text">
+                        <div class="ui mini red button">Remove</div>
+                    </div>
+                </td>
+                <td class="amount">
+                    <div class="ui fluid transparent input">
+                        <input value="1" class="ui input" type="text">
+                    </div>
+                </td>
+                <td class="price">
+                    <div class="ui fluid transparent input">
+                        <input value="120,00" class="ui input" type="text">
+                    </div>
+                </td>
+                <td class="tax">
+                    <div class="ui fluid transparent input">
+                        <input value="24" class="ui input" type="text">
+                    </div>
+                </td>
+                <td class="total">148,80</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="4" class="footer header">
+                    <button class="ui mini left floated button">Add item</button>
+                    <h4 class="ui right floated header">Total</h4>
+                </th>
+                <th class="footer value">
+                    148,80
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </invoice-form>
+    <div class="ui hidden divider"></div>
+    <a href="list-invoices.html">
+        <button class="ui teal button">Save</button>
+    </a>
+</div>
+</body>
+</html>
