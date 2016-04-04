@@ -38,11 +38,14 @@ Käyttäjä voi tulostaa luomansa laskun.
 
 ### Customer
 
-| Attribuutti | Arvojoukko                 | Kuvailu          |
-|-------------|----------------------------|------------------|
-| id          | Kokonaisluku               | Primääriavain    |
-| name        | Merkkijono max 255 merkkiä | Asiakkaan nimi   |
-| address     | Merkkijono max 255 merkkiä | Asiakkaan osoite |
+| Attribuutti | Arvojoukko                 | Kuvailu               |
+|-------------|----------------------------|-----------------------|
+| id          | Kokonaisluku               | Primääriavain         |
+| name        | Merkkijono max 255 merkkiä | Asiakkaan nimi        |
+| street_name | Merkkijono max 255 merkkiä | Asiakkaan katuosoite  |
+| post_code   | Merkkijono max 10 merkkiä  | Asiakkaan postinumero |
+| city        | Merkkijono max 255 merkkiä | Asiakkaan kaupunki    |
+| email       | Merkkijono max 255 merkkiä | Asiakkaan sähköposti  |
 
 Customer on asiakas jotka ovat laskujen maksajia.
 
@@ -67,8 +70,8 @@ Item on laskurivi.
 | id               | Kokonaisluku | Primääriavain                      |
 | invoice_number   | Kokonaisluku | Laskun numero                      |
 | reference_number | Kokonaisluku | Laskun viitenumero                 |
-| created          | Aikaleima    | Aika jolloin lasku luotu           |
-| due              | Aikaleima    | Laskun eräpäivä                    |
+| created          | Päivämäärä   | Päivä jolloin lasku luotu          |
+| due              | Päivämäärä   | Laskun eräpäivä                    |
 | status           | Enum         | Laskun tila                        |
 | customer         | Kokonaisluku | Foreign key, viittaus asiakkaaseen |
 

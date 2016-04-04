@@ -12,8 +12,8 @@ class InvoiceTable extends AbstractMigration
             id SERIAL NOT NULL PRIMARY KEY,
             invoice_number SERIAL NOT NULL,
             reference_number INT NOT NULL,
-            created TIMESTAMP NOT NULL,
-            due TIMESTAMP NOT NULL,
+            created DATE NOT NULL,
+            due DATE NOT NULL,
             status invoice_status NOT NULL
         )');
     }

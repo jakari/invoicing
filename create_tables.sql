@@ -1,0 +1,28 @@
+CREATE TYPE invoice_status AS ENUM ('PENDING', 'PAID');
+CREATE TABLE invoice(
+  id SERIAL NOT NULL PRIMARY KEY,
+  invoice_number SERIAL NOT NULL,
+  reference_number INT NOT NULL,
+  created DATE NOT NULL,
+  due DATE NOT NULL,
+  customer INT NOT NULL,
+  status invoice_status NOT NULL
+);
+CREATE TABLE item(
+  id SERIAL NOT NULL PRIMARY KEY,
+  invoice INT NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  amount INT NOT NULL,
+  tax INT NOT NULL,
+  price INT NOT NULL
+);
+ALTER TABLE item ADD CONSTRAINT invoice_items FOREIGN KEY (invoice) REFERENCES invoice (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+CREATE TABLE customer(
+  id SERIAL NOT NULL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  street_name VARCHAR(255) NOT NULL,
+  post_code VARCHAR(10) NOT NULL,
+  city VARCHAR(255) NOT NULL,
+  email VARCHAR(255) DEFAULT NULL
+);
+ALTER TABLE invoice ADD CONSTRAINT invoice_customers FOREIGN KEY (customer) REFERENCES customer (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
