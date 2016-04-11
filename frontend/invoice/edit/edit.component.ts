@@ -19,7 +19,6 @@ export class EditInvoiceComponent {
         this.id = Number(routeParams.get('id'));
 
         this.invoice = new Invoice();
-        this.invoice.customer = 'Asiakas Oy';
     }
 
     edit():void {

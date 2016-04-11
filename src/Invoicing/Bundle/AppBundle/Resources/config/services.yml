@@ -6,3 +6,37 @@ services:
             - '%invoicing.database_user%'
             - '%invoicing.database_password%'
             - '%invoicing.database_name%'
+
+    invoicing.controller.invoice:
+        class: Invoicing\Bundle\AppBundle\Controller\InvoiceController
+        arguments:
+            - '@invoicing.service.invoice'
+            - '@serializer'
+
+    invoicing.controller.customer:
+        class: Invoicing\Bundle\AppBundle\Controller\CustomerController
+        arguments:
+            - '@invoicing.service.invoice'
+
+    invoicing.service.invoice:
+        class: Invoicing\Service\InvoiceService
+        arguments:
+            - '@invoicing.database.connection'
+            - '@invoicing.service.customer'
+
+    invoicing.service.customer:
+        class: Invoicing\Service\CustomerService
+        arguments:
+            - '@invoicing.database.connection'
+
+    invoicing.param_converter.json_deserializer:
+        class: Invoicing\Bundle\AppBundle\Request\ParamConverter\JsonDeserializerParamConverter
+        arguments:
+            - '@jms_serializer'
+            - '@validator'
+            - '@invoicing.violation.error_formatter'
+        tags:
+            - { name: request.param_converter, priority: 0, converter: json_deserializer }
+
+    invoicing.violation.error_formatter:
+        class: Invoicing\Bundle\AppBundle\Request\Handler\ViolationErrorFormatter

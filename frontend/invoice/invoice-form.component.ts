@@ -9,4 +9,8 @@ import {Input} from "angular2/core";
 })
 export class InvoiceFormComponent {
     @Input() invoice:Invoice;
+
+    test() {
+        console.log(this);
+    }
 }

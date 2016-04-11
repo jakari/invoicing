@@ -7,11 +7,17 @@
             <div class="ui attached segment">
                 <div class="field">
                     <label>Name</label>
-                    <input type="text" name="name" placeholder="Customer name" [(ngModel)]="invoice.customer">
+                    <input type="text" name="name" placeholder="Customer name" [(ngModel)]="invoice.customer.name">
                 </div>
                 <div class="field">
                     <label>Customer address</label>
-                    <textarea rows="2"></textarea>
+                    <input type="text" name="streetName" placeholder="Street name" [(ngModel)]="invoice.customer.streetName">
+                    <input type="text" name="postCode" placeholder="Postcode" [(ngModel)]="invoice.customer.postCode">
+                    <input type="text" name="city" placeholder="city" [(ngModel)]="invoice.customer.city">
+                </div>
+                <div class="field">
+                    <label>Customer Email</label>
+                    <input type="text" name="email" placeholder="Customer email" [(ngModel)]="invoice.customer.email">
                 </div>
             </div>
         </div>
@@ -22,11 +28,11 @@
             <div class="ui attached segment">
                 <div class="field">
                     <label>Invoice date</label>
-                    <input type="text" placeholder="yyyy-mm-dd">
+                    <input type="text" placeholder="yyyy-mm-dd" [(ngModel)]="invoice.created">
                 </div>
                 <div class="field">
                     <label>Invoice due</label>
-                    <input type="text" placeholder="yyyy-mm-dd">
+                    <input type="text" placeholder="yyyy-mm-dd" [(ngModel)]="invoice.due">
                 </div>
             </div>
         </div>
@@ -41,39 +47,39 @@
         <th>Total</th>
     </tr></thead>
     <tbody>
-        <tr>
+        <tr *ngFor="#item of invoice.items">
             <td>
                 <div class="ui fluid transparent action input">
-                    <input class="ui input" type="text" value="Tuote 1" />
+                    <input class="ui input" type="text" [(ngModel)]="item.description" />
                     <div class="ui mini red button">Remove</div>
                 </div>
             </td>
             <td class="amount">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" value="1" type="text" />
+                    <input class="ui input" [(ngModel)]="item.amount" type="text" />
                 </div>
             </td>
             <td class="price">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" value="120,00" type="text" />
+                    <input class="ui input" [(ngModel)]="item.price" type="text" />
                 </div>
             </td>
             <td class="tax">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" value="24" type="text" />
+                    <input class="ui input" [(ngModel)]="item.tax" type="text" />
                 </div>
             </td>
-            <td class="total">148,80</td>
+            <td class="total">{{ item.total() }}</td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
             <th colspan="4" class="footer header">
-                <button class="ui mini left floated button">Add item</button>
+                <button class="ui mini left floated button" (click)="invoice.addItem()">Add item</button>
                 <h4 class="ui right floated header">Total</h4>
             </th>
             <th class="footer value">
-                148,80
+                {{ invoice.total() }}
             </th>
         </tr>
     </tfoot>

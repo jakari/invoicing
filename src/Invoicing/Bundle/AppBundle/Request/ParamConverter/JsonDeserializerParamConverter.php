@@ -1,6 +1,6 @@
 <?php
 
-namespace Soilscout\Bundle\MainBundle\Request\ParamConverter;
+namespace Invoicing\Bundle\AppBundle\Request\ParamConverter;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,14 +1,14 @@
 import {Item} from "./item.model";
+import {CustomerModel} from "./customer.model";
 
 export class Invoice {
     public id:number;
-    public customer:string;
-    public customerAddress:string;
+    public customer:CustomerModel;
     public referenceNumber:number;
     public invoiceNumber:number;
-    public created:Date;
-    public due:Date;
-    public items:Array<Item>;
+    public created:string;
+    public due:string;
+    public items:Array<Item> = [];
 
     public total():number {
         var total = 0;
@@ -18,5 +18,9 @@ export class Invoice {
         }
 
         return total;
+    }
+
+    public addItem():void {
+        this.items.push(new Item());
     }
 }

@@ -6,6 +6,7 @@ import {InvoiceFormComponent} from "../invoice-form.component";
 import {RouteParams} from "angular2/router";
 import {Item} from "../item.model";
 import {ROUTER_DIRECTIVES} from "angular2/router";
+import {Response} from "angular2/http";
 
 @Component({
     templateUrl: 'app/invoice/view/view.html',
@@ -20,21 +21,9 @@ export class ViewInvoiceComponent {
         this.invoiceService = invoiceService;
         this.id = Number(routeParams.get('id'));
 
-        this.invoice = new Invoice();
-        this.invoice.id = 123;
-        this.invoice.customer = 'Asiakas Oy';
-        this.invoice.created = new Date('2015-11-10');
-        this.invoice.due = new Date('2015-11-20');
-        this.invoice.invoiceNumber = 123;
-        this.invoice.referenceNumber = 1234;
-
-        var item = new Item();
-        item.description = 'Tuote 1';
-        item.price = 1234;
-        item.tax = 24;
-        item.amount = 1;
-
-        this.invoice.items = [item];
+        this.invoiceService.getInvoice(this.id).subscribe((invoice:Invoice) => {
+            this.invoice = invoice;
+        });
     }
 
     edit():void {

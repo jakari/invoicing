@@ -3,6 +3,8 @@ import {Component} from 'angular2/core';
 import {Invoice} from "../invoice.model";
 import {InvoiceService} from "../invoice.service";
 import {ROUTER_DIRECTIVES} from "angular2/router";
+import {InvoiceListItem} from "../invoice.list.item.model";
+import {Response} from "angular2/http";
 
 @Component({
     templateUrl: 'app/invoice/list/list.html',
@@ -10,19 +12,25 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 })
 export class ListInvoicesComponent {
     private invoiceService:InvoiceService;
-    invoices:Array<Invoice>;
+    invoices:Array<InvoiceListItem> = [];
 
     constructor(invoiceService:InvoiceService) {
-        var invoice = new Invoice();
-        invoice.id = 123;
-        invoice.customer = 'Asiakas Oy';
-        invoice.created = new Date('2015-11-10');
-        invoice.due = new Date('2015-11-20');
-        invoice.invoiceNumber = 123;
-        invoice.referenceNumber = 1234;
-
-        this.invoices = [invoice];
         this.invoiceService = invoiceService;
-        // this.invoiceService.getInvoices();
+        this.invoiceService.getInvoices().subscribe((response:Response) => this.setInvoices(response.json()));
+    }
+
+    private setInvoices(invoices:any) {
+        this.invoices = invoices.map((invoice:any) => {
+            var model = new InvoiceListItem();
+            model.id = invoice.id;
+            model.customer = invoice.customer;
+            model.created = new Date(invoice.created);
+            model.due = new Date(invoice.due);
+            model.referenceNumber = invoice.referenceNumber;
+            model.invoiceNumber = invoice.invoiceNumber;
+            model.total = invoice.total;
+
+            return model;
+        });
     }
 }

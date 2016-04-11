@@ -4,14 +4,14 @@
         <thead>
             <tr>
                 <th>Customer</th>
-                <th>Reference number</th>
                 <th>Invoice number</th>
+                <th>Reference number</th>
                 <th>Created</th>
                 <th>Due</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="#invoice of invoices" [routerLink]="['ViewInvoice', {id: 123}]">
+            <tr class="invoice list row" *ngFor="#invoice of invoices" [routerLink]="['ViewInvoice', {id: invoice.id}]">
                 <td>{{ invoice.customer }}</td>
                 <td>{{ invoice.invoiceNumber }}</td>
                 <td>{{ invoice.referenceNumber }}</td>

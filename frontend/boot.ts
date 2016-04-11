@@ -5,6 +5,7 @@ import {ROUTER_PROVIDERS, HashLocationStrategy, LocationStrategy} from 'angular2
 import {AppComponent} from './app.component';
 import {provide} from 'angular2/core';
 import {HTTP_PROVIDERS} from "angular2/http";
+import 'rxjs/Rx';
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,

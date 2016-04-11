@@ -29,3 +29,6 @@
 .ui.invoice.items.table .footer.value {
     text-align: right;
 }
+.invoice.list.row:hover {
+    cursor: pointer;
+}

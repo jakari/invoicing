@@ -1,4 +1,4 @@
-<div class="ui main container">
+<div class="ui main container" *ngIf="invoice">
     <h1 class="ui header">invoice {{ invoice.invoiceNumber }}</h1>
 
     <div class="ui grid">
@@ -11,11 +11,16 @@
                 <tbody>
                     <tr>
                         <td>Name</td>
-                        <td>{{ invoice.customer }}</td>
+                        <td>{{ invoice.customer.name }}</td>
                     </tr>
                     <tr>
                         <td>Customer address</td>
-                        <td>{{ invoice.customerAddress }}</td>
+                        <td>
+                            {{ invoice.customer.streetName }}<br />
+                            {{ invoice.customer.postCode }}<br />
+                            {{ invoice.customer.city }}<br />
+                            {{ invoice.customer.email }}
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -37,11 +42,11 @@
                     </tr>
                     <tr>
                         <td>Invoice date</td>
-                        <td>{{ invoice.created |date:"d" }}.{{ invoice.created |date:"M" }}.{{ invoice.created |date:"y" }}</td>
+                        <td>{{ invoice.created }}</td>
                     </tr>
                     <tr>
                         <td>Invoice due</td>
-                        <td>{{ invoice.due |date:"d" }}.{{ invoice.due |date:"M" }}.{{ invoice.due |date:"y" }}</td>
+                        <td>{{ invoice.due }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -77,5 +82,5 @@
     </table>
 
     <div class="ui hidden divider"></div>
-    <button class="ui red button"  [routerLink]="['EditInvoice', {id: 123}]">Edit</button>
+    <button class="ui red button"  [routerLink]="['EditInvoice', {id: invoice.id}]">Edit</button>
 </div>

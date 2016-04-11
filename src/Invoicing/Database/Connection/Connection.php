@@ -46,9 +46,26 @@ class Connection
     }
 
     /**
+     * @param  string        $statement
+     * @return \PDOStatement
+     */
+    public function prepare($statement)
+    {
+        return $this->getPDO()->prepare($statement);
+    }
+
+    /**
+     * @return string
+     */
+    public function lastInsertId($sequence)
+    {
+        return $this->getPDO()->lastInsertId($sequence);
+    }
+
+    /**
      * @return PDO
      */
-    public function getPDO()
+    private function getPDO()
     {
         if (!$this->instance) {
             $this->instance = new PDO(
