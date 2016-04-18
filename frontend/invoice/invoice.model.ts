@@ -23,4 +23,10 @@ export class Invoice {
     public addItem():void {
         this.items.push(new Item());
     }
+
+    public removeItem(item:Item):void {
+        console.log(this.items.indexOf(item));
+        this.items.splice(this.items.indexOf(item), 1);
+        console.log(this.items);
+    }
 }

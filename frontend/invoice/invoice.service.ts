@@ -28,6 +28,7 @@ export class InvoiceService {
             .map((response:Response) :Invoice => {
                 var data = response.json();
                 var invoice = new Invoice();
+                invoice.id = data.id;
                 invoice.created = data.created;
                 invoice.due = data.due;
                 invoice.customer = new CustomerModel();
@@ -51,5 +52,13 @@ export class InvoiceService {
 
                 return invoice;
             });
+    }
+
+    public update(invoice:Invoice):Observable<Response> {
+        return this.http.patch('/api/invoice/'+invoice.id, JSON.stringify(invoice));
+    }
+
+    public remove(invoice:Invoice):Observable<Response> {
+        return this.http.delete('/api/invoice/'+invoice.id);
     }
 }

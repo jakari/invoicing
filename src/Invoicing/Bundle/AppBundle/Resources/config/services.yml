@@ -23,9 +23,15 @@ services:
         arguments:
             - '@invoicing.database.connection'
             - '@invoicing.service.customer'
+            - '@invoicing.service.item'
 
     invoicing.service.customer:
         class: Invoicing\Service\CustomerService
+        arguments:
+            - '@invoicing.database.connection'
+
+    invoicing.service.item:
+        class: Invoicing\Service\ItemService
         arguments:
             - '@invoicing.database.connection'
 

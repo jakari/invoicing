@@ -26,6 +26,8 @@ gulp.task('copy:assets', ['clean:app'], function() {
 
 // copy dependencies
 gulp.task('copy:libs', ['clean:lib'], function() {
+    gulp.src(['./node_modules/semantic-ui/dist/themes/default/assets/fonts/**/*'], {base: './node_modules/semantic-ui/dist'})
+        .pipe(gulp.dest('web/lib'));
     return gulp.src([
             'node_modules/intl/dist/Intl.complete.js',
             'node_modules/intl/dist/Intl.min.js',
@@ -44,7 +46,7 @@ gulp.task('copy:libs', ['clean:lib'], function() {
             'node_modules/pickadate/lib/compressed/picker.js',
             'node_modules/pickadate/lib/compressed/picker.date.js'
         ])
-        .pipe(gulp.dest('web/lib'))
+        .pipe(gulp.dest('web/lib'));
 });
 
 // linting

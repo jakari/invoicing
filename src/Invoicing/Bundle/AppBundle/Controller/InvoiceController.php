@@ -62,6 +62,30 @@ class InvoiceController
     }
 
     /**
+     * @Route("/api/invoice/{invoiceId}", name="invoices.edit", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
+     * @Method("PATCH")
+     * @return Response
+     */
+    public function editInvoiceAction($invoiceId, InvoiceModel $model)
+    {
+        $this->invoiceService->updateInvoice($invoiceId, $model);
+
+        return new Response(null, 204);
+    }
+
+    /**
+     * @Route("/api/invoice/{invoiceId}", name="invoices.delete", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
+     * @Method("DELETE")
+     * @return Response
+     */
+    public function deleteInvoiceAction($invoiceId)
+    {
+        $this->invoiceService->remove($invoiceId);
+
+        return new Response(null, 200);
+    }
+
+    /**
      * @Route("/api/invoice/{invoiceId}", name="invoices.getInvoice", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
      * @Method("GET")
      * @throws NotFoundHttpException
