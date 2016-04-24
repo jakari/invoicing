@@ -1,7 +1,7 @@
 <div class="ui active dimmer" *ngIf="!invoice">
     <div class="ui loader"></div>
 </div>
-<div *ngIf="invoice">
+<form *ngIf="invoice" [ngFormModel]="invoiceForm">
     <div class="ui form">
         <div class="ui grid">
             <div class="eight wide column">
@@ -9,19 +9,37 @@
                     Customer Information
                 </h5>
                 <div class="ui attached segment">
-                    <div class="field">
+                    <div class="required field">
                         <label>Name</label>
-                        <input type="text" name="name" placeholder="Customer name" [(ngModel)]="invoice.customer.name">
+                        <input type="text" #customerName="ngForm" ngControl="customerName" placeholder="Customer name" [(ngModel)]="invoice.customer.name">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !customerName.errors || !customerName.errors.required || customerName.pristine}">
+                            Please enter a value
+                        </div>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label>Customer address</label>
-                        <input type="text" name="streetName" placeholder="Street name" [(ngModel)]="invoice.customer.streetName">
-                        <input type="text" name="postCode" placeholder="Postcode" [(ngModel)]="invoice.customer.postCode">
-                        <input type="text" name="city" placeholder="city" [(ngModel)]="invoice.customer.city">
+                        <input type="text" #streetName="ngForm" ngControl="streetName" placeholder="Street name" [(ngModel)]="invoice.customer.streetName">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !streetName.errors || !streetName.errors.required || streetName.pristine}">
+                            Please enter a value
+                        </div>
+                        <input type="text" #postCode="ngForm" ngControl="postCode"  placeholder="Postcode" [(ngModel)]="invoice.customer.postCode">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !city.errors || !city.errors.required || postCode.pristine}">
+                            Please enter a value
+                        </div>
+                        <input type="text" #city="ngForm" ngControl="city" placeholder="city" [(ngModel)]="invoice.customer.city">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !city.errors || !city.errors.required || city.pristine}">
+                            Please enter a value
+                        </div>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label>Customer Email</label>
-                        <input type="text" name="email" placeholder="Customer email" [(ngModel)]="invoice.customer.email">
+                        <input type="text" #email="ngForm" ngControl="email"  placeholder="Customer email" [(ngModel)]="invoice.customer.email">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !email.errors || !email.errors.required || email.pristine}">
+                            Please enter a value
+                        </div>
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !email.errors || !email.errors.pattern }">
+                            Please specify an email with the correct format: email@example.com
+                        </div>
                     </div>
                 </div>
             </div>
@@ -30,13 +48,25 @@
                     Invoice information
                 </h5>
                 <div class="ui attached segment">
-                    <div class="field">
+                    <div class="required field">
                         <label>Invoice date</label>
-                        <input type="text" placeholder="yyyy-mm-dd" [(ngModel)]="invoice.created">
+                        <input type="text" #created="ngForm" ngControl="created" placeholder="created" [(ngModel)]="invoice.created">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !created.errors || !created.errors.required || created.pristine}">
+                            Please enter a date
+                        </div>
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !created.errors || !created.errors.pattern }">
+                            Please specify a valid date with the following format: yyyy-mm-dd
+                        </div>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label>Invoice due</label>
-                        <input type="text" placeholder="yyyy-mm-dd" [(ngModel)]="invoice.due">
+                        <input type="text" #due="ngForm" ngControl="due" placeholder="due" [(ngModel)]="invoice.due">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !due.errors || !due.errors.required || due.pristine}">
+                            Please enter a date
+                        </div>
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !due.errors || !due.errors.pattern}">
+                            Please specify a valid date with the following format: yyyy-mm-dd
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,35 +81,38 @@
             <th>Total</th>
         </tr></thead>
         <tbody>
-        <tr *ngFor="#item of invoice.items">
+        <tr *ngFor="#item of itemsArray.controls; #i = index">
             <td>
                 <div class="ui fluid transparent action input">
-                    <input class="ui input" type="text" [(ngModel)]="item.description" />
+                    <input class="ui input" type="text" [ngFormControl]="item.controls.description" [(ngModel)]="invoice.items[i].description" />
                     <div class="ui mini red button" (click)="invoice.removeItem(item)">Remove</div>
                 </div>
             </td>
             <td class="amount">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" [(ngModel)]="item.amount" type="text" />
+                    <input class="ui input" [ngFormControl]="item.controls.amount" [(ngModel)]="invoice.items[i].amount" type="text" />
                 </div>
             </td>
             <td class="price">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" [(ngModel)]="item.price" type="text" />
+                    <input class="ui input" [ngFormControl]="item.controls.price" [(ngModel)]="invoice.items[i].price" type="text" />
+                </div>
+                <div class="ui pointing red basic label" [ngClass]="{hidden: !item.controls.price.errors || !item.controls.price.errors.pattern}">
+                    Price should be a number in one of the following formats: 2000 or 2000,00. Maximum length is 9 999 999,99
                 </div>
             </td>
             <td class="tax">
                 <div class="ui fluid transparent input">
-                    <input class="ui input" [(ngModel)]="item.tax" type="text" />
+                    <input class="ui input" [ngFormControl]="item.controls.tax" [(ngModel)]="invoice.items[i].tax" type="text" />
                 </div>
             </td>
-            <td class="total">{{ item.total() }}</td>
+            <td class="total">{{ invoice.items[i].total() }}</td>
         </tr>
         </tbody>
         <tfoot>
         <tr>
             <th colspan="4" class="footer header">
-                <button class="ui mini left floated button" (click)="invoice.addItem()">Add item</button>
+                <button class="ui mini left floated button" (click)="addItem()">Add item</button>
                 <h4 class="ui right floated header">Total</h4>
             </th>
             <th class="footer value">
@@ -88,4 +121,7 @@
         </tr>
         </tfoot>
     </table>
-</div>
+    <div class="ui red basic label" [ngClass]="{hidden: invoice.items.length}">
+        At least 1 invoice item should be added to be able to create a invoice.
+    </div>
+</form>
