@@ -1,7 +1,4 @@
-<div class="ui active dimmer" *ngIf="!invoice">
-    <div class="ui loader"></div>
-</div>
-<form *ngIf="invoice" [ngFormModel]="invoiceForm">
+<form [ngFormModel]="invoiceForm">
     <div class="ui form">
         <div class="ui grid">
             <div class="eight wide column">
@@ -23,7 +20,7 @@
                             Please enter a value
                         </div>
                         <input type="text" #postCode="ngForm" ngControl="postCode"  placeholder="Postcode" [(ngModel)]="invoice.customer.postCode">
-                        <div class="ui pointing red basic label" [ngClass]="{hidden: !city.errors || !city.errors.required || postCode.pristine}">
+                        <div class="ui pointing red basic label" [ngClass]="{hidden: !postCode.errors || !postCode.errors.required || postCode.pristine}">
                             Please enter a value
                         </div>
                         <input type="text" #city="ngForm" ngControl="city" placeholder="city" [(ngModel)]="invoice.customer.city">
@@ -85,7 +82,7 @@
             <td>
                 <div class="ui fluid transparent action input">
                     <input class="ui input" type="text" [ngFormControl]="item.controls.description" [(ngModel)]="invoice.items[i].description" />
-                    <div class="ui mini red button" (click)="invoice.removeItem(item)">Remove</div>
+                    <div class="ui mini red button" (click)="removeItem(i)">Remove</div>
                 </div>
             </td>
             <td class="amount">
@@ -112,7 +109,7 @@
         <tfoot>
         <tr>
             <th colspan="4" class="footer header">
-                <button class="ui mini left floated button" (click)="addItem()">Add item</button>
+                <button type="button" class="ui mini left floated button" (click)="addItem()">Add item</button>
                 <h4 class="ui right floated header">Total</h4>
             </th>
             <th class="footer value">

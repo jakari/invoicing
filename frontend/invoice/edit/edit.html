@@ -1,4 +1,7 @@
-<div class="ui main container">
+<div class="ui active dimmer" *ngIf="!invoice">
+    <div class="ui loader"></div>
+</div>
+<div class="ui main container" *ngIf="invoice">
     <h1 class="ui header">Edit invoice</h1>
     <invoice-form #form [(invoice)]="invoice"></invoice-form>
     <div class="ui hidden divider"></div>

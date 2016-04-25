@@ -5,6 +5,7 @@ import {Invoice} from "../invoice.model";
 import {CustomerModel} from "../customer.model";
 import {InvoiceFormComponent} from "../invoice-form.component";
 import {Observable} from "rxjs/Observable";
+import {Router} from "angular2/router";
 
 @Component({
     templateUrl: 'app/invoice/create/create.html',
@@ -14,16 +15,18 @@ export class CreateInvoiceComponent {
     private invoiceService:InvoiceService;
     private invoice:Invoice;
     private customerSearch:String;
+    private router:Router;
 
-    constructor(invoiceService:InvoiceService) {
+    constructor(invoiceService:InvoiceService, router:Router) {
         this.invoiceService = invoiceService;
         this.invoice = new Invoice();
         this.invoice.customer = new CustomerModel();
+        this.router = router;
     }
 
     create():void {
-        this.invoiceService.create(this.invoice).subscribe(
-            data => console.log(data)
-        );
+        this.invoiceService.create(this.invoice).subscribe(() => {
+            this.router.navigate(['ListInvoices']);
+        });
     }
 }
