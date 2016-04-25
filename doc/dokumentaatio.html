@@ -368,5 +368,31 @@ pre.editor-colors.is-focused .line.cursor-line {
 <p>Invoice on lasku, joka luodaan asiakkaalle. Status tarkoittaa laskun tilaa,
 vaihtoehtoina on PENDING tai PAID.</p>
 <h2 id="relaatiotietokantakaavio">Relaatiotietokantakaavio</h2>
-<p><img src="/Users/jani/projects/invoicing/doc/relaatiotietokantakaavio.png" alt="Relaatiotietokantakaavio"></p></body>
+<p><img src="/Users/jani/projects/invoicing/doc/relaatiotietokantakaavio.png" alt="Relaatiotietokantakaavio"></p>
+<h2 id="j-rjestelm-n-yleisrakenne">Järjestelmän yleisrakenne</h2>
+<p>Järjestelmä on toteutettu Angular 2 -frontend javascript-kirjastolla ja Symfony 3.0 -backendillä.</p>
+<p>Angular-ja Html-lähdekoodit löytyvät <code style="font-family: Menlo;">frontend</code> -hakemistosta.
+Frontend-koodi kirjoitetaan ylläolevaan hakemistoon ja ajetaan Gulp task-runnerin läpi <code style="font-family: Menlo;">web</code> -hakemistoon.</p>
+<p>Symfony:n osalta järjestelmä t”ottelee ns. Standard edition hakemistorakennetta. <code style="font-family: Menlo;">src</code> -hakemistossa on backend-lähdekoodi. Tämä lähdekoodi on kirjoitettu PSR-4 standardeja mukaillen.</p>
+<p>Ohjelman controllerit ovat <code style="font-family: Menlo;">Invoicing\Bundle\AppBundle\Controller</code> -hakemistossa.
+Sovelluksen modelit ovat <code style="font-family: Menlo;">Invoicing\Model</code> -hakemistossa.
+Sovelluksen servicet ovat <code style="font-family: Menlo;">Invoicing\Service</code> -hakemistossa.</p>
+<h2 id="j-rjestelm-n-asennus">Järjestelmän asennus</h2>
+<p>Järjestelmä vaatii seuraavat komponentit toimiakseen:</p>
+<ul>
+<li>npm</li>
+<li>php 5.6</li>
+<li>postgresql 9.4</li>
+<li>yleisimmät php-moduulit esim. php-pdo, php-postgresql, php-intl.</li>
+</ul>
+<p>Ohjelmiston asennus:</p>
+<ol>
+<li>Ladataan ohjelmistokoodi Githubista</li>
+<li>Luo ohjelmistolle tietokanta</li>
+<li>Ajetaan <code style="font-family: Menlo;">composer install</code>. Täytä kysymyksiin vastaukset, tämä luo automaattisesti konfiguraatiotiedoston ympäristöllesi.</li>
+<li>Aja tietokantamigraatiot komennolla: <code style="font-family: Menlo;">php bin/console phinx:migrations:migrate</code></li>
+<li>Osoita WWW-palvelin (esim nginx) osoittamaan &#39;web/&#39; -hakemistoon (katso konfiguraatiotiedosto <code style="font-family: Menlo;">doc/nginx.example.conf</code>)</li>
+<li>Ohjelmisto on valmis käytettäväksi</li>
+</ol>
+<p>Vaihtoehtoinen tapa luoda tietokanta on importtaamalla <code style="font-family: Menlo;">create_tables.sql</code>. Tällöin ei tosin ole migraatioita käytössä.</p></body>
 </html>

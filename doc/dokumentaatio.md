@@ -82,3 +82,37 @@ vaihtoehtoina on PENDING tai PAID.
 ## Relaatiotietokantakaavio
 
 ![Relaatiotietokantakaavio](relaatiotietokantakaavio.png)
+
+## Järjestelmän yleisrakenne
+
+Järjestelmä on toteutettu Angular 2 -frontend javascript-kirjastolla ja Symfony 3.0 -backendillä.
+
+Angular-ja Html-lähdekoodit löytyvät `frontend` -hakemistosta.
+Frontend-koodi kirjoitetaan ylläolevaan hakemistoon ja ajetaan Gulp task-runnerin läpi `web` -hakemistoon.
+
+Symfony:n osalta järjestelmä t”ottelee ns. Standard edition hakemistorakennetta. `src` -hakemistossa on backend-lähdekoodi. Tämä lähdekoodi on kirjoitettu PSR-4 standardeja mukaillen.
+
+Ohjelman controllerit ovat `Invoicing\Bundle\AppBundle\Controller` -hakemistossa.
+Sovelluksen modelit ovat `Invoicing\Model` -hakemistossa.
+Sovelluksen servicet ovat `Invoicing\Service` -hakemistossa.
+
+
+## Järjestelmän asennus
+
+Järjestelmä vaatii seuraavat komponentit toimiakseen:
+
+- npm
+- php 5.6
+- postgresql 9.4
+- yleisimmät php-moduulit esim. php-pdo, php-postgresql, php-intl.
+
+Ohjelmiston asennus:
+
+1. Ladataan ohjelmistokoodi Githubista
+1. Luo ohjelmistolle tietokanta
+2. Ajetaan `composer install`. Täytä kysymyksiin vastaukset, tämä luo automaattisesti konfiguraatiotiedoston ympäristöllesi.
+3. Aja tietokantamigraatiot komennolla: `php bin/console phinx:migrations:migrate`
+4. Osoita WWW-palvelin (esim nginx) osoittamaan 'web/' -hakemistoon (katso konfiguraatiotiedosto `doc/nginx.example.conf`)
+5. Ohjelmisto on valmis käytettäväksi
+
+Vaihtoehtoinen tapa luoda tietokanta on importtaamalla `create_tables.sql`. Tällöin ei tosin ole migraatioita käytössä.
