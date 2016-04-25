@@ -5,6 +5,7 @@
         </div>
         <a [routerLink]="['CreateInvoice']" class="item" [class.active]="isRouteActive(['CreateInvoice'])">Create</a>
         <a [routerLink]="['ListInvoices']" class="item" [class.active]="isRouteActive(['ListInvoices'])">List</a>
+        <a href="/logout" class="item">Logout</a>
     </div>
 </div>
 <router-outlet></router-outlet>

@@ -1,3 +1,9 @@
 invoicing_app:
     resource: "@InvoicingAppBundle/Controller/"
     type:     annotation
+
+index:
+    path: /
+
+logout:
+    path: /logout

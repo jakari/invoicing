@@ -32,3 +32,11 @@
 .invoice.list.row:hover {
     cursor: pointer;
 }
+
+.login {
+    background-color: #DADADA;
+    height: 100%;
+}
+.login .column {
+    max-width: 450px;
+}

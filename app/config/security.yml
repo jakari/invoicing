@@ -19,10 +19,20 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         main:
             anonymous: ~
-            http_basic: ~
+            pattern:   ^/
+            form_login:
+                login_path: login
+                check_path: login
+                post_only: true
+                username_parameter: username
+                password_parameter: password
+                always_use_default_target_path: true
+                default_target_path: /
+            logout:
+                path:   /logout
+                target: login
             # activate different ways to authenticate
 
             # http_basic: ~
@@ -31,4 +41,5 @@ security:
             # form_login: ~
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
     access_control:
+        - {path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: ROLE_USER }
