@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8" />
-    <base href="/">
-    <link rel="stylesheet" href="lib/semantic.min.css">
-    <link rel="stylesheet" href="lib/picker.date.css">
-    <link rel="stylesheet" href="style.css">
+{% extends '::base.html.twig' %}
+{% block head %}
     <script src="lib/angular2-polyfills.js"></script>
     <script src="lib/system.src.js"></script>
     <script src="lib/Rx.js"></script>
@@ -39,8 +32,7 @@
         System.import('app/boot')
                 .then(null, console.error.bind(console));
     </script>
-</head>
-<body>
-<my-app></my-app>
-</body>
-</html>
+{% endblock %}
+{% block body %}
+    <my-app></my-app>
+{% endblock %}
