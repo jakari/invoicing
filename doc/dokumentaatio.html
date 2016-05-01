@@ -210,12 +210,13 @@ pre.editor-colors.is-focused .line.cursor-line {
 }
 </style>
   </head>
-  <body class='markdown-preview'><h1 id="invoicing-laskutusj-rjestelm-n-dokumentaatio">Invoicing-laskutusjärjestelmän dokumentaatio</h1>
+  <body class='markdown-preview' data-use-github-style><h1 id="invoicing-laskutusj-rjestelm-n-dokumentaatio">Invoicing-laskutusjärjestelmän dokumentaatio</h1>
 <p>Invoicing on www-pohjainen laskutusjärjestelmä, jolla on helppoa luoda uusia laskuja ja tulostaa niitä asiakkaille.</p>
 <p>Järjestelmä on pienyrityksen käyttöä varten luotu ja siten sen ominaisuudet on varsin pienet, mutta riittävät, sillä laskutuksessa olisi tarkoitus käyttää mahdollisimman vähän aikaa.</p>
 <h2 id="j-rjestelm-vaatimukset">Järjestelmävaatimukset</h2>
 <h3 id="palvelimen-j-rjestelm-vaatimukset">Palvelimen järjestelmävaatimukset</h3>
 <ul>
+<li>WWW-palvelin (esim. Nginx tai Apache)</li>
 <li>PHP 5.6</li>
 <li>PostgreSQL 9.4</li>
 </ul>
@@ -225,11 +226,15 @@ pre.editor-colors.is-focused .line.cursor-line {
 <p>Käyttäjä
     Käyttäjä on henkilö jolla on täysi käyttöoikeus invoicing-laskutuspalvelussa.</p>
 <h2 id="k-ytt-tapaukset">Käyttötapaukset</h2>
-<p><img src="/Users/jani/projects/invoicing/doc/kayttotapauskaavio.png" alt="K&#xE4;ytt&#xF6;tapaukaavio"></p>
+<p><img src="/Users/jani/projects/invoicing/doc/kayttotapauskaavio.png" alt="K&#xE4;ytt&#xF6;tapaukaavio">  </p>
 <h3 id="laskun-luonti">Laskun luonti</h3>
 <p>Laskun luonnissa käyttäjä kirjaa uuden laskun lisäämällä asiakastiedot, tuotteet ja niiden hinnat. Järjestelmä laskee laskun loppusumman, generoi laskulle laskunumeron ja viitenumeron.</p>
 <h3 id="laskun-tulostus">Laskun tulostus</h3>
 <p>Käyttäjä voi tulostaa luomansa laskun.</p>
+<h3 id="laskun-muokkaus">Laskun muokkaus</h3>
+<p>Käyttäjä voi muokata laskua, lisätä, poistaa tai muokata tuotteita, muokata asiakastietoja, eräpäiviä tms.</p>
+<h3 id="laskun-poisto">Laskun poisto</h3>
+<p>Käyttäjä voi poistaa laskun.</p>
 <h2 id="j-rjestelm-n-tietosis-lt-">Järjestelmän tietosisältö</h2>
 <p><img src="/Users/jani/projects/invoicing/doc/kasitekaavio.png" alt="kasitekaavio"></p>
 <h3 id="customer">Customer</h3>
@@ -394,5 +399,7 @@ Sovelluksen servicet ovat <code style="font-family: Menlo;">Invoicing\Service</c
 <li>Osoita WWW-palvelin (esim nginx) osoittamaan &#39;web/&#39; -hakemistoon (katso konfiguraatiotiedosto <code style="font-family: Menlo;">doc/nginx.example.conf</code>)</li>
 <li>Ohjelmisto on valmis käytettäväksi</li>
 </ol>
-<p>Vaihtoehtoinen tapa luoda tietokanta on importtaamalla <code style="font-family: Menlo;">create_tables.sql</code>. Tällöin ei tosin ole migraatioita käytössä.</p></body>
+<p>Vaihtoehtoinen tapa luoda tietokanta on importtaamalla <code style="font-family: Menlo;">create_tables.sql</code>. Tällöin ei tosin ole migraatioita käytössä.</p>
+<h2 id="testaus">Testaus</h2>
+<p>Ohjelmistoa on testattu käsipelillä. Valmius Unit ja Integraatiotestaukseen on mutta ohjelmiston yksinkertaisuuden, ORM:in puuttuminen aiheutti sen etten lähtenyt tekemään automatisoituja testejä. Integraatiotestejä varten olisi tarvinnut kunnollisen tavan tehdä testidataa, mikä ei ollut järin yksinertaista ilman vaadittuja kirjastoja.</p></body>
 </html>

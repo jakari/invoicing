@@ -8,6 +8,7 @@ Järjestelmä on pienyrityksen käyttöä varten luotu ja siten sen ominaisuudet
 
 ### Palvelimen järjestelmävaatimukset
 
+- WWW-palvelin (esim. Nginx tai Apache)
 - PHP 5.6
 - PostgreSQL 9.4
 
@@ -22,7 +23,7 @@ Käyttäjä
 
 ## Käyttötapaukset
 
-![Käyttötapaukaavio](kayttotapauskaavio.png)
+![Käyttötapaukaavio](kayttotapauskaavio.png)  
 
 ### Laskun luonti
 
@@ -31,6 +32,15 @@ Laskun luonnissa käyttäjä kirjaa uuden laskun lisäämällä asiakastiedot, t
 ### Laskun tulostus
 
 Käyttäjä voi tulostaa luomansa laskun.
+
+### Laskun muokkaus
+
+Käyttäjä voi muokata laskua, lisätä, poistaa tai muokata tuotteita, muokata asiakastietoja, eräpäiviä tms.
+      
+### Laskun poisto
+
+Käyttäjä voi poistaa laskun.
+
 
 ## Järjestelmän tietosisältö
 
@@ -116,3 +126,7 @@ Ohjelmiston asennus:
 5. Ohjelmisto on valmis käytettäväksi
 
 Vaihtoehtoinen tapa luoda tietokanta on importtaamalla `create_tables.sql`. Tällöin ei tosin ole migraatioita käytössä.
+
+## Testaus
+
+Ohjelmistoa on testattu käsipelillä. Valmius Unit ja Integraatiotestaukseen on mutta ohjelmiston yksinkertaisuuden, ORM:in puuttuminen aiheutti sen etten lähtenyt tekemään automatisoituja testejä. Integraatiotestejä varten olisi tarvinnut kunnollisen tavan tehdä testidataa, mikä ei ollut järin yksinertaista ilman vaadittuja kirjastoja.
