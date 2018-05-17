@@ -7,9 +7,6 @@ security:
         in_memory:
             memory:
                 users:
-                    demo:
-                        password: demo
-                        roles: 'ROLE_USER'
 
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext

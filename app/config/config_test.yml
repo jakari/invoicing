@@ -20,3 +20,9 @@ invoicing_app:
     database_name: "%test_database_name%"
     database_user: "%database_user%"
     database_password: "%database_password%"
+
+# app/config/config_test.yml
+security:
+    firewalls:
+        main:
+            http_basic: ~

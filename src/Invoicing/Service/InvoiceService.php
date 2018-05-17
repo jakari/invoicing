@@ -61,6 +61,9 @@ class InvoiceService
 
         $invoiceId = (integer) $this->conn->lastInsertId('invoice_id_seq');
 
+        var_dump($stmt->errorCode());
+        var_dump($stmt->errorInfo());
+
         foreach ($model->getItems() as $item) {
             $this->itemService->addItem($invoiceId, $item);
         }

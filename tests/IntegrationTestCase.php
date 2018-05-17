@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests;
+namespace Invoicing\Tests;
 
+use Invoicing\Tests\Traits\DatabaseTestTrait;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class IntegrationTestCase extends WebTestCase
 {
+    use DatabaseTestTrait;
+
     protected function setUp()
     {
         gc_collect_cycles();

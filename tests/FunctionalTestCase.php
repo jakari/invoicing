@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Invoicing\Tests;
 
 use Tests\Unit\ProphecyTestTrait;
 

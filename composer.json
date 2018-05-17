@@ -4,8 +4,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "": "src/",
-            "Tests\\": "tests/"
+            "": "src/"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -14,7 +13,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Invoicing\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -59,7 +58,7 @@
     },
     "config": {
         "platform": {
-            "php": "5.5.9"
+            "php": "7.1.1"
         }
     },
     "extra": {
@@ -72,5 +71,6 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    }
+    },
+    "prefer-stable": true
 }

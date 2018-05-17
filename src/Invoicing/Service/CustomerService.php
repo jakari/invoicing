@@ -17,20 +17,20 @@ class CustomerService
         $this->conn = $connection;
     }
 
-    public function createCustomer(CustomerModel $customer)
+    public function createCustomer(CustomerModel $model)
     {
         $stmt = $this->conn
             ->prepare('INSERT INTO customer(name, street_name, post_code, city, email) VALUES(:name, :street_name, :post_code, :city, :email)');
 
         $stmt->execute([
-            ':name' => $customer->getName(),
-            ':street_name' => $customer->getStreetName(),
-            ':post_code' => $customer->getPostCode(),
-            ':city' => $customer->getCity(),
-            ':email' => $customer->getEmail(),
+            ':name' => $model->getName(),
+            ':street_name' => $model->getStreetName(),
+            ':post_code' => $model->getPostCode(),
+            ':city' => $model->getCity(),
+            ':email' => $model->getEmail(),
         ]);
 
-        $customer->setId((int) $this->conn->lastInsertId('customer_id_seq'));
+        $model->setId((int) $this->conn->lastInsertId('customer_id_seq'));
     }
 
     public function updateCustomer(CustomerModel $customer)
