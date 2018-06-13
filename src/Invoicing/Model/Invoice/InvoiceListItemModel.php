@@ -7,12 +7,6 @@ use JMS\Serializer\Annotation as Serialize;
 class InvoiceListItemModel
 {
     /**
-     * @Serialize\Type("integer")
-     * @var integer
-     */
-    private $id;
-
-    /**
      * @Serialize\Type("string")
      * @var string
      */
@@ -60,7 +54,6 @@ class InvoiceListItemModel
      * @param integer $total
      */
     public function __construct(
-        $id,
         $customer,
         $invoiceNumber,
         $referenceNumber,
@@ -68,7 +61,6 @@ class InvoiceListItemModel
         $due,
         $total
     ) {
-        $this->id = $id;
         $this->customer = $customer;
         $this->invoiceNumber = $invoiceNumber;
         $this->referenceNumber = $referenceNumber;

@@ -8,13 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class InvoiceModel
 {
     /**
-     * @Assert\Type("integer")
-     * @Serialize\Type("integer")
-     * @var integer|null
-     */
-    private $id;
-
-    /**
      * @Assert\NotBlank()
      * @Assert\Type("DateTime")
      * @Serialize\Type("DateTime<'Y-m-d'>")
@@ -72,19 +65,17 @@ class InvoiceModel
      * @param \DateTime          $created
      * @param \DateTime          $due
      * @param CustomerModel      $customer
-     * @param integer            $invoiceNumber
-     * @param integer            $referenceNumber
      * @param ItemModel[]        $items
-     * @param string|null        $id
+     * @param integer|null       $invoiceNumber
+     * @param integer|null       $referenceNumber
      */
     public function __construct(
         \DateTime $created,
         \DateTime $due,
         CustomerModel $customer,
-        $invoiceNumber,
-        $referenceNumber,
         array $items,
-        $id = null
+        $referenceNumber = null,
+        $invoiceNumber = null
     ) {
         $this->created = $created;
         $this->due = $due;
@@ -92,7 +83,6 @@ class InvoiceModel
         $this->invoiceNumber = $invoiceNumber;
         $this->referenceNumber = $referenceNumber;
         $this->items = $items;
-        $this->id = $id;
     }
 
     /**

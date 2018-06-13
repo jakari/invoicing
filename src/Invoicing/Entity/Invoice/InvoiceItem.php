@@ -4,7 +4,7 @@ namespace Invoicing\Entity\Invoice;
 
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Invoicing\Entity\Invoice;
+use Invoicing\Entity\Invoice\Invoice;
 
 /**
  * @Entity(repositoryClass="Invoicing\Repository\InvoiceItemRepository")
@@ -22,8 +22,8 @@ class InvoiceItem
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Invoice")
-     * @ORM\JoinColumn(name="invoice", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Invoice\Invoice")
+     * @ORM\JoinColumn(name="invoice", referencedColumnName="invoice_number", nullable=false)
      *
      * @var Invoice
      */

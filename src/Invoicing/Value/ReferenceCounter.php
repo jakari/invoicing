@@ -2,9 +2,9 @@
 
 namespace Invoicing\Value;
 
-class ReferenceNumber
+class ReferenceCounter
 {
-    public function checksum($base) {
+    public function checksum($base) : int {
         $values = [7, 3, 1];
         $total = 0;
 

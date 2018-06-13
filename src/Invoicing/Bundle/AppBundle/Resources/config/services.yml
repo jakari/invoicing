@@ -7,6 +7,16 @@ services:
             - '%invoicing.database_password%'
             - '%invoicing.database_name%'
 
+    invoicing.repository.customer:
+        class: Invoicing\Repository\CustomerRepository
+        arguments: [Invoicing\Entity\Customer\Customer]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
+    invoicing.repository.invoice:
+        class: Invoicing\Repository\InvoiceRepository
+        arguments: [Invoicing\Entity\Invoice\Invoice]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
     invoicing.controller.invoice:
         class: Invoicing\Bundle\AppBundle\Controller\InvoiceController
         arguments:
@@ -24,10 +34,13 @@ services:
             - '@invoicing.database.connection'
             - '@invoicing.service.customer'
             - '@invoicing.service.item'
+            - '@invoicing.repository.invoice'
+            - '@invoicing.value.reference_counter'
 
     invoicing.service.customer:
         class: Invoicing\Service\CustomerService
         arguments:
+            - '@invoicing.repository.customer'
             - '@invoicing.database.connection'
 
     invoicing.service.item:
@@ -46,3 +59,6 @@ services:
 
     invoicing.violation.error_formatter:
         class: Invoicing\Bundle\AppBundle\Request\Handler\ViolationErrorFormatter
+
+    invoicing.value.reference_counter:
+        class: Invoicing\Value\ReferenceCounter

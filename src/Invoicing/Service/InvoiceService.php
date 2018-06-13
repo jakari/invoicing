@@ -3,12 +3,16 @@
 namespace Invoicing\Service;
 
 use Invoicing\Database\Connection\Connection;
+use Invoicing\Entity\Invoice\Invoice;
 use Invoicing\Exception\InvoiceNotFoundException;
+use Invoicing\Exception\NoReferenceException;
 use Invoicing\Model\Invoice\CustomerModel;
 use Invoicing\Model\Invoice\InvoiceListItemModel;
 use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Model\Invoice\ItemModel;
+use Invoicing\Repository\InvoiceRepository;
 use Invoicing\Value\InvoiceStatus;
+use Invoicing\Value\ReferenceCounter;
 use Xi\Collections\Collection\ArrayCollection;
 
 class InvoiceService
@@ -28,14 +32,28 @@ class InvoiceService
      */
     private $itemService;
 
+    /**
+     * @var InvoiceRepository
+     */
+    private $repository;
+
+    /**
+     * @var ReferenceCounter
+     */
+    private $referenceCounter;
+
     public function __construct(
         Connection $conn,
         CustomerService $customerService,
-        ItemService $itemService
+        ItemService $itemService,
+        InvoiceRepository $repository,
+        ReferenceCounter $counter
     ) {
         $this->conn = $conn;
         $this->customerService = $customerService;
         $this->itemService = $itemService;
+        $this->repository = $repository;
+        $this->referenceCounter = $counter;
     }
 
     /**
@@ -44,29 +62,33 @@ class InvoiceService
      */
     public function createInvoice(InvoiceModel $model)
     {
-        $customer = $model->getCustomer();
-        $this->customerService->createCustomer($customer);
+        return $this->repository->transactional(function () use ($model) {
+            $customer = $this->customerService->createCustomer($model->getCustomer());
+            $invoice = Invoice::createFromModel($customer, $model);
+            $this->repository->create($invoice);
+            $reference = 100;
 
-        $stmt = $this->conn->prepare(
-            'INSERT INTO invoice(reference_number, created, due, customer, status) VALUES(:reference_number, :created, :due, :customer, :status)'
-        );
-        $stmt->execute([
-            // Todo calculate reference number automatically
-            ':reference_number' => rand(1, 100000),
-            ':created' => $model->getCreated()->format('Y-m-d'),
-            ':due' => $model->getDue()->format('Y-m-d'),
-            ':customer' => $customer->getId(),
-            ':status' => InvoiceStatus::STATUS_PENDING
-        ]);
+            try {
+                $reference = (int) substr(
+                    $this->repository->getNextReference(),
+                    0,
+                    -1
+                );
+                $reference++;
+            } catch (NoReferenceException $e) {
+            }
 
-        $invoiceId = (integer) $this->conn->lastInsertId('invoice_id_seq');
+            $invoice->setReferenceNumber(
+                $reference . $this->referenceCounter->checksum($reference)
+            );
+            $this->repository->update($invoice);
 
-        var_dump($stmt->errorCode());
-        var_dump($stmt->errorInfo());
+            foreach ($model->getItems() as $item) {
+                $this->itemService->addItem($invoice->getInvoiceNumber(), $item);
+            }
 
-        foreach ($model->getItems() as $item) {
-            $this->itemService->addItem($invoiceId, $item);
-        }
+            return $invoice->getInvoiceNumber();
+        });
     }
 
     /**
@@ -76,10 +98,11 @@ class InvoiceService
     public function updateInvoice($id, InvoiceModel $model)
     {
         $stmt = $this->conn->prepare('UPDATE invoice
-            SET created = :created, due = :due');
+            SET created = :created, due = :due WHERE invoice_number = :id');
         $stmt->execute([
             ':created' => $model->getCreated()->format('Y-m-d'),
-            'due' => $model->getDue()->format('Y-m-d')
+            'due' => $model->getDue()->format('Y-m-d'),
+            ':id' => $id
         ]);
 
         // Update customer
@@ -128,9 +151,8 @@ class InvoiceService
     {
         $stmt = $this->conn->prepare('
             SELECT
-                invoice.id,
-                customer.name AS customer,
                 invoice_number,
+                customer.name AS customer,
                 reference_number,
                 created,
                 due,
@@ -138,15 +160,14 @@ class InvoiceService
                 COALESCE(SUM(item.amount * (1 + (item.tax / 100)) * item.price), 0) AS total
             FROM invoice
             JOIN customer ON invoice.customer = customer.id
-            LEFT JOIN item ON invoice.id = item.invoice
-            GROUP BY invoice.id, customer.id
+            LEFT JOIN invoice_item item ON invoice.invoice_number = item.invoice
+            GROUP BY invoice.invoice_number, customer.id
             ORDER BY created DESC
         ');
         $stmt->execute();
 
         return array_map(function (array $invoice) {
             return new InvoiceListItemModel(
-                $invoice['id'],
                 $invoice['customer'],
                 $invoice['invoice_number'],
                 $invoice['reference_number'],
@@ -166,7 +187,6 @@ class InvoiceService
     {
         $stmt = $this->conn->prepare(
             'SELECT
-             invoice.id,
              invoice_number,
              reference_number,
              created,
@@ -178,7 +198,7 @@ class InvoiceService
              post_code,
              city,
              email
-             FROM invoice JOIN customer ON invoice.customer = customer.id WHERE invoice.id = :invoice'
+             FROM invoice JOIN customer ON invoice.customer = customer.id WHERE invoice.invoice_number = :invoice'
         );
         $stmt->execute([':invoice' => $invoiceId]);
         $invoiceData = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -198,10 +218,9 @@ class InvoiceService
                 $invoiceData['email'],
                 $invoiceData['customerid']
             ),
-            $invoiceData['invoice_number'],
-            $invoiceData['reference_number'],
             $this->itemService->getItems($invoiceId),
-            $invoiceData['id']
+            $invoiceData['invoice_number'],
+            $invoiceData['reference_number']
         );
     }
 
@@ -217,7 +236,7 @@ class InvoiceService
             $this->itemService->removeItem($item);
         }
 
-        $this->conn->prepare('DELETE FROM invoice WHERE id = :id')
+        $this->conn->prepare('DELETE FROM invoice WHERE invoice_number = :id')
             ->execute([':id' => $invoiceId]);
     }
 }

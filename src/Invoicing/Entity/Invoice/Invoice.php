@@ -1,12 +1,12 @@
 <?php
 
-namespace Invoicing\Entity;
+namespace Invoicing\Entity\Invoice;
 
 use Doctrine\Common\Collections\ArrayCollection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Invoicing\DBAL\Types\InvoiceStatusType;
 use Invoicing\Entity\Customer\Customer;
-use Invoicing\Entity\Invoice\InvoiceItem;
+use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Value\InvoiceStatus;
 
 /**
@@ -17,38 +17,31 @@ class Invoice
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="invoice_number")
      * @ORM\GeneratedValue
-     *
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(name="invoice_number", type="integer", nullable=false)
      *
      * @var integer
      */
     private $invoiceNumber;
 
     /**
-     * @ORM\Column(name="reference_number", type="integer", nullable=false)
+     * @ORM\Column(name="reference_number", type="integer", nullable=true)
      *
      * @var integer
      */
     private $referenceNumber;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      *
-     * @var \DateTimeInterface
+     * @var \DateTime
      */
     private $created;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="date", nullable=false)
      *
-     * @var \DateTimeInterface
+     * @var \DateTime
      */
     private $due;
 
@@ -75,25 +68,30 @@ class Invoice
     private $items;
 
     /**
-     * @param integer            $invoiceNumber
-     * @param integer            $referenceNumber
-     * @param \DateTimeImmutable $created
-     * @param \DateTimeImmutable $due
-     * @param Customer           $customer
+     * @param \DateTime $created
+     * @param \DateTime $due
+     * @param Customer  $customer
      */
     public function __construct(
-        integer $invoiceNumber,
-        integer $referenceNumber,
-        \DateTimeImmutable $created,
-        \DateTimeImmutable $due,
+        \DateTime $created,
+        \DateTime $due,
         Customer $customer
     ) {
-        $this->invoiceNumber = $invoiceNumber;
-        $this->referenceNumber = $referenceNumber;
         $this->created = $created;
         $this->due = $due;
         $this->customer = $customer;
         $this->status = InvoiceStatus::STATUS_PENDING;
+    }
+
+    public static function createFromModel(
+        Customer $customer,
+        InvoiceModel $model
+    ) {
+        return new self($model->getCreated(), $model->getDue(), $customer);
+    }
+
+    public function getInvoiceNumber() : int {
+        return $this->invoiceNumber;
     }
 
     /**
@@ -106,5 +104,10 @@ class Invoice
         }
 
         $this->addItem($item);
+    }
+
+    public function setReferenceNumber(int $number)
+    {
+        $this->referenceNumber = $number;
     }
 }

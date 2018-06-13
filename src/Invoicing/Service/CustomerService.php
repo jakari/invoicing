@@ -3,7 +3,9 @@
 namespace Invoicing\Service;
 
 use Invoicing\Database\Connection\Connection;
+use Invoicing\Entity\Customer\Customer;
 use Invoicing\Model\Invoice\CustomerModel;
+use Invoicing\Repository\CustomerRepository;
 
 class CustomerService
 {
@@ -12,25 +14,28 @@ class CustomerService
      */
     private $conn;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var CustomerRepository
+     */
+    private $repository;
+
+    public function __construct(CustomerRepository $repository, Connection $connection)
     {
+        $this->repository = $repository;
         $this->conn = $connection;
     }
 
     public function createCustomer(CustomerModel $model)
     {
-        $stmt = $this->conn
-            ->prepare('INSERT INTO customer(name, street_name, post_code, city, email) VALUES(:name, :street_name, :post_code, :city, :email)');
-
-        $stmt->execute([
-            ':name' => $model->getName(),
-            ':street_name' => $model->getStreetName(),
-            ':post_code' => $model->getPostCode(),
-            ':city' => $model->getCity(),
-            ':email' => $model->getEmail(),
-        ]);
-
-        $model->setId((int) $this->conn->lastInsertId('customer_id_seq'));
+        $customer = new Customer(
+            $model->getName(),
+            $model->getStreetName(),
+            $model->getPostCode(),
+            $model->getCity(),
+            $model->getEmail()
+        );
+        $this->repository->save($customer);
+        return $customer;
     }
 
     public function updateCustomer(CustomerModel $customer)
