@@ -2,86 +2,66 @@
 
 namespace Invoicing\Service;
 
-use Invoicing\Database\Connection\Connection;
+use Invoicing\Entity\Invoice\Invoice;
+use Invoicing\Entity\Invoice\InvoiceItem;
 use Invoicing\Model\Invoice\ItemModel;
+use Invoicing\Repository\InvoiceItemRepository;
 
 class ItemService
 {
     /**
-     * @var Connection
+     * @var InvoiceItemRepository
      */
-    private $connection;
+    private $repository;
 
-    public function __construct(Connection $connection)
+    public function __construct(InvoiceItemRepository $repository)
     {
-        $this->connection = $connection;
+        $this->repository = $repository;
     }
 
     /**
-     * @param integer   $invoiceId
+     * @param Invoice   $invoice
      * @param ItemModel $item
      */
-    public function addItem($invoiceId, ItemModel $item)
+    public function addItem(Invoice $invoice, ItemModel $item)
     {
-        $stmt = $this->connection
-            ->prepare('INSERT INTO
-                item(invoice, description, amount, tax, price)
-                VALUES(:invoice, :description, :amount, :tax, :price)'
-            );
+        $item = new InvoiceItem(
+            $invoice,
+            $item->getDescription(),
+            $item->getAmount(),
+            $item->getTax(),
+            $item->getPrice()
+        );
 
-        $stmt->execute([
-            ':invoice' => $invoiceId,
-            ':description' => $item->getDescription(),
-            ':amount' => $item->getAmount(),
-            ':tax' => $item->getTax(),
-            ':price' => $item->getPrice(),
-        ]);
+        $this->repository->add($item);
     }
 
-    public function updateItem(ItemModel $item)
+    public function updateItem(ItemModel $model)
     {
-        $this->connection->prepare('
-            UPDATE item SET
-                description = :description,
-                amount = :amount,
-                tax = :tax,
-                price = :price
-            WHERE id = :id')
-        ->execute([
-            ':description' => $item->getDescription(),
-            ':amount' => $item->getAmount(),
-            ':tax' => $item->getTax(),
-            ':price' => $item->getPrice(),
-            ':id' => $item->getId(),
-        ]);
+        $item = $this->repository->get($model->getId());
+        $item->updateFromModel($model);
+    }
+
+    public function flush() {
+        $this->repository->flush();
     }
 
     /**
-     * @param  integer     $invoiceId
+     * @param  Invoice     $invoice
      * @return ItemModel[]
      */
-    public function getItems($invoiceId)
+    public function getItems($invoice)
     {
-        $stmt = $this->connection->prepare('SELECT * FROM item WHERE invoice = :invoice');
-        $stmt->execute([':invoice' => $invoiceId]);
-
         return array_map(
-            function (array $item) {
-                return new ItemModel(
-                    $item['description'],
-                    $item['amount'],
-                    $item['price'],
-                    $item['tax'],
-                    $item['id']
-                );
+            function (InvoiceItem $item) {
+                return $item->createOutputModel();
             },
-            $stmt->fetchAll(\PDO::FETCH_ASSOC)
+            $this->repository->findBy(['invoice' => $invoice])
         );
     }
 
     public function removeItem(ItemModel $item)
     {
-        $this->connection->prepare('DELETE FROM item WHERE id = :id')
-            ->execute([':id' => $item->getId()]);
+        $this->repository->remove($this->repository->get($item->getId()));
     }
 }

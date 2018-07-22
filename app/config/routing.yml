@@ -3,4 +3,4 @@ invoicing_app:
     type:     annotation
 
 logout:
-    path: /logout
+    path: /api/logout

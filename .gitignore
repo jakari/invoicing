@@ -1,5 +1,4 @@
 /app/config/parameters.yml
-/build/
 /phpunit.xml
 /var/*
 !/var/cache
@@ -15,5 +14,5 @@
 /vendor/
 /web/bundles/
 /node_modules/
-/web/lib/
-/web/app/
+/src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html.twig
+/src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml

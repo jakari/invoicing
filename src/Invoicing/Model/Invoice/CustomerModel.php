@@ -9,6 +9,7 @@ class CustomerModel
 {
     /**
      * @Serialize\Type("integer")
+     * @Assert\Type("integer")
      * @var integer|null
      */
     private $id;
@@ -138,5 +139,10 @@ class CustomerModel
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function shouldCreateNewCustomer()
+    {
+        return !$this->id;
     }
 }

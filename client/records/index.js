@@ -1,0 +1,45 @@
+import {Record, List} from "immutable";
+
+export const AuthRecord = new Record({
+  isAuthenticated: null
+});
+
+export const CustomerRecord = new Record({
+  id: 0,
+  name: '',
+  streetName: '',
+  postCode: '',
+  city: '',
+  email: ''
+});
+
+export const InvoiceListRecord = new Record({
+  customer: null,
+  invoiceNumber: null,
+  referenceNumber: null,
+  created: null,
+  due: null
+});
+
+export const InvoiceItemRecord = new Record({
+  id: null,
+  description: '',
+  amount: 1,
+  price: 0,
+  tax: 24,
+  total: 0
+});
+
+export const InvoiceRecord = new Record({
+  created: '',
+  due: '',
+  customer: null,
+  invoiceNumber: 0,
+  referenceNumber: 0,
+  items: List([new InvoiceItemRecord()]),
+  total: 0
+});
+
+export const InvoiceSettingsRecord = new Record({
+
+});

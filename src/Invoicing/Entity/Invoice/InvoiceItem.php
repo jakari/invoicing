@@ -5,6 +5,7 @@ namespace Invoicing\Entity\Invoice;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Invoicing\Entity\Invoice\Invoice;
+use Invoicing\Model\Invoice\ItemModel;
 
 /**
  * @Entity(repositoryClass="Invoicing\Repository\InvoiceItemRepository")
@@ -15,7 +16,7 @@ class InvoiceItem
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @var integer
      */
@@ -57,6 +58,17 @@ class InvoiceItem
      */
     private $price;
 
+    public static function createFromModel(Invoice $invoice, ItemModel $model)
+    {
+        return new self(
+            $invoice,
+            $model->getDescription(),
+            $model->getAmount(),
+            $model->getTax(),
+            $model->getPrice()
+        );
+    }
+
     /**
      * @param Invoice $invoice
      * @param string  $description
@@ -81,10 +93,35 @@ class InvoiceItem
     }
 
     /**
+     * @return int|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return Invoice
      */
     public function getInvoice()
     {
         return $this->invoice;
+    }
+
+    public function updateFromModel(ItemModel $model) {
+        $this->description = $model->getDescription();
+        $this->amount = $model->getAmount();
+        $this->price = $model->getPrice();
+        $this->tax = $model->getTax();
+    }
+
+    public function createOutputModel(): ItemModel {
+        return new ItemModel(
+            $this->description,
+            $this->amount,
+            $this->price,
+            $this->tax,
+            $this->id
+        );
     }
 }

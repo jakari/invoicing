@@ -15,7 +15,7 @@ class Customer
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      *
      * @var integer
      */
@@ -86,5 +86,26 @@ class Customer
         $this->postCode = $postCode;
         $this->city = $city;
         $this->email = $email;
+    }
+
+    public function createOutputModel()
+    {
+        return new CustomerModel(
+            $this->name,
+            $this->streetName,
+            $this->postCode,
+            $this->city,
+            $this->email,
+            $this->id
+        );
+    }
+
+    public function updateFromModel(CustomerModel $model)
+    {
+        $this->name = $model->getName();
+        $this->streetName = $model->getStreetName();
+        $this->postCode = $model->getPostCode();
+        $this->city = $model->getCity();
+        $this->email = $model->getEmail();
     }
 }

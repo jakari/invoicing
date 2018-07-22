@@ -45,7 +45,6 @@ class InvoiceListItemModel
     private $total;
 
     /**
-     * @param integer $id
      * @param string  $customer
      * @param integer $invoiceNumber
      * @param integer $referenceNumber

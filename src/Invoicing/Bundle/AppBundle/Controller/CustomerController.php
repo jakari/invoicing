@@ -5,11 +5,13 @@ namespace Invoicing\Bundle\AppBundle\Controller;
 use Invoicing\Model\Invoice\CustomerModel;
 use Invoicing\Service\CustomerService;
 
+use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/", service="invoicing.controller.invoice")
+ * @Route("/", service="invoicing.controller.customer")
  */
 class CustomerController
 {
@@ -18,9 +20,15 @@ class CustomerController
      */
     private $service;
 
-    public function __construct(CustomerService $service)
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    public function __construct(CustomerService $service, Serializer $serializer)
     {
         $this->service = $service;
+        $this->serializer = $serializer;
     }
 
 
@@ -32,5 +40,24 @@ class CustomerController
     public function createCustomerAction(CustomerModel $customer)
     {
 
+    }
+
+    /**
+     * @Route("/api/customers/{name}", name="customer.search", defaults={"_format": "json"})
+     * @Method("GET")
+     * @param string
+     * @return Response
+     */
+    public function searchCustomersAction(string $name)
+    {
+        if ($customer = $this->service->search($name)) {
+            return new Response(
+                $this->serializer->serialize($customer, 'json'),
+                200,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        return new Response('', 404);
     }
 }

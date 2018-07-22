@@ -36,7 +36,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoices", name="invoice.create", defaults={"_format": "json"})
+     * @Route("/api/invoice", name="invoice.create", defaults={"_format": "json"})
      * @Method("POST")
      * @param  InvoiceModel $invoice
      * @return Response
@@ -102,5 +102,26 @@ class InvoiceController
         } catch (InvoiceNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
+    }
+
+    /**
+     * @Route("/api/invoice/settings", name="invoices.settings", defaults={"_format": "json"})
+     * @Method("GET")
+     * @return Response
+     */
+    public function getSettingsAction()
+    {
+        return $this->serializeResponse(
+            $this->invoiceService->getSettings()
+        );
+    }
+
+    private function serializeResponse($data)
+    {
+        return new Response(
+            $this->serializer->serialize($data, 'json'),
+            200,
+            ['Content-Type' => 'application/json']
+        );
     }
 }

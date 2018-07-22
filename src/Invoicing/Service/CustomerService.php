@@ -25,6 +25,13 @@ class CustomerService
         $this->conn = $connection;
     }
 
+    public function saveCustomer(CustomerModel $model)
+    {
+        return $model->shouldCreateNewCustomer()
+            ? $this->createCustomer($model)
+            : $this->updateCustomer($model);
+    }
+
     public function createCustomer(CustomerModel $model)
     {
         $customer = new Customer(
@@ -38,28 +45,36 @@ class CustomerService
         return $customer;
     }
 
-    public function updateCustomer(CustomerModel $customer)
+    /**
+     * @param  CustomerModel             $model
+     * @return Customer
+     * @throws CustomerNotFoundException
+     */
+    public function updateCustomer(CustomerModel $model): Customer
     {
-        $this->conn->prepare('UPDATE customer SET
-                name = :name,
-                street_name = :street_name,
-                post_code = :post_code,
-                city = :city,
-                email = :email
-            WHERE id = :id')
-            ->execute([
-            ':name' => $customer->getName(),
-            ':street_name' => $customer->getStreetName(),
-            ':post_code' => $customer->getPostCode(),
-            ':city' => $customer->getCity(),
-            ':email' => $customer->getEmail(),
-            'id' => $customer->getId(),
-        ]);
+        $customer = $this->repository->get($model->getId());
+        $customer->updateFromModel($model);
+        $this->repository->update($customer);
+
+        return $customer;
     }
 
     public function removeCustomer(CustomerModel $customer)
     {
         $this->conn->prepare('DELETE FROM customer WHERE id = :id')
             ->execute([':id' => $customer->getId()]);
+    }
+
+    /**
+     * @param  string             $name
+     * @return CustomerModel|null
+     */
+    public function search(string $name)
+    {
+        if ($customer = $this->repository->getFirst($name)) {
+            return $customer->createOutputModel();
+        }
+
+        return null;
     }
 }

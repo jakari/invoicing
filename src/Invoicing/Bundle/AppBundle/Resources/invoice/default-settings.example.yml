@@ -1,0 +1,23 @@
+default:
+  # Amount in days to calculate default due date
+  default_due: 14
+  # Late interest, %
+  late_interest: 10
+  # Days for complaint period
+  remarking_time: 14
+
+company:
+  marketing_name: company
+  name: Oy Company AB
+  street: Yritystie 1
+  postcode: 01234
+  city: Kaupunki
+  country: Finland
+  telephone: +358 400 123 123
+  vat: 123456
+  www: https://www.company.com
+
+bank:
+  name: Nordea
+  iban: FI12345
+  bic: NDEAFIHH

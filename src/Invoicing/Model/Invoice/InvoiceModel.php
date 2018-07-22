@@ -74,8 +74,8 @@ class InvoiceModel
         \DateTime $due,
         CustomerModel $customer,
         array $items,
-        $referenceNumber = null,
-        $invoiceNumber = null
+        $invoiceNumber = null,
+        $referenceNumber = null
     ) {
         $this->created = $created;
         $this->due = $due;

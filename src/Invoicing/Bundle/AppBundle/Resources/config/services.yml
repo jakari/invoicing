@@ -17,6 +17,17 @@ services:
         arguments: [Invoicing\Entity\Invoice\Invoice]
         factory: ["@doctrine.orm.default_entity_manager", getRepository]
 
+    invoicing.repository.invoice_item:
+        class: Invoicing\Repository\InvoiceItemRepository
+        arguments: [Invoicing\Entity\Invoice\InvoiceItem]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
+    invoicing.controller.security:
+        class: Invoicing\Bundle\AppBundle\Controller\SecurityController
+        arguments:
+            - '@invoicing.service.invoice'
+            - '@serializer'
+
     invoicing.controller.invoice:
         class: Invoicing\Bundle\AppBundle\Controller\InvoiceController
         arguments:
@@ -26,7 +37,8 @@ services:
     invoicing.controller.customer:
         class: Invoicing\Bundle\AppBundle\Controller\CustomerController
         arguments:
-            - '@invoicing.service.invoice'
+            - '@invoicing.service.customer'
+            - '@serializer'
 
     invoicing.service.invoice:
         class: Invoicing\Service\InvoiceService
@@ -36,6 +48,7 @@ services:
             - '@invoicing.service.item'
             - '@invoicing.repository.invoice'
             - '@invoicing.value.reference_counter'
+            - '%kernel.project_dir%/src/Bundle/AppBundle/Resources/invoice/default-settings.yml'
 
     invoicing.service.customer:
         class: Invoicing\Service\CustomerService
@@ -46,7 +59,7 @@ services:
     invoicing.service.item:
         class: Invoicing\Service\ItemService
         arguments:
-            - '@invoicing.database.connection'
+            - '@invoicing.repository.invoice_item'
 
     invoicing.param_converter.json_deserializer:
         class: Invoicing\Bundle\AppBundle\Request\ParamConverter\JsonDeserializerParamConverter
@@ -62,3 +75,11 @@ services:
 
     invoicing.value.reference_counter:
         class: Invoicing\Value\ReferenceCounter
+
+    invoicing.security.logout_handler:
+        class: Invoicing\Bundle\AppBundle\Security\LogoutHandler
+
+    invoicing.listener.exception_listener:
+        class: Invoicing\Bundle\AppBundle\Listener\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

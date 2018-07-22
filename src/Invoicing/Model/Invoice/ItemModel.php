@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ItemModel
 {
     /**
-     * @Serialize\ReadOnly()
      * @Serialize\Type("integer")
      *
      * @var integer|null
