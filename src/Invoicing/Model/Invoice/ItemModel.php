@@ -2,6 +2,7 @@
 
 namespace Invoicing\Model\Invoice;
 
+use Invoicing\Value\Money;
 use JMS\Serializer\Annotation as Serialize;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -34,10 +35,10 @@ class ItemModel
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Type("integer")
-     * @Serialize\Type("integer")
+     * @Assert\Type("Invoicing\Value\Money")
+     * @Serialize\Type("Invoicing\Value\Money")
      *
-     * @var integer
+     * @var Money
      */
     private $price;
 
@@ -50,15 +51,13 @@ class ItemModel
      */
     private $tax;
 
-    /**
-     * @param string       $description
-     * @param integer      $amount
-     * @param integer      $price
-     * @param integer      $tax
-     * @param integer|null $id
-     */
-    public function __construct($description, $amount, $price, $tax, $id = null)
-    {
+    public function __construct(
+        string $description,
+        int $amount,
+        Money $price,
+        int $tax,
+        int $id = null
+    ) {
         $this->description = $description;
         $this->amount = $amount;
         $this->price = $price;
@@ -77,31 +76,22 @@ class ItemModel
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return integer
-     */
-    public function getAmount()
+    public function getAmount(): int
     {
         return $this->amount;
     }
 
-    /**
-     * @return integer
-     */
-    public function getPrice()
+    public function getPrice(): Money
     {
         return $this->price;
     }
 
-    /**
-     * @return integer
-     */
-    public function getTax()
+    public function getTax(): int
     {
         return $this->tax;
     }

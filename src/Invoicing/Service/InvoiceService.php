@@ -8,9 +8,7 @@ use Invoicing\Exception\InvoiceNotFoundException;
 use Invoicing\Exception\NoReferenceException;
 use Invoicing\Model\Invoice\InvoiceListItemModel;
 use Invoicing\Model\Invoice\InvoiceModel;
-use Invoicing\Model\Invoice\ItemModel;
 use Invoicing\Repository\InvoiceRepository;
-use Invoicing\Value\InvoiceStatus;
 use Invoicing\Value\ReferenceCounter;
 use Symfony\Component\Yaml\Yaml;
 
@@ -44,7 +42,7 @@ class InvoiceService
     /**
      * @var string
      */
-    private $rootDir;
+    private $defaultSettings;
 
     public function __construct(
         Connection $conn,
@@ -52,14 +50,14 @@ class InvoiceService
         ItemService $itemService,
         InvoiceRepository $repository,
         ReferenceCounter $counter,
-        $rootDir
+        $defaultSettings
     ) {
         $this->conn = $conn;
         $this->customerService = $customerService;
         $this->itemService = $itemService;
         $this->repository = $repository;
         $this->referenceCounter = $counter;
-        $this->rootDir = $rootDir;
+        $this->defaultSettings = $defaultSettings;
     }
 
     /**
@@ -152,6 +150,8 @@ class InvoiceService
 
     public function getSettings()
     {
-        return [];
+        $settings = Yaml::parseFile($this->defaultSettings);
+
+        return $settings['default'];
     }
 }

@@ -108,4 +108,36 @@ class Customer
         $this->city = $model->getCity();
         $this->email = $model->getEmail();
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreetName(): string
+    {
+        return $this->streetName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostCode(): string
+    {
+        return $this->postCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
 }

@@ -1,6 +1,8 @@
 import {createReducer} from "utilities";
-import {List, Record} from 'immutable';
-import {CustomerRecord, InvoiceItemRecord, InvoiceRecord} from "records";
+import {Record} from 'immutable';
+import {
+  InvoiceSettingsRecord
+} from "records";
 
 const initial = new Record({
   // List of invoices
@@ -14,5 +16,5 @@ const initial = new Record({
 export default createReducer(new initial(), {
   SET_INVOICES: (state, invoices) => state.set('invoices', invoices),
   UNSET_OPEN_INVOICE: (state) => state.set('open_invoice', null),
-  SET_SETTINGS: (state, settings) => state.set('settings', settings)
+  SET_SETTINGS: (state, settings) => state.set('settings', new InvoiceSettingsRecord(settings))
 });

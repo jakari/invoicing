@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Invoicing\Entity\Invoice\Invoice;
 use Invoicing\Model\Invoice\ItemModel;
+use Invoicing\Value\Money;
 
 /**
  * @Entity(repositoryClass="Invoicing\Repository\InvoiceItemRepository")
@@ -40,21 +41,21 @@ class InvoiceItem
     /**
      * @ORM\Column(type="integer", nullable=false)
      *
-     * @var string
+     * @var integer
      */
     private $amount;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
      *
-     * @var string
+     * @var integer
      */
     private $tax;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
      *
-     * @var string
+     * @var integer
      */
     private $price;
 
@@ -69,25 +70,18 @@ class InvoiceItem
         );
     }
 
-    /**
-     * @param Invoice $invoice
-     * @param string  $description
-     * @param integer $amount
-     * @param integer $tax
-     * @param integer $price
-     */
     public function __construct(
         Invoice $invoice,
-        $description,
-        $amount,
-        $tax,
-        $price
+        string $description,
+        int $amount,
+        int $tax,
+        Money $price
     ) {
         $this->invoice = $invoice;
         $this->description = $description;
         $this->amount = $amount;
         $this->tax = $tax;
-        $this->price = $price;
+        $this->price = $price->getValue();
 
         $this->invoice->addItem($this);
     }
@@ -111,7 +105,7 @@ class InvoiceItem
     public function updateFromModel(ItemModel $model) {
         $this->description = $model->getDescription();
         $this->amount = $model->getAmount();
-        $this->price = $model->getPrice();
+        $this->price = $model->getPrice()->getValue();
         $this->tax = $model->getTax();
     }
 
@@ -119,9 +113,41 @@ class InvoiceItem
         return new ItemModel(
             $this->description,
             $this->amount,
-            $this->price,
+            $this->getPrice(),
             $this->tax,
             $this->id
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getAmount(): string
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getTax(): string
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @return Money
+     */
+    public function getPrice(): Money
+    {
+        return new Money($this->price);
     }
 }

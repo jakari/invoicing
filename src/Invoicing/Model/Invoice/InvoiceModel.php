@@ -62,27 +62,88 @@ class InvoiceModel
     private $items;
 
     /**
-     * @param \DateTime          $created
-     * @param \DateTime          $due
-     * @param CustomerModel      $customer
-     * @param ItemModel[]        $items
-     * @param integer|null       $invoiceNumber
-     * @param integer|null       $referenceNumber
+     * @Serialize\SerializedName("remarkingTime")
+     * @Serialize\Type("integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("integer")
+     * @Assert\Range(min=0, max=360)
+     * @var int
+     */
+    private $remarkingTime;
+
+    /**
+     * @Serialize\SerializedName("hesitationCostOfInterest")
+     * @Serialize\Type("integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("integer")
+     * @Assert\Range(min=0, max=100)
+     * @var int
+     */
+    private $hesitationCostOfInterest;
+
+    /**
+     * @Serialize\SerializedName("customerReference")
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     * @Assert\Length(min=1, max=255)
+     * @var string|null
+     */
+    private $customerReference;
+
+    /**
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     * @Assert\Length(min=1, max=255)
+     * @var string|null
+     */
+    private $delivery;
+
+    /**
+     * @Serialize\SerializedName("conditionsOfPayment")
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     * @Assert\Length(min=1, max=255)
+     * @var string|null
+     */
+    private $conditionsOfPayment;
+
+    /**
+     * @param \DateTime     $created
+     * @param \DateTime     $due
+     * @param CustomerModel $customer
+     * @param ItemModel[]   $items
+     * @param int           $hesitationCostOfInterest
+     * @param int           $remarkingTime
+     * @param integer|null  $invoiceNumber
+     * @param integer|null  $referenceNumber
+     * @param string|null   $customerReference
+     * @param string|null   $delivery
+     * @param string|null   $conditionsOfPayment
      */
     public function __construct(
         \DateTime $created,
         \DateTime $due,
         CustomerModel $customer,
         array $items,
+        int $hesitationCostOfInterest,
+        int $remarkingTime,
         $invoiceNumber = null,
-        $referenceNumber = null
+        $referenceNumber = null,
+        string $customerReference = null,
+        string $delivery = null,
+        string $conditionsOfPayment = null
     ) {
         $this->created = $created;
         $this->due = $due;
         $this->customer = $customer;
+        $this->items = $items;
+        $this->hesitationCostOfInterest = $hesitationCostOfInterest;
+        $this->remarkingTime = $remarkingTime;
         $this->invoiceNumber = $invoiceNumber;
         $this->referenceNumber = $referenceNumber;
-        $this->items = $items;
+        $this->customerReference = $customerReference;
+        $this->delivery = $delivery;
+        $this->conditionsOfPayment = $conditionsOfPayment;
     }
 
     /**
@@ -115,5 +176,45 @@ class InvoiceModel
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRemarkingTime(): int
+    {
+        return $this->remarkingTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHesitationCostOfInterest(): int
+    {
+        return $this->hesitationCostOfInterest;
+    }
+
+    /**
+     * @return string[null
+     */
+    public function getCustomerReference(): ?string
+    {
+        return $this->customerReference;
+    }
+
+    /**
+     * @return string[null
+     */
+    public function getDelivery(): ?string
+    {
+        return $this->delivery;
+    }
+
+    /**
+     * @return string[null
+     */
+    public function getConditionsOfPayment(): ?string
+    {
+        return $this->conditionsOfPayment;
     }
 }

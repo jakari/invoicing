@@ -7,6 +7,7 @@ use Invoicing\Entity\Invoice\Invoice;
 use Invoicing\Exception\InvoiceNotFoundException;
 use Invoicing\Exception\NoReferenceException;
 use Invoicing\Model\Invoice\InvoiceListItemModel;
+use Invoicing\Value\Money;
 
 class InvoiceRepository extends EntityRepository
 {
@@ -55,7 +56,7 @@ class InvoiceRepository extends EntityRepository
                 $invoice['reference_number'],
                 $invoice['created'],
                 $invoice['due'],
-                $invoice['total']
+                new Money($invoice['total'])
             );
         }, $stmt->fetchAll(\PDO::FETCH_ASSOC));
     }

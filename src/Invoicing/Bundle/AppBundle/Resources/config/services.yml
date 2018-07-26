@@ -1,4 +1,16 @@
+parameters:
+    invoice_settings: '%kernel.project_dir%/src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml'
+
 services:
+    serialization_money_handler:
+        class: Invoicing\Serializer\Handler\MoneyHandler
+        tags:
+            - { name: jms_serializer.subscribing_handler }
+    twig.invoice.extension:
+        class: Invoicing\Bundle\AppBundle\Twig\InvoiceExtension
+        tags:
+            - { name: twig.extension }
+
     invoicing.database.connection:
         class: Invoicing\Database\Connection\Connection
         arguments:
@@ -33,6 +45,7 @@ services:
         arguments:
             - '@invoicing.service.invoice'
             - '@serializer'
+            - '@invoicing.service.renderer'
 
     invoicing.controller.customer:
         class: Invoicing\Bundle\AppBundle\Controller\CustomerController
@@ -48,7 +61,14 @@ services:
             - '@invoicing.service.item'
             - '@invoicing.repository.invoice'
             - '@invoicing.value.reference_counter'
-            - '%kernel.project_dir%/src/Bundle/AppBundle/Resources/invoice/default-settings.yml'
+            - '%invoice_settings%'
+
+    invoicing.service.renderer:
+        class: Invoicing\Service\InvoiceRendererService
+        arguments:
+            - '@invoicing.repository.invoice'
+            - '%invoice_settings%'
+            - '@templating'
 
     invoicing.service.customer:
         class: Invoicing\Service\CustomerService

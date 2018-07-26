@@ -2,6 +2,7 @@
 
 namespace Invoicing\Model\Invoice;
 
+use Invoicing\Value\Money;
 use JMS\Serializer\Annotation as Serialize;
 
 class InvoiceListItemModel
@@ -39,8 +40,8 @@ class InvoiceListItemModel
     private $due;
 
     /**
-     * @Serialize\Type("integer")
-     * @var integer
+     * @Serialize\Type("Invoicing\Value\Money")
+     * @var Money
      */
     private $total;
 
@@ -50,7 +51,7 @@ class InvoiceListItemModel
      * @param integer $referenceNumber
      * @param string  $created
      * @param string  $due
-     * @param integer $total
+     * @param Money   $total
      */
     public function __construct(
         $customer,
@@ -58,7 +59,7 @@ class InvoiceListItemModel
         $referenceNumber,
         $created,
         $due,
-        $total
+        Money $total
     ) {
         $this->customer = $customer;
         $this->invoiceNumber = $invoiceNumber;

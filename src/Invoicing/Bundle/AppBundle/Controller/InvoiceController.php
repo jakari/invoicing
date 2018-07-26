@@ -4,6 +4,7 @@ namespace Invoicing\Bundle\AppBundle\Controller;
 
 use Invoicing\Exception\InvoiceNotFoundException;
 use Invoicing\Model\Invoice\InvoiceModel;
+use Invoicing\Service\InvoiceRendererService;
 use Invoicing\Service\InvoiceService;
 use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,12 +28,19 @@ class InvoiceController
      */
     private $serializer;
 
+    /**
+     * @var InvoiceRendererService
+     */
+    private $invoiceRendererService;
+
     public function __construct(
         InvoiceService $invoiceService,
-        Serializer $serializer
+        Serializer $serializer,
+        InvoiceRendererService $invoiceRendererService
     ) {
         $this->invoiceService = $invoiceService;
         $this->serializer = $serializer;
+        $this->invoiceRendererService = $invoiceRendererService;
     }
 
     /**
@@ -98,6 +106,24 @@ class InvoiceController
                 $this->serializer->serialize($this->invoiceService->getInvoice($invoiceId), 'json'),
                 200,
                 ['Content-Type' => 'application/json']
+            );
+        } catch (InvoiceNotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/api/invoice/{invoiceId}/print", name="invoices.printInvoice", requirements={"invoiceId": "\d+"})
+     * @Method("GET")
+     * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function printInvoiceAction($invoiceId)
+    {
+        try {
+            return new Response(
+                $this->invoiceRendererService->render($invoiceId),
+                200
             );
         } catch (InvoiceNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage());

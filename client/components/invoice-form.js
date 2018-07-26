@@ -16,9 +16,16 @@ export default class InvoiceForm extends Component {
     this.props.submit(this.state.invoice);
   }
 
-  changeInvoice = e => this.setState({
-    invoice: this.state.invoice.set(e.target.name, e.target.value)
-  });
+  changeInvoice = e => {
+    const value = typeof e.target.value === 'string' && !e.target.value
+      ? null
+      : e.target.value;
+
+    this.setState({
+      invoice: this.state.invoice.set(e.target.name, value)
+    });
+  };
+
   changeCustomer = customer =>
     this.setState({invoice: this.state.invoice.set('customer', customer)});
 
@@ -56,7 +63,12 @@ export default class InvoiceForm extends Component {
       customer,
       created,
       due,
-      items
+      items,
+      delivery,
+      remarkingTime,
+      hesitationCostOfInterest,
+      conditionsOfPayment,
+      customerReference
     } = this.state.invoice;
 
     return <form onSubmit={this.submit} autoComplete="nope">
@@ -79,6 +91,61 @@ export default class InvoiceForm extends Component {
               <label>Invoice due</label>
               <input type="date" name="due" value={due} onChange={this.changeInvoice} placeholder="due" required />
             </div>
+          </div>
+          <div className="two fields">
+            <div className="field">
+              <label>Delivery</label>
+              <input type="text"
+                     name="delivery" value={delivery || ''}
+                     onChange={this.changeInvoice}
+                     placeholder="Delivery" max="255"
+              />
+            </div>
+            <div className="required field">
+              <label>Remarking time</label>
+              <div className="ui labeled input">
+                <input type="number"
+                       name="remarkingTime"
+                       value={remarkingTime}
+                       onChange={this.changeInvoice}
+                       placeholder="Remarking time"
+                       required
+                       pattern="\d+"
+                       min="0"
+                       max="360" />
+                <div className="ui basic label">days</div>
+              </div>
+            </div>
+          </div>
+          <div className="two fields">
+            <div className="required field">
+              <label>Hesitation cost of interest</label>
+              <div className="ui right labeled input">
+                  <input type="number"
+                         name="hesitationCostOfInterest"
+                         value={hesitationCostOfInterest}
+                         onChange={this.changeInvoice}
+                         placeholder="Hesitation cost of interest"
+                         required
+                         pattern="\d+"
+                         min="0"
+                         max="100" />
+                <div className="ui basic label">%</div>
+              </div>
+            </div>
+            <div className="field">
+              <label>Conditions of payment</label>
+              <input type="text"
+                     name="conditionsOfPayment"
+                     value={conditionsOfPayment || ''}
+                     onChange={this.changeInvoice}
+                     placeholder="Conditions of payment"
+                     max="255" />
+            </div>
+          </div>
+          <div className="field">
+            <label>Customer reference</label>
+            <input type="text" name="customerReference" value={customerReference || ''} onChange={this.changeInvoice} placeholder="Customer reference" />
           </div>
         </div>
       </div>

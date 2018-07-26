@@ -3,14 +3,13 @@ import React from 'react';
 import {Component} from 'react';
 import {connect} from 'react-redux';
 import InvoiceForm from '../components/invoice-form'
-import {InvoiceRecord} from "../records";
-import {createInvoice} from "actions/invoices";
+import {createInvoice, getEmptyInvoice} from "actions/invoices";
 
 class CreateInvoice extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {invoice: new InvoiceRecord()};
+    this.state = {invoice: this.props.getEmptyInvoice()};
   }
 
   saveInvoice = invoice => {
@@ -25,4 +24,4 @@ class CreateInvoice extends Component {
   }
 }
 
-export default connect(null, {createInvoice})(CreateInvoice);
+export default connect(null, {createInvoice, getEmptyInvoice})(CreateInvoice);

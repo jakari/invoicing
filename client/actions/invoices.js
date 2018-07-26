@@ -3,6 +3,7 @@ import {jsonFetch as jf, rawFetch as rf} from "utilities";
 import {calculateItemTotal, calculateTotal} from "../utilities/invoice";
 import {CustomerRecord, InvoiceItemRecord, InvoiceRecord} from "../records";
 import {List} from "immutable";
+import {dateToString} from 'utilities/date';
 
 export function listInvoices() {
   return async dispatch => dispatch({
@@ -45,6 +46,24 @@ export function createInvoice(invoice) {
     return rf(dispatch, `/api/invoice`, {
       method: 'POST',
       body: JSON.stringify(invoice)
+    });
+  }
+}
+
+export function getEmptyInvoice() {
+  return function (dispatch, getState) {
+    const settings = getState().invoices.settings;
+
+    const now = new Date();
+    const due = new Date();
+    due.setDate(due.getDate()+settings.default_due);
+
+    return new InvoiceRecord({
+      remarkingTime: settings.remarking_time,
+      hesitationCostOfInterest: settings.late_interest,
+      created: dateToString(now),
+      due: dateToString(due),
+
     });
   }
 }

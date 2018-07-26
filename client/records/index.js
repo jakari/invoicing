@@ -37,9 +37,16 @@ export const InvoiceRecord = new Record({
   invoiceNumber: 0,
   referenceNumber: 0,
   items: List([new InvoiceItemRecord()]),
-  total: 0
+  total: 0,
+  remarkingTime: 0,
+  hesitationCostOfInterest: 0,
+  customerReference: null,
+  delivery: null,
+  conditionsOfPayment: null
 });
 
 export const InvoiceSettingsRecord = new Record({
-
+  default_due: 0,
+  late_interest: 0,
+  remarking_time: 0
 });
