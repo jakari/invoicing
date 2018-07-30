@@ -131,6 +131,25 @@ class InvoiceController
     }
 
     /**
+     * @Route("/api/invoice/{invoiceId}/print_pdf", name="invoices.printInvoicePdf", requirements={"invoiceId": "\d+"})
+     * @Method("GET")
+     * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function printInvoicePdfAction($invoiceId)
+    {
+        try {
+            return new Response(
+                $this->invoiceRendererService->renderPdf($invoiceId),
+                200,
+                ['Content-Type' => 'application/pdf']
+            );
+        } catch (InvoiceNotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+    }
+
+    /**
      * @Route("/api/invoice/settings", name="invoices.settings", defaults={"_format": "json"})
      * @Method("GET")
      * @return Response

@@ -68,6 +68,7 @@ services:
         arguments:
             - '@invoicing.repository.invoice'
             - '%invoice_settings%'
+            - '%kernel.project_dir%'
             - '@templating'
 
     invoicing.service.customer:
