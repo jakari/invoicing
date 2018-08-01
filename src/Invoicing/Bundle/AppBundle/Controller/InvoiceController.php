@@ -51,8 +51,10 @@ class InvoiceController
      */
     public function createInvoiceAction(InvoiceModel $invoice)
     {
-        $this->invoiceService->createInvoice($invoice);
-        return new Response(null, 200);
+        return new Response(
+            $this->invoiceService->createInvoice($invoice),
+            200
+        );
     }
 
     /**

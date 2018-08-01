@@ -3,16 +3,18 @@ import {InvoiceItemRecord} from "../records";
 import {recalcInvoice, recalcItem} from "../utilities/invoice";
 import {Button} from 'semantic-ui-react';
 import SelectCustomer from '../containers/select-customer';
+import Loader from './loader';
 
 export default class InvoiceForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {invoice: props.invoice};
+    this.state = {invoice: props.invoice, loading: false};
   }
 
   submit = e => {
     e.preventDefault();
+    this.setState({loading: true});
     this.props.submit(this.state.invoice);
   }
 
@@ -58,6 +60,12 @@ export default class InvoiceForm extends Component {
 
   areItemsEmpty = () => this.state.invoice.items.size === 0;
 
+  cancel = () => {
+    if (confirm('Are you sure you want to cancel?')) {
+      this.props.cancel();
+    }
+  };
+
   render() {
     const {
       customer,
@@ -70,6 +78,10 @@ export default class InvoiceForm extends Component {
       conditionsOfPayment,
       customerReference
     } = this.state.invoice;
+
+    if (this.state.loading) {
+      return <Loader />;
+    }
 
     return <form onSubmit={this.submit} autoComplete="nope">
       <div className="ui form stackable grid">
@@ -167,7 +179,9 @@ export default class InvoiceForm extends Component {
             <td>
               <div className="ui fluid transparent action input">
                 <input name="description" required onChange={changer} value={item.description} className="ui input" type="text" />
-                <div onClick={this.removeItem(key)} className="ui mini red button">Remove</div>
+                <div onClick={this.removeItem(key)} className="ui compact mini red icon button">
+                  <i className="trash alternate icon" />
+                </div>
               </div>
             </td>
             <td className="amount">
@@ -195,6 +209,9 @@ export default class InvoiceForm extends Component {
             <button onClick={this.addItem} type="button" className="ui mini left floated button">
               Add item
             </button>
+            {this.areItemsEmpty() && <div className="ui left pointing red label">
+              At least 1 invoice item should be added to be able to create a invoice.
+            </div>}
             <h4 className="ui right floated header">Total</h4>
           </th>
           <th className="footer value">
@@ -203,15 +220,17 @@ export default class InvoiceForm extends Component {
         </tr>
         </tfoot>
       </table>
-      {this.areItemsEmpty() && <div className="ui red basic label">
-        At least 1 invoice item should be added to be able to create a invoice.
-      </div>}
       <div>
         <Button
           type="submit"
           primary
           disabled={!customer || this.areItemsEmpty()}>
           Save
+        </Button>
+        <Button
+          type="button"
+          onClick={this.cancel}>
+          Cancel
         </Button>
       </div>
     </form>;

@@ -110,8 +110,11 @@ class ViewInvoice extends Component {
 
       <div className="ui hidden divider" />
 
+      <a href={`/api/invoice/${this.state.invoice.invoiceNumber}/print_pdf`} target="_blank">
+        <Button primary>Print</Button>
+      </a>
       <Link to={`/invoice/${invoice.invoiceNumber}/edit`}>
-        <Button color="red">Edit</Button>
+        <Button>Edit</Button>
       </Link>
   </div>;
   }

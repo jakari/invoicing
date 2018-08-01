@@ -12,14 +12,17 @@ class CreateInvoice extends Component {
     this.state = {invoice: this.props.getEmptyInvoice()};
   }
 
-  saveInvoice = invoice => {
-    this.props.createInvoice(invoice);
-  };
+  saveInvoice = invoice => this.props.createInvoice(invoice)
+    .then(response => response.text())
+    .then(invoiceNumber => this.props.history.push({pathname: '/invoice/' + invoiceNumber}));
 
   render() {
     return <div>
       <h1 className="ui header">Create invoice</h1>
-      <InvoiceForm invoice={this.state.invoice} submit={this.saveInvoice} />
+      <InvoiceForm invoice={this.state.invoice}
+                   submit={this.saveInvoice}
+                   cancel={() => this.props.history.goBack()}
+      />
     </div>
   }
 }
