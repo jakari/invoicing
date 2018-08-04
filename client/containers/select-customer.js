@@ -32,17 +32,17 @@ class SelectCustoemr extends Component {
       this.timeout = setTimeout(async () => {
         try {
           customer = await this.props.searchCustomer(name);
+          this.setCustomerState(customer);
         } catch (e) {
+          this.setNewCustomer();
         } finally {
           // Timeout might have been cleared by quick blurring etc. Check that
           // async is not obsolete
           if (this.timeout) {
-            this.setState({customer, loading: false});
-            this.props.onChange(customer);
             this.timeout = null;
           }
         }
-      }, 300);
+      }, 150);
     } else {
       loading = false;
     }
@@ -62,24 +62,34 @@ class SelectCustoemr extends Component {
       e.preventDefault();
       e.target.blur();
     }
-  }
+  };
+
+  setNewCustomer = () => {
+    this.setCustomerState(new CustomerRecord({name: this.state.name}));
+  };
+
+  setCustomerState = (customer) => {
+    this.setState({customer, loading: false});
+    this.props.onChange(customer);
+  };
 
   onNameBlur = () => {
-    let customer = null;
-
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = null;
     }
 
+    let selected = false;
+
     if (!this.state.customer && this.state.name) {
-      customer = new CustomerRecord({name: this.state.name});
+      selected = true;
+      this.setNewCustomer();
     } else if (this.state.customer) {
-      customer = this.state.customer;
+      selected = true;
+      this.setCustomerState(this.state.customer);
     }
 
-    this.setState({selected: !!customer, customer, name: ''});
-    this.props.onChange(customer);
+    this.setState({selected: selected, name: ''});
   };
 
   unselectCustomer = () => {
@@ -91,7 +101,7 @@ class SelectCustoemr extends Component {
     if (!this.state.selected) return {content: 'Not selected', color: 'teal'};
     if (this.state.customer.id) return {content: 'Selected', color: 'blue'};
     else return {content: 'Creating new customer', color: 'yellow'};
-  }
+  };
 
   render() {
     return <div className="eight wide column">
@@ -101,7 +111,7 @@ class SelectCustoemr extends Component {
       </h3>
         {!this.state.selected &&
           <div>
-              <Input
+            <Input
               fluid
               size="huge"
               icon='search'
