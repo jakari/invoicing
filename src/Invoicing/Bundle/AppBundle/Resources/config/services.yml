@@ -43,6 +43,8 @@ services:
     invoicing.controller.invoice:
         class: Invoicing\Bundle\AppBundle\Controller\InvoiceController
         arguments:
+            - '@invoicing.repository.invoice'
+            - '@invoicing.service.sender'
             - '@invoicing.service.invoice'
             - '@serializer'
             - '@invoicing.service.renderer'
@@ -63,12 +65,25 @@ services:
             - '@invoicing.value.reference_counter'
             - '%invoice_settings%'
 
+    invoicing.service.sender:
+      class: Invoicing\Service\Sender\InvoiceSenderService
+      arguments: ['%use_mock_mailer%']
+      factory: ["@invoicing.service.sender.factory", create]
+
+    invoicing.service.sender.factory:
+        class: Invoicing\Service\Sender\InvoiceSenderFactory
+        arguments:
+            - '@invoicing.service.invoice'
+            - '@invoicing.service.renderer'
+            - '@mailer'
+            - '%invoice_settings%'
+
     invoicing.service.renderer:
         class: Invoicing\Service\InvoiceRendererService
         arguments:
-            - '@invoicing.repository.invoice'
             - '%invoice_settings%'
             - '%kernel.project_dir%'
+            - '%node_bin%'
             - '@templating'
 
     invoicing.service.customer:

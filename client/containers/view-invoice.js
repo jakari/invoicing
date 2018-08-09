@@ -2,7 +2,7 @@
 import React from 'react';
 import {Component} from 'react';
 import {connect} from 'react-redux';
-import {getInvoice} from "actions/invoices";
+import {getInvoice, sendInvoiceEmail} from "actions/invoices";
 import {Link} from 'react-router-dom';
 import {Button} from 'semantic-ui-react';
 import Loader from 'components/loader';
@@ -18,6 +18,8 @@ class ViewInvoice extends Component {
     const invoice = await this.props.getInvoice(this.props.match.params.invoice);
     this.setState({invoice});
   }
+
+  sendEmail = () => this.props.sendInvoiceEmail(this.state.invoice);
 
   render() {
     const {invoice} = this.state;
@@ -113,6 +115,7 @@ class ViewInvoice extends Component {
       <a href={`/api/invoice/${this.state.invoice.invoiceNumber}/print_pdf`} target="_blank">
         <Button primary>Print</Button>
       </a>
+      <Button primary onClick={this.sendEmail}>Send invoice email</Button>
       <Link to={`/invoice/${invoice.invoiceNumber}/edit`}>
         <Button>Edit</Button>
       </Link>
@@ -120,4 +123,4 @@ class ViewInvoice extends Component {
   }
 }
 
-export default connect(null, {getInvoice})(ViewInvoice);
+export default connect(null, {getInvoice, sendInvoiceEmail})(ViewInvoice);

@@ -17,6 +17,13 @@ company:
   vat: 123456
   www: https://www.company.com
 
+email:
+  from:
+    address: laskut@firma.com
+    name: Firma Oy - Laskut
+  subject: 'Firma Oy, Lasku'
+  body: 'Hei! Liitteenä laskunne.'
+
 bank:
   name: Nordea
   iban: FI12345

@@ -2,17 +2,12 @@
 
 namespace Invoicing\Service;
 
-use Invoicing\Repository\InvoiceRepository;
+use Invoicing\Entity\Invoice\Invoice;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Yaml\Yaml;
 
 class InvoiceRendererService
 {
-    /**
-     * @var InvoiceRepository
-     */
-    private $repository;
-
     /**
      * @var string
      */
@@ -24,25 +19,29 @@ class InvoiceRendererService
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $nodeBin;
+
+    /**
      * @var TwigEngine
      */
     private $twig;
 
     public function __construct(
-        InvoiceRepository $repository,
         string $settingsPath,
         string $rootDir,
+        string $nodeBin,
         TwigEngine $twig
     ) {
-        $this->repository = $repository;
         $this->settingsPath = $settingsPath;
         $this->rootDir = $rootDir;
+        $this->nodeBin = $nodeBin;
         $this->twig = $twig;
     }
 
-    public function render($invoiceId)
+    public function render(Invoice $invoice)
     {
-        $invoice = $this->repository->get($invoiceId);
         $settings = Yaml::parseFile($this->settingsPath);
 
         return $this->twig->render(
@@ -72,7 +71,11 @@ class InvoiceRendererService
             $output = tempnam(sys_get_temp_dir(), 'invoice_');
             $path = $this->rootDir . '/scripts/makepdf.js';
 
-            `node {$path} {$input} {$output}`;
+            $result = shell_exec("{$this->nodeBin} {$path} {$input} {$output} 2>&1");
+
+            if ($result !== null) {
+                throw new \ErrorException($result);
+            }
 
             return file_get_contents($output);
         } finally {

@@ -140,4 +140,12 @@ class Customer
     {
         return $this->city;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
 }

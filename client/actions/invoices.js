@@ -50,6 +50,16 @@ export function createInvoice(invoice) {
   }
 }
 
+
+export function sendInvoiceEmail(invoice) {
+  return function (dispatch) {
+    return rf(dispatch, `/api/invoice/${invoice.invoiceNumber}/send-email`, {
+      method: 'POST',
+      body: JSON.stringify(invoice)
+    });
+  }
+}
+
 export function getEmptyInvoice() {
   return function (dispatch, getState) {
     const settings = getState().invoices.settings;

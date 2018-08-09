@@ -4,6 +4,8 @@ namespace Invoicing\Bundle\AppBundle\Controller;
 
 use Invoicing\Exception\InvoiceNotFoundException;
 use Invoicing\Model\Invoice\InvoiceModel;
+use Invoicing\Repository\InvoiceRepository;
+use Invoicing\Service\Sender\InvoiceSenderService;
 use Invoicing\Service\InvoiceRendererService;
 use Invoicing\Service\InvoiceService;
 use JMS\Serializer\Serializer;
@@ -18,6 +20,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class InvoiceController
 {
+    /**
+     * @var InvoiceRepository
+     */
+    private $invoiceRepository;
+
+    /**
+     * @var InvoiceSenderService
+     */
+    private $invoiceSenderService;
+
     /**
      * @var InvoiceService
      */
@@ -34,10 +46,14 @@ class InvoiceController
     private $invoiceRendererService;
 
     public function __construct(
+        InvoiceRepository $invoiceRepository,
+        InvoiceSenderService $invoiceSenderService,
         InvoiceService $invoiceService,
         Serializer $serializer,
         InvoiceRendererService $invoiceRendererService
     ) {
+        $this->invoiceRepository = $invoiceRepository;
+        $this->invoiceSenderService = $invoiceSenderService;
         $this->invoiceService = $invoiceService;
         $this->serializer = $serializer;
         $this->invoiceRendererService = $invoiceRendererService;
@@ -123,8 +139,10 @@ class InvoiceController
     public function printInvoiceAction($invoiceId)
     {
         try {
+            $invoice = $this->invoiceRepository->get($invoiceId);
+
             return new Response(
-                $this->invoiceRendererService->render($invoiceId),
+                $this->invoiceRendererService->render($invoice),
                 200
             );
         } catch (InvoiceNotFoundException $e) {
@@ -141,11 +159,32 @@ class InvoiceController
     public function printInvoicePdfAction($invoiceId)
     {
         try {
+            $invoice = $this->invoiceRepository->get($invoiceId);
+
             return new Response(
-                $this->invoiceRendererService->renderPdf($invoiceId),
+                $this->invoiceRendererService->renderPdf($invoice),
                 200,
                 ['Content-Type' => 'application/pdf']
             );
+        } catch (InvoiceNotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/api/invoice/{invoiceId}/send-email", name="invoices.sendInvoiceEmail", requirements={"invoiceId": "\d+"})
+     * @Method("POST")
+     * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function sendInvoiceEmail($invoiceId)
+    {
+        try {
+            $invoice = $this->invoiceRepository->get($invoiceId);
+
+            $this->invoiceSenderService->send($invoice);
+
+            return new Response('',200);
         } catch (InvoiceNotFoundException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
