@@ -27,7 +27,9 @@ Symfony is built with the Standard edition structure.
 1. Download sources from Github.
 2. Create a database in PostgreSQL
 3. Run `composer install` and answer to the questions the installation script asks. This creates automatically the required configuration to run the application
-4. Run database migrations using the command `php bin/console phinx:migrations:migrate`.
+4. Run database migrations using the command `php bin/console doctrine:migrations:migrate`.
 5. Point your webserver to the `web/` folder (look at the example nginx configuration `doc/nginx.example.conf`)
-6. Initialize the frontend by running `npm install` and `gulp`
-7. Application is ready to use.
+6. Copy `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.example.yml` to `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml` and modify settings accordingly.
+7. Copy `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template-example.html` to `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html` and modify according to your needs. 
+8. Initialize the frontend by running `npm install` and `npm start`
+9. Application is ready to use.

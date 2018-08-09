@@ -4,6 +4,8 @@ import {recalcInvoice, recalcItem} from "../utilities/invoice";
 import {Button} from 'semantic-ui-react';
 import SelectCustomer from '../containers/select-customer';
 import Loader from './loader';
+import NumberInput from "./number-input";
+import Input from "./ui/input";
 
 export default class InvoiceForm extends Component {
   constructor(props) {
@@ -43,13 +45,16 @@ export default class InvoiceForm extends Component {
       this.state.invoice.items.remove(index)
     )
   });
-  changeItem = index => e => {
+  onPlainInputChangeValue = index => e => {
     const {name, value} = e.target;
 
     if (!e.target.checkValidity()) {
-      return;
+        return;
     }
 
+    this.onChangeValue(index)(name)(value);
+  };
+  onChangeValue = index => name => value => {
     const item = this.state.invoice.items.get(index).set(name, value);
     const items = this.state.invoice.items.set(index, recalcItem(name, item));
 
@@ -173,12 +178,13 @@ export default class InvoiceForm extends Component {
         </thead>
         <tbody>
         {items.map((item, key) => {
-          const changer = this.changeItem(key);
+          const valueChanger = this.onChangeValue(key);
+          const plainInputValueChanger = this.onPlainInputChangeValue(key);
 
           return <tr key={key}>
             <td>
               <div className="ui fluid transparent action input">
-                <input name="description" required onChange={changer} value={item.description} className="ui input" type="text" />
+                <input name="description" required onChange={plainInputValueChanger} value={item.description} className="ui input" type="text" />
                 <div onClick={this.removeItem(key)} className="ui compact mini red icon button">
                   <i className="trash alternate icon" />
                 </div>
@@ -186,17 +192,17 @@ export default class InvoiceForm extends Component {
             </td>
             <td className="amount">
               <div className="ui fluid transparent input">
-                <input name="amount" required onChange={changer} value={item.amount} className="ui input" type="text" pattern="\d+" />
+                <input name="amount" required onChange={plainInputValueChanger} value={item.amount} className="ui input" type="text" pattern="\d+" />
               </div>
             </td>
             <td className="price">
               <div className="ui fluid transparent input">
-                <input name="price" onChange={changer} value={item.price} className="ui input" type="text" />
+                  <NumberInput required onValueChange={valueChanger('price')} value={item.price} customInput={Input} />
               </div>
             </td>
             <td className="tax">
               <div className="ui fluid transparent input">
-                <input name="tax" required onChange={changer} value={item.tax} className="ui input" type="text" pattern="\d+" />
+                <input name="tax" required onChange={plainInputValueChanger} value={item.tax} className="ui input" type="text" pattern="\d+" />
               </div>
             </td>
             <td className="total">{item.total.toFixed(2)}</td>
