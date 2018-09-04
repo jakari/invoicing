@@ -6,6 +6,7 @@ import {getInvoice, sendInvoiceEmail} from "actions/invoices";
 import {Link} from 'react-router-dom';
 import {Button} from 'semantic-ui-react';
 import Loader from 'components/loader';
+import {FormattedMessage} from "react-intl";
 
 class ViewInvoice extends Component {
   constructor(props) {
@@ -29,21 +30,27 @@ class ViewInvoice extends Component {
     }
 
     return <div>
-      <h1 className="ui header">Invoice { invoice.invoiceNumber }</h1>
+      <h1 className="ui header">
+        <FormattedMessage id="invoice.view.header" values={{invoiceNumber: invoice.invoiceNumber}} />
+      </h1>
       <div className="ui stackable grid">
         <div className="eight wide column">
-          <h4 className="ui horizontal divider header">
-            <i className="bar chart icon" />
-            Customer information
-          </h4>
+          <FormattedMessage id="invoice.customer_information">
+            {(txt) => (
+              <h4 className="ui horizontal divider header">
+                <i className="address book icon" />
+                {txt}
+              </h4>
+            )}
+          </FormattedMessage>
           <table className="ui definition table">
             <tbody>
             <tr>
-              <td>Name</td>
+              <td><FormattedMessage id="customer.name" /></td>
               <td>{ invoice.customer.name }</td>
             </tr>
             <tr>
-              <td>Customer address</td>
+              <td><FormattedMessage id="customer.address" /></td>
               <td>
                 { invoice.customer.streetName }<br />
                 { invoice.customer.postCode }<br />
@@ -55,27 +62,55 @@ class ViewInvoice extends Component {
           </table>
         </div>
         <div className="eight wide column">
-          <h4 className="ui horizontal divider header">
-            <i className="bar chart icon" />
-            Invoice information
-          </h4>
+          <FormattedMessage id="invoice.information">
+            {(txt) => (
+              <h4 className="ui horizontal divider header">
+                <i className="address book icon" />
+                {txt}
+              </h4>
+            )}
+          </FormattedMessage>
           <table className="ui definition table">
             <tbody>
             <tr>
-              <td>Invoice number</td>
+              <td><FormattedMessage id="invoice.invoice_number" /></td>
               <td>{ invoice.invoiceNumber }</td>
             </tr>
             <tr>
-              <td>Reference number</td>
+              <td><FormattedMessage id="invoice.reference_number" /></td>
               <td>{ invoice.referenceNumber }</td>
             </tr>
             <tr>
-              <td>Invoice date</td>
+              <td><FormattedMessage id="invoice.created" /></td>
               <td>{ invoice.created }</td>
             </tr>
             <tr>
-              <td>Invoice due</td>
+              <td><FormattedMessage id="invoice.due" /></td>
               <td>{ invoice.due }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="invoice.delivery" /></td>
+              <td>{ invoice.delivery }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="invoice.remarking_time" /></td>
+              <td>
+                { invoice.remarkingTime }
+                &nbsp;
+                <FormattedMessage id="invoice.remarking_time_days_suffix" />
+              </td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="invoice.hesitation_cost" /></td>
+              <td>{ invoice.hesitationCostOfInterest }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="invoice.conditions_of_payment" /></td>
+              <td>{ invoice.conditionsOfPayment }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="invoice.customer_reference" /></td>
+              <td>{ invoice.customerReference }</td>
             </tr>
             </tbody>
           </table>
@@ -84,11 +119,11 @@ class ViewInvoice extends Component {
       <table className="ui celled invoice items table">
         <thead>
         <tr>
-          <th>Item name</th>
-          <th>Amount</th>
-          <th>Price</th>
-          <th>Tax %</th>
-          <th>Total</th>
+          <FormattedMessage id="invoice.items.header.name" tagName="th" />
+          <FormattedMessage id="invoice.items.header.amount" tagName="th" />
+          <FormattedMessage id="invoice.items.header.price" tagName="th" />
+          <FormattedMessage id="invoice.items.header.tax" tagName="th" />
+          <FormattedMessage id="invoice.total" tagName="th" />
         </tr>
         </thead>
         <tbody>
@@ -103,7 +138,9 @@ class ViewInvoice extends Component {
         <tfoot>
         <tr>
           <th colSpan="4" className="footer header">
-            <h4 className="ui right floated header">Total</h4>
+            <h4 className="ui right floated header">
+              <FormattedMessage id="invoice.total" />
+            </h4>
           </th>
           <th className="footer value">{ invoice.total }</th>
         </tr>
@@ -113,11 +150,15 @@ class ViewInvoice extends Component {
       <div className="ui hidden divider" />
 
       <a href={`/api/invoice/${this.state.invoice.invoiceNumber}/print_pdf`} target="_blank">
-        <Button primary>Print</Button>
+        <Button primary>
+          <FormattedMessage id="invoice.print" />
+        </Button>
       </a>
-      <Button primary onClick={this.sendEmail}>Send invoice email</Button>
+      <Button primary onClick={this.sendEmail}>
+        <FormattedMessage id="invoice.send_email" />
+      </Button>
       <Link to={`/invoice/${invoice.invoiceNumber}/edit`}>
-        <Button>Edit</Button>
+        <Button><FormattedMessage id="invoice.edit" /></Button>
       </Link>
   </div>;
   }

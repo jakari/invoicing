@@ -4,13 +4,16 @@ import React, {Component} from 'react';
 import { Input, Button } from 'semantic-ui-react';
 import {searchCustomer} from "../utilities/customer";
 import {CustomerRecord} from "../records";
+import {FormattedMessage, injectIntl} from "react-intl";
 
 
-class SelectCustoemr extends Component {
+class SelectCustomer extends Component {
   timeout = null;
+  t = null;
 
   constructor(props) {
     super(props);
+    this.t = this.props.intl.formatMessage;
 
     this.state = {
       customer: props.customer,
@@ -98,40 +101,46 @@ class SelectCustoemr extends Component {
   };
 
   getNameLabel = () => {
-    if (!this.state.selected) return {content: 'Not selected', color: 'teal'};
-    if (this.state.customer.id) return {content: 'Selected', color: 'blue'};
-    else return {content: 'Creating new customer', color: 'yellow'};
+    if (!this.state.selected) return {content: this.t({id: 'invoice.select_customer.not_selected'}), color: 'teal'};
+    if (this.state.customer.id) return {content: this.t({id: 'invoice.select_customer.selected'}), color: 'blue'};
+    else return {content: this.t({id: 'invoice.select_customer.create_new'}), color: 'yellow'};
   };
 
   render() {
     return <div className="eight wide column">
-      <h3 className="ui horizontal divider header">
-        <i className="address book icon" />
-        Customer information
-      </h3>
-        {!this.state.selected &&
-          <div>
-            <Input
-              fluid
-              size="huge"
-              icon='search'
-              name="name-search"
-              loading={this.state.loading}
-              placeholder='Customer name'
-              value={this.state.name}
-              onChange={this.onSearch}
-              onBlur={this.onNameBlur}
-              onKeyPress={this.onNameSearchKeyPress}
-            />
-            <div className="ui hidden divider" />
-          </div>}
+      <FormattedMessage id="invoice.customer_information">
+        {(txt) => (
+          <h4 className="ui horizontal divider header">
+            <i className="address book icon" />
+            {txt}
+          </h4>
+        )}
+      </FormattedMessage>
+      {!this.state.selected &&
+        <div>
+          <Input
+            fluid
+            size="huge"
+            icon='search'
+            name="name-search"
+            loading={this.state.loading}
+            placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
+            value={this.state.name}
+            onChange={this.onSearch}
+            onBlur={this.onNameBlur}
+            onKeyPress={this.onNameSearchKeyPress}
+          />
+          <div className="ui hidden divider" />
+        </div>}
       <div>
         <div className="ui hidden divider" />
         {
           !!this.state.name &&
           !this.state.loading &&
           !this.state.customer &&
-          <h4 className="ui center aligned header">Customer not found</h4>
+          <h4 className="ui center aligned header">
+            <FormattedMessage id="invoice.select_customer.not_found" />
+          </h4>
         }
         {
           this.state.customer &&
@@ -141,12 +150,12 @@ class SelectCustoemr extends Component {
             </div>}
             {!this.state.customer.id
               ? <div className="required field">
-                  <label>Name</label>
+                  <FormattedMessage id="customer.name" tagName="label" />
                   <Input
                     name="name"
                     label={this.getNameLabel()}
                     labelPosition='right'
-                    placeholder='Customer name'
+                    placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
                     value={this.state.customer.name}
                     onChange={this.onChange}
                     required
@@ -160,33 +169,52 @@ class SelectCustoemr extends Component {
               </div>}
             <div className="ui hidden divider" />
             <div className="required field">
-              <label>Street name</label>
+              <FormattedMessage id="invoice.select_customer.street_name" tagName="label" />
               <input type="text" name="streetName"
-                     value={this.state.customer.streetName} onChange={this.onChange}
-                     placeholder="Street name" required/>
+                     value={this.state.customer.streetName}
+                     onChange={this.onChange}
+                     placeholder={this.t({id: 'invoice.select_customer.street_name'})}
+                     required
+              />
             </div>
             <div className="two fields">
               <div className="required field">
-                <label>Post code</label>
-                <input type="text" name="postCode" value={this.state.customer.postCode}
-                       onChange={this.onChange} placeholder="Postcode" required/>
+                <FormattedMessage id="invoice.select_customer.post_code" tagName="label" />
+                <input type="text"
+                       name="postCode"
+                       value={this.state.customer.postCode}
+                       onChange={this.onChange}
+                       placeholder={this.t({id: 'invoice.select_customer.post_code'})}
+                       required
+                />
               </div>
               <div className="field">
-                <label>City</label>
-                <input type="text" name="city" value={this.state.customer.city}
-                       onChange={this.onChange} placeholder="city" required/>
+                <FormattedMessage id="invoice.select_customer.city" tagName="label" />
+                <input type="text"
+                       name="city"
+                       value={this.state.customer.city}
+                       onChange={this.onChange}
+                       placeholder={this.t({id: 'invoice.select_customer.city'})}
+                       required
+                />
               </div>
             </div>
             <div className="required field">
-              <label>Customer email</label>
-              <input type="email" name="email" value={this.state.customer.email} onChange={this.onChange} placeholder="Customer email" required/>
+              <FormattedMessage id="invoice.select_customer.email" tagName="label" />
+              <input type="email"
+                     name="email"
+                     value={this.state.customer.email}
+                     onChange={this.onChange}
+                     placeholder={this.t({id: 'invoice.select_customer.email'})}
+                     required
+              />
             </div>
             {this.state.selected && <Button
               type='button'
               color="red"
               onClick={this.unselectCustomer}
             >
-              Remove selection
+              <FormattedMessage id="invoice.select_customer.remove_selection" />
             </Button>}
           </div>
         }
@@ -194,4 +222,4 @@ class SelectCustoemr extends Component {
     </div>;
   }
 }
-export default connect(null, {searchCustomer})(SelectCustoemr);
+export default injectIntl(connect(null, {searchCustomer})(SelectCustomer));

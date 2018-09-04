@@ -6,8 +6,9 @@ import SelectCustomer from '../containers/select-customer';
 import Loader from './loader';
 import NumberInput from "./number-input";
 import Input from "./ui/input";
+import {FormattedMessage, injectIntl} from "react-intl";
 
-export default class InvoiceForm extends Component {
+class InvoiceForm extends Component {
   constructor(props) {
     super(props);
 
@@ -84,6 +85,8 @@ export default class InvoiceForm extends Component {
       customerReference
     } = this.state.invoice;
 
+    const {formatMessage} = this.props.intl;
+
     if (this.state.loading) {
       return <Loader />;
     }
@@ -95,54 +98,75 @@ export default class InvoiceForm extends Component {
           onChange={this.changeCustomer}
         />
         <div className="ui eight wide column">
-          <h3 className="ui horizontal divider header">
-            <i className="bar chart icon" />
-            Invoice information
-          </h3>
+          <FormattedMessage id="invoice.information">
+            {(txt) => (
+              <h4 className="ui horizontal divider header">
+                <i className="address book icon" />
+                {txt}
+              </h4>
+            )}
+          </FormattedMessage>
           <div className="two fields">
             <div className="required field">
-              <label>Invoice date</label>
-              <input type="date" name="created" value={created} onChange={this.changeInvoice} placeholder="created" required />
+              <FormattedMessage id="invoice.created" tagName="label" />
+              <input
+                type="date"
+                name="created"
+                value={created}
+                onChange={this.changeInvoice}
+                required
+              />
             </div>
             <div className="required field">
-              <label>Invoice due</label>
-              <input type="date" name="due" value={due} onChange={this.changeInvoice} placeholder="due" required />
+              <FormattedMessage id="invoice.due" tagName="label" />
+              <input
+                type="date"
+                name="due"
+                value={due}
+                onChange={this.changeInvoice}
+                required
+              />
             </div>
           </div>
           <div className="two fields">
             <div className="field">
-              <label>Delivery</label>
+              <FormattedMessage id="invoice.delivery" tagName="label" />
               <input type="text"
                      name="delivery" value={delivery || ''}
                      onChange={this.changeInvoice}
-                     placeholder="Delivery" max="255"
+                     placeholder={formatMessage({id: 'invoice.delivery'})}
+                     max="255"
               />
             </div>
             <div className="required field">
-              <label>Remarking time</label>
-              <div className="ui labeled input">
+              <FormattedMessage id="invoice.remarking_time" tagName="label" />
+              <div className="ui right labeled input">
                 <input type="number"
                        name="remarkingTime"
                        value={remarkingTime}
                        onChange={this.changeInvoice}
-                       placeholder="Remarking time"
+                       placeholder={formatMessage({id: 'invoice.remarking_time'})}
                        required
                        pattern="\d+"
                        min="0"
                        max="360" />
-                <div className="ui basic label">days</div>
+                <FormattedMessage id="invoice.remarking_time_days_suffix">
+                  {(txt) => (
+                    <div className="ui basic label">{txt}</div>
+                  )}
+                </FormattedMessage>
               </div>
             </div>
           </div>
           <div className="two fields">
             <div className="required field">
-              <label>Hesitation cost of interest</label>
+              <FormattedMessage id="invoice.hesitation_cost" tagName="label" />
               <div className="ui right labeled input">
                   <input type="number"
                          name="hesitationCostOfInterest"
                          value={hesitationCostOfInterest}
                          onChange={this.changeInvoice}
-                         placeholder="Hesitation cost of interest"
+                         placeholder={formatMessage({id: 'invoice.hesitation_cost'})}
                          required
                          pattern="\d+"
                          min="0"
@@ -151,29 +175,34 @@ export default class InvoiceForm extends Component {
               </div>
             </div>
             <div className="field">
-              <label>Conditions of payment</label>
+              <FormattedMessage id="invoice.conditions_of_payment" tagName="label" />
               <input type="text"
                      name="conditionsOfPayment"
                      value={conditionsOfPayment || ''}
                      onChange={this.changeInvoice}
-                     placeholder="Conditions of payment"
+                     placeholder={formatMessage({id: 'invoice.conditions_of_payment'})}
                      max="255" />
             </div>
           </div>
           <div className="field">
-            <label>Customer reference</label>
-            <input type="text" name="customerReference" value={customerReference || ''} onChange={this.changeInvoice} placeholder="Customer reference" />
+            <FormattedMessage id="invoice.customer_reference" tagName="label" />
+            <input type="text"
+                   name="customerReference"
+                   value={customerReference || ''}
+                   onChange={this.changeInvoice}
+                   placeholder={formatMessage({id: 'invoice.customer_reference'})}
+            />
           </div>
         </div>
       </div>
       <table className="ui celled invoice items table">
         <thead>
         <tr>
-          <th>Item name</th>
-          <th>Amount</th>
-          <th>Price</th>
-          <th>Tax %</th>
-          <th>Total</th>
+          <FormattedMessage id="invoice.items.header.name" tagName="th" />
+          <FormattedMessage id="invoice.items.header.amount" tagName="th" />
+          <FormattedMessage id="invoice.items.header.price" tagName="th" />
+          <FormattedMessage id="invoice.items.header.tax" tagName="th" />
+          <FormattedMessage id="invoice.total" tagName="th" />
         </tr>
         </thead>
         <tbody>
@@ -184,7 +213,14 @@ export default class InvoiceForm extends Component {
           return <tr key={key}>
             <td>
               <div className="ui fluid transparent action input">
-                <input name="description" required onChange={plainInputValueChanger} value={item.description} className="ui input" type="text" />
+                <input
+                  name="description"
+                  required
+                  onChange={plainInputValueChanger}
+                  value={item.description}
+                  className="ui input"
+                  type="text"
+                />
                 <div onClick={this.removeItem(key)} className="ui compact mini red icon button">
                   <i className="trash alternate icon" />
                 </div>
@@ -213,12 +249,14 @@ export default class InvoiceForm extends Component {
         <tr>
           <th colSpan="4" className="footer header">
             <button onClick={this.addItem} type="button" className="ui mini left floated button">
-              Add item
+              <FormattedMessage id="invoice.form.add_item" />
             </button>
             {this.areItemsEmpty() && <div className="ui left pointing red label">
-              At least 1 invoice item should be added to be able to create a invoice.
+              <FormattedMessage id="invoice.form.error.at_least_one_item_required" />
             </div>}
-            <h4 className="ui right floated header">Total</h4>
+            <h4 className="ui right floated header">
+              <FormattedMessage id="invoice.total" />
+            </h4>
           </th>
           <th className="footer value">
             { this.state.invoice.total }
@@ -230,15 +268,19 @@ export default class InvoiceForm extends Component {
         <Button
           type="submit"
           primary
-          disabled={!customer || this.areItemsEmpty()}>
-          Save
+          disabled={!customer || this.areItemsEmpty()}
+        >
+          <FormattedMessage id="invoice.form.save" />
         </Button>
         <Button
           type="button"
-          onClick={this.cancel}>
-          Cancel
+          onClick={this.cancel}
+        >
+          <FormattedMessage id="invoice.form.cancel" />
         </Button>
       </div>
     </form>;
   }
 }
+
+export default injectIntl(InvoiceForm);

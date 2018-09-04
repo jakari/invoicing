@@ -2,8 +2,9 @@
 import React from 'react';
 import {Component} from 'react';
 import {connect} from 'react-redux';
-import InvoiceForm from '../components/invoice-form'
+import InvoiceForm from '../components/invoice-form';
 import {createInvoice, getEmptyInvoice} from "actions/invoices";
+import {FormattedMessage} from "react-intl";
 
 class CreateInvoice extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class CreateInvoice extends Component {
 
   render() {
     return <div>
-      <h1 className="ui header">Create invoice</h1>
+      <h1 className="ui header"><FormattedMessage id="invoice.new" /></h1>
       <InvoiceForm invoice={this.state.invoice}
                    submit={this.saveInvoice}
                    cancel={() => this.props.history.goBack()}

@@ -13,6 +13,12 @@ import {connect} from 'react-redux';
 import 'app.scss';
 import Loader from 'components/loader';
 import Nav from 'components/nav';
+import {addLocaleData} from 'react-intl';
+import fi from 'react-intl/locale-data/fi';
+import messages from 'i18n/fi'
+import {IntlProvider} from 'react-intl'
+
+addLocaleData([...fi]);
 
 const addContainer = Component => renderProps => <div className="ui container"><Component {...renderProps} /></div>;
 
@@ -24,6 +30,12 @@ class Root extends Component {
   }
 
   render() {
+    return <IntlProvider locale={'fi'} messages={messages}>
+      {this.renderApp()}
+      </IntlProvider>;
+  }
+
+  renderApp() {
     if (this.props.authenticated === null) {
       return <Loader />;
     }
@@ -33,17 +45,17 @@ class Root extends Component {
     }
 
     return <Router>
-      <div>
-        {/* Wrap Nav to pathless Route to prevent render blocking */}
-        <Route component={Nav}/>
-        <Switch>
-          <AuthRoute exact path="/invoice/:invoice/edit" component={addContainer(EditInvoice)} />
-          <AuthRoute exact path="/invoice/create" component={addContainer(CreateInvoice)} />
-          <AuthRoute exact path="/invoice/:invoice" component={addContainer(ViewInvoice)} />
-          <AuthRoute exact path="/" component={addContainer(ListInvoices)} />
-        </Switch>
-      </div>
-    </Router>;
+        <div>
+          {/* Wrap Nav to pathless Route to prevent render blocking */}
+          <Route component={Nav}/>
+          <Switch>
+            <AuthRoute exact path="/invoice/:invoice/edit" component={addContainer(EditInvoice)} />
+            <AuthRoute exact path="/invoice/create" component={addContainer(CreateInvoice)} />
+            <AuthRoute exact path="/invoice/:invoice" component={addContainer(ViewInvoice)} />
+            <AuthRoute exact path="/" component={addContainer(ListInvoices)} />
+          </Switch>
+        </div>
+      </Router>;
   }
 }
 

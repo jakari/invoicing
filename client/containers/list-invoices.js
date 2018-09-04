@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {listInvoices} from "actions/invoices";
+import {FormattedMessage} from "react-intl";
 
 class ListInvoices extends Component {
   constructor(props) {
@@ -16,15 +17,17 @@ class ListInvoices extends Component {
 
   render(){
     return <div>
-      <h1 className="ui header">Invoices</h1>
+      <h1 className="ui header">
+        <FormattedMessage id="list.header" />
+      </h1>
       <table className="ui single line table">
         <thead>
         <tr>
-          <th>Customer</th>
-          <th>Invoice number</th>
-          <th>Reference number</th>
-          <th>Created</th>
-          <th>Due</th>
+          <th><FormattedMessage id="invoice.customer" /></th>
+          <th><FormattedMessage id="invoice.invoice_number" /></th>
+          <th><FormattedMessage id="invoice.reference_number" /></th>
+          <th><FormattedMessage id="invoice.created" /></th>
+          <th><FormattedMessage id="invoice.due" /></th>
         </tr>
         </thead>
         <tbody>

@@ -3,28 +3,29 @@ import React from 'react';
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logout } from "actions/auth";
+import {FormattedMessage} from 'react-intl';
 
 function Nav({logout}) {
   return <div className="ui inverted menu">
     <div className="ui container">
       <div className="header item">
-        Invoicing
+        <FormattedMessage id="invoicing.title" />
       </div>
       <NavLink className="item"
                exact
                to="/invoice/create">
-        Create
+        <FormattedMessage id="nav.create" />
       </NavLink>
       <NavLink className="item"
                exact
                to="/">
-        List
+        <FormattedMessage id="nav.list" />
       </NavLink>
       <NavLink className="item"
                to="/"
                activeClassName=""
                onClick={logout}>
-        Logout
+        <FormattedMessage id="nav.logout" />
       </NavLink>
     </div>
   </div>;

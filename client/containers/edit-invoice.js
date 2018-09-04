@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import InvoiceForm from '../components/invoice-form';
 import {getInvoice, saveInvoice} from "actions/invoices";
 import Loader from 'components/loader';
+import {FormattedMessage} from "react-intl";
 
 class EditInvoice extends Component {
   constructor(props) {
@@ -25,14 +26,18 @@ class EditInvoice extends Component {
     this.props.history.push({pathname: '/invoice/' + this.state.invoice.invoiceNumber});
   };
 
-
   render() {
     if (!this.state.invoice || this.state.loading) {
       return <Loader />;
     }
 
     return <div>
-      <h1 className="ui header">Invoice { this.state.invoice.invoiceNumber }</h1>
+      <h1 className="ui header">
+        <FormattedMessage
+          id="invoice.view.header"
+          values={{invoiceNumber: this.state.invoice.invoiceNumber}}
+        />
+      </h1>
       <InvoiceForm invoice={this.state.invoice}
                    submit={this.save}
                    cancel={() => this.props.history.goBack()}
