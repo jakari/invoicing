@@ -152,6 +152,9 @@ class InvoiceService
     {
         $settings = Yaml::parseFile($this->defaultSettings);
 
-        return $settings['default'];
+        return [
+            'default' => $settings['default'],
+            'templates' => $settings['templates']
+        ];
     }
 }

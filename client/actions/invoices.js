@@ -73,7 +73,7 @@ export function getEmptyInvoice() {
       hesitationCostOfInterest: settings.late_interest,
       created: dateToString(now),
       due: dateToString(due),
-
+      template: settings.templates[0]
     });
   }
 }

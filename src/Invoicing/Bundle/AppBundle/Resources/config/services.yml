@@ -8,6 +8,8 @@ services:
             - { name: jms_serializer.subscribing_handler }
     twig.invoice.extension:
         class: Invoicing\Bundle\AppBundle\Twig\InvoiceExtension
+        arguments:
+            - '@file_locator'
         tags:
             - { name: twig.extension }
 

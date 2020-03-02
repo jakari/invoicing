@@ -103,11 +103,18 @@ class Invoice
     private $conditionsOfPayment;
 
     /**
+     * @ORM\Column(name="template", type="string", nullable=false)
+     * @var string
+     */
+    private $template;
+
+    /**
      * @param \DateTime   $created
      * @param \DateTime   $due
      * @param Customer    $customer
      * @param int         $hesitationCostOfInterest
      * @param int         $remarkingTime
+     * @param string      $template
      * @param string|null $customerReference
      * @param string|null $delivery
      * @param string|null $conditionsOfPayment
@@ -118,11 +125,11 @@ class Invoice
         Customer $customer,
         int $hesitationCostOfInterest,
         int $remarkingTime,
+        string $template,
         string $customerReference = null,
         string $delivery = null,
         string $conditionsOfPayment = null
-    )
-    {
+    ) {
         $this->created = $created;
         $this->due = $due;
         $this->customer = $customer;
@@ -130,6 +137,7 @@ class Invoice
         $this->items = new DoctrineCollection();
         $this->hesitationCostOfInterest = $hesitationCostOfInterest;
         $this->remarkingTime = $remarkingTime;
+        $this->template = $template;
         $this->customerReference = $customerReference;
         $this->delivery = $delivery;
         $this->conditionsOfPayment = $conditionsOfPayment;
@@ -138,14 +146,14 @@ class Invoice
     public static function createFromModel(
         Customer $customer,
         InvoiceModel $model
-    )
-    {
+    ) {
         return new self(
             $model->getCreated(),
             $model->getDue(),
             $customer,
             $model->getHesitationCostOfInterest(),
             $model->getRemarkingTime(),
+            $model->getTemplate(),
             $model->getCustomerReference(),
             $model->getDelivery(),
             $model->getConditionsOfPayment()
@@ -188,6 +196,7 @@ class Invoice
                 ->toArray(),
             $this->hesitationCostOfInterest,
             $this->remarkingTime,
+            $this->template,
             $this->invoiceNumber,
             $this->referenceNumber,
             $this->customerReference,
@@ -240,6 +249,7 @@ class Invoice
         $this->customerReference = $model->getCustomerReference();
         $this->delivery = $model->getDelivery();
         $this->conditionsOfPayment = $model->getConditionsOfPayment();
+        $this->template = $model->getTemplate();
 
         $updatedItems = ArrayCollection::create($model->getItems());
         $itemsToUpdate = $updatedItems
@@ -362,5 +372,13 @@ class Invoice
     public function getConditionsOfPayment(): ?string
     {
         return $this->conditionsOfPayment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return $this->template;
     }
 }

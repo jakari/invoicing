@@ -1,14 +1,34 @@
-  const webpack = require('webpack');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
+
+const isProduction = process.env.NODE_ENV === "production";
+const plugins = [
+  // Injects the JS files into the template HTML file
+  new HtmlWebpackPlugin({
+    template: './client/index.html',
+    inject: 'body',
+    filename: 'index.html',
+  }),
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  })
+];
+
+if (isProduction) {
+  plugins.push(
+    new CopyPlugin([
+      { from: 'client/robots.txt' },
+    ])
+  );
+}
 
 module.exports = {
   entry: {
     app: [
-      'babel-polyfill',
       './client/index.js',
     ],
   },
@@ -24,18 +44,7 @@ module.exports = {
     modules: ['node_modules', path.resolve(__dirname, 'client')],
   },
 
-  plugins: [
-    // Injects the JS files into the template HTML file
-    new HtmlWebpackPlugin({
-      template: './client/index.html',
-      inject: 'body',
-      filename: 'index.html',
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    }),
-  ],
-
+  plugins,
   devtool: 'none',
 
   devServer: {
@@ -45,6 +54,11 @@ module.exports = {
     publicPath: '/',
     proxy: {
       '/api': {
+        target: 'http://invoicing.tunk.io',
+        changeOrigin: true,
+        secure: false
+      },
+      '/bundles': {
         target: 'http://invoicing.tunk.io',
         changeOrigin: true,
         secure: false
@@ -89,6 +103,7 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]',
         },
       },
+      { test: /\.txt$/, use: 'raw-loader' },
       {
         test: /\.(png|jpe?g|gif|)$/,
         loader: 'url-loader',

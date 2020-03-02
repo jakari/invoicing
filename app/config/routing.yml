@@ -1,5 +1,6 @@
 invoicing_app:
     resource: "@InvoicingAppBundle/Controller/"
+    prefix:   /api
     type:     annotation
 
 logout:

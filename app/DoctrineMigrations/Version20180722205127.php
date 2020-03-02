@@ -23,6 +23,7 @@ class Version20180722205127 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice ADD customer_reference VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE invoice ADD delivery VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE invoice ADD conditions_of_payment VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE invoice ADD template VARCHAR(255) DEFAULT NULL');
     }
 
     /**
@@ -38,5 +39,6 @@ class Version20180722205127 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice DROP customer_reference');
         $this->addSql('ALTER TABLE invoice DROP delivery');
         $this->addSql('ALTER TABLE invoice DROP conditions_of_payment');
+        $this->addSql('ALTER TABLE invoice DROP template');
     }
 }

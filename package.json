@@ -1,23 +1,28 @@
 {
-  "name": "Invoicing",
+  "name": "invoicing",
   "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server --mode development --history-api-fallback --hot --config webpack.config.js"
+    "start": "NODE_ENV=development webpack-dev-server --mode development --history-api-fallback --hot --config webpack.config.js",
+    "build": "NODE_ENV=production webpack --mode production --config webpack.config.js"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "css-loader": "^0.28.11",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-react": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.1.1",
+    "core-js": "^2.6.11",
+    "css-loader": "^3.4.2",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
     "immutable": "^3.8.2",
-    "node-sass": "^4.9.2",
-    "puppeteer": "^1.6.0",
+    "node-sass": "^4.13.1",
+    "puppeteer": "^1.20.0",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.13.0",
     "react-hot-loader": "^4.3.3",
     "react-intl": "^2.4.0",
     "react-number-format": "^3.5.1",
@@ -26,12 +31,12 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.0.3",
-    "semantic-ui-css": "^2.3.3",
-    "semantic-ui-react": "^0.81.3",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",
-    "webpack": "^4.16.1",
+    "webpack": "^4.41.6",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.4"
+    "webpack-dev-server": "^3.10.3"
   }
 }

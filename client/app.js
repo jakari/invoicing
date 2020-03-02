@@ -2,11 +2,11 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthRoute from 'components/auth-route';
-import ListInvoices from 'containers/list-invoices'
-import EditInvoice from 'containers/edit-invoice'
-import CreateInvoice from 'containers/create-invoice'
-import Login from 'containers/login'
-import 'style.css'
+import ListInvoices from 'containers/list-invoices';
+import EditInvoice from 'containers/edit-invoice';
+import CreateInvoice from 'containers/create-invoice';
+import Login from 'containers/login';
+import 'style.css';
 import ViewInvoice from 'containers/view-invoice';
 import {getSettings} from "actions/invoices";
 import {connect} from 'react-redux';
@@ -15,8 +15,8 @@ import Loader from 'components/loader';
 import Nav from 'components/nav';
 import {addLocaleData} from 'react-intl';
 import fi from 'react-intl/locale-data/fi';
-import messages from 'i18n/fi'
-import {IntlProvider} from 'react-intl'
+import messages from 'i18n/fi';
+import {IntlProvider} from 'react-intl';
 
 addLocaleData([...fi]);
 

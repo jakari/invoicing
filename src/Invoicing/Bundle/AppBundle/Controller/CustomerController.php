@@ -33,7 +33,7 @@ class CustomerController
 
 
     /**
-     * @Route("/api/customers", name="customer.create", defaults={"_format": "json"})
+     * @Route("/customers", name="customer.create", defaults={"_format": "json"})
      * @Method("POST")
      * @param CustomerModel $model
      */
@@ -43,7 +43,7 @@ class CustomerController
     }
 
     /**
-     * @Route("/api/customers/{name}", name="customer.search", defaults={"_format": "json"})
+     * @Route("/customers/{name}", name="customer.search", defaults={"_format": "json"})
      * @Method("GET")
      * @param string
      * @return Response

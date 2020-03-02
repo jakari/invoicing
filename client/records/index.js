@@ -42,11 +42,13 @@ export const InvoiceRecord = new Record({
   hesitationCostOfInterest: 0,
   customerReference: null,
   delivery: null,
-  conditionsOfPayment: null
+  conditionsOfPayment: null,
+  template: ''
 });
 
 export const InvoiceSettingsRecord = new Record({
   default_due: 0,
   late_interest: 0,
-  remarking_time: 0
+  remarking_time: 0,
+  templates: []
 });

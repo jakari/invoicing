@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {InvoiceItemRecord} from "../records";
+import {connect} from 'react-redux';
 import {recalcInvoice, recalcItem} from "../utilities/invoice";
-import {Button} from 'semantic-ui-react';
+import {Button, Dropdown} from 'semantic-ui-react';
 import SelectCustomer from '../containers/select-customer';
 import Loader from './loader';
 import NumberInput from "./number-input";
@@ -12,7 +13,7 @@ class InvoiceForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {invoice: props.invoice, loading: false};
+    this.state = { invoice: props.invoice, loading: false};
   }
 
   submit = e => {
@@ -33,6 +34,10 @@ class InvoiceForm extends Component {
 
   changeCustomer = customer =>
     this.setState({invoice: this.state.invoice.set('customer', customer)});
+
+  onTemplateChange = (_, data) => {
+    this.setState({invoice: this.state.invoice.set("template", data.value)});
+  }
 
   addItem = () => this.setState({
     invoice: this.state.invoice.set(
@@ -82,7 +87,8 @@ class InvoiceForm extends Component {
       remarkingTime,
       hesitationCostOfInterest,
       conditionsOfPayment,
-      customerReference
+      customerReference,
+      template
     } = this.state.invoice;
 
     const {formatMessage} = this.props.intl;
@@ -91,8 +97,21 @@ class InvoiceForm extends Component {
       return <Loader />;
     }
 
+    const templates = this.props.templates
+      .map(template => ({text: template.title, value: template.name}));
+
     return <form onSubmit={this.submit} autoComplete="nope">
       <div className="ui form stackable grid">
+        <Dropdown
+          placeholder={formatMessage({id: 'invoice.select_template'})}
+          name="template"
+          fluid
+          selection
+          required
+          options={templates}
+          value={template}
+          onChange={this.onTemplateChange}
+        />
         <SelectCustomer
           customer={this.state.invoice.customer}
           onChange={this.changeCustomer}
@@ -283,4 +302,8 @@ class InvoiceForm extends Component {
   }
 }
 
-export default injectIntl(InvoiceForm);
+export default connect(
+  state => ({
+    templates: state.invoices.templates
+  })
+)(injectIntl(InvoiceForm));

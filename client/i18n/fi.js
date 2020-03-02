@@ -48,4 +48,5 @@ export default {
   'invoice.select_customer.city': 'Kaupunki',
   'invoice.select_customer.email': 'Asiakkaan sähköposti',
   'invoice.select_customer.remove_selection': 'Poista valinta',
+  'invoice.select_template': 'Valitse laskupohja',
 }

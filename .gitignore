@@ -14,5 +14,7 @@
 /vendor/
 /web/bundles/
 /node_modules/
-/src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html.twig
+/src/Invoicing/Bundle/AppBundle/Resources/views/invoice/*
+!/src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template-example.html.twig
 /src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml
+/build/*

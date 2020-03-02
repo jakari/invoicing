@@ -149,7 +149,7 @@ class ViewInvoice extends Component {
 
       <div className="ui hidden divider" />
 
-      <a href={`/api/invoice/${this.state.invoice.invoiceNumber}/print_pdf`} target="_blank">
+      <a href={`/api/invoice/lasku-${this.state.invoice.invoiceNumber}.pdf`} target="_blank">
         <Button primary>
           <FormattedMessage id="invoice.print" />
         </Button>

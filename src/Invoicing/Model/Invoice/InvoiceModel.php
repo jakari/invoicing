@@ -108,12 +108,23 @@ class InvoiceModel
     private $conditionsOfPayment;
 
     /**
+     * @Serialize\SerializedName("template")
+     * @Assert\NotBlank()
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     * @Assert\Length(min=1, max=255)
+     * @var string
+     */
+    private $template;
+
+    /**
      * @param \DateTime     $created
      * @param \DateTime     $due
      * @param CustomerModel $customer
      * @param ItemModel[]   $items
      * @param int           $hesitationCostOfInterest
      * @param int           $remarkingTime
+     * @param string        $template
      * @param integer|null  $invoiceNumber
      * @param integer|null  $referenceNumber
      * @param string|null   $customerReference
@@ -127,6 +138,7 @@ class InvoiceModel
         array $items,
         int $hesitationCostOfInterest,
         int $remarkingTime,
+        string $template,
         $invoiceNumber = null,
         $referenceNumber = null,
         string $customerReference = null,
@@ -139,6 +151,7 @@ class InvoiceModel
         $this->items = $items;
         $this->hesitationCostOfInterest = $hesitationCostOfInterest;
         $this->remarkingTime = $remarkingTime;
+        $this->template = $template;
         $this->invoiceNumber = $invoiceNumber;
         $this->referenceNumber = $referenceNumber;
         $this->customerReference = $customerReference;
@@ -216,5 +229,13 @@ class InvoiceModel
     public function getConditionsOfPayment(): ?string
     {
         return $this->conditionsOfPayment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return $this->template;
     }
 }

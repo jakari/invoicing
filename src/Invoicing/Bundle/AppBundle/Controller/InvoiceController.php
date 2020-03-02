@@ -60,7 +60,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice", name="invoice.create", defaults={"_format": "json"})
+     * @Route("/invoice", name="invoice.create", defaults={"_format": "json"})
      * @Method("POST")
      * @param  InvoiceModel $invoice
      * @return Response
@@ -74,7 +74,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoices", name="invoices.get", defaults={"_format": "json"})
+     * @Route("/invoices", name="invoices.get", defaults={"_format": "json"})
      * @Method("GET")
      * @return Response
      */
@@ -88,7 +88,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}", name="invoices.edit", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}", name="invoices.edit", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
      * @Method("PATCH")
      * @return Response
      */
@@ -100,7 +100,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}", name="invoices.delete", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}", name="invoices.delete", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
      * @Method("DELETE")
      * @return Response
      */
@@ -112,7 +112,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}", name="invoices.getInvoice", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}", name="invoices.getInvoice", defaults={"_format": "json"}, requirements={"invoiceId": "\d+"})
      * @Method("GET")
      * @throws NotFoundHttpException
      * @return Response
@@ -131,7 +131,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}/print", name="invoices.printInvoice", requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}/print", name="invoices.printInvoice", requirements={"invoiceId": "\d+"})
      * @Method("GET")
      * @throws NotFoundHttpException
      * @return Response
@@ -151,7 +151,27 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}/print_pdf", name="invoices.printInvoicePdf", requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}/print_html", name="invoices.printInvoiceHtml", requirements={"invoiceId": "\d+"})
+     * @Method("GET")
+     * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function printInvoiceHtmlAction($invoiceId)
+    {
+        try {
+            $invoice = $this->invoiceRepository->get($invoiceId);
+
+            return new Response(
+                $this->invoiceRendererService->render($invoice),
+                200
+            );
+        } catch (InvoiceNotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * @Route("/invoice/lasku-{invoiceId}.pdf", name="invoices.printInvoicePdf", requirements={"invoiceId": "\d+"})
      * @Method("GET")
      * @throws NotFoundHttpException
      * @return Response
@@ -172,7 +192,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/{invoiceId}/send-email", name="invoices.sendInvoiceEmail", requirements={"invoiceId": "\d+"})
+     * @Route("/invoice/{invoiceId}/send-email", name="invoices.sendInvoiceEmail", requirements={"invoiceId": "\d+"})
      * @Method("POST")
      * @throws NotFoundHttpException
      * @return Response
@@ -191,7 +211,7 @@ class InvoiceController
     }
 
     /**
-     * @Route("/api/invoice/settings", name="invoices.settings", defaults={"_format": "json"})
+     * @Route("/invoice/settings", name="invoices.settings", defaults={"_format": "json"})
      * @Method("GET")
      * @return Response
      */

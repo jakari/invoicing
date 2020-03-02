@@ -45,7 +45,7 @@ class InvoiceRendererService
         $settings = Yaml::parseFile($this->settingsPath);
 
         return $this->twig->render(
-            '@InvoicingApp/invoice/invoice-template.html.twig',
+            "@InvoicingApp/invoice/{$invoice->getTemplate()}.twig",
             [
                 'company' => $settings['company'],
                 'bank' => $settings['bank'],

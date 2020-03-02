@@ -32,7 +32,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/api/login", name="login")
+     * @Route("/login", name="login")
      */
     public function loginAction()
     {
