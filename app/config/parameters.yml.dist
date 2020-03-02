@@ -20,3 +20,5 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    node_bin:           /path/to/node
+    server_name:       server-name
