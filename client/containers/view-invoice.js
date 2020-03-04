@@ -4,7 +4,7 @@ import {Component} from 'react';
 import {connect} from 'react-redux';
 import {getInvoice, sendInvoiceEmail} from "actions/invoices";
 import {Link} from 'react-router-dom';
-import {Button} from 'semantic-ui-react';
+import {Button, Message} from 'semantic-ui-react';
 import Loader from 'components/loader';
 import {FormattedMessage} from "react-intl";
 
@@ -23,6 +23,7 @@ class ViewInvoice extends Component {
   sendEmail = () => this.props.sendInvoiceEmail(this.state.invoice);
 
   render() {
+    const {templates} = this.props;
     const {invoice} = this.state;
 
     if (!invoice) {
@@ -35,6 +36,15 @@ class ViewInvoice extends Component {
       </h1>
       <div className="ui stackable grid">
         <div className="eight wide column">
+          <FormattedMessage id="invoice.template">
+            {(txt) => (
+              <h4 className="ui horizontal divider header">
+                <i className="address book icon" />
+                {txt}
+              </h4>
+            )}
+          </FormattedMessage>
+          <Message visible>{templates.find(template => invoice.template === template.name).title}</Message>
           <FormattedMessage id="invoice.customer_information">
             {(txt) => (
               <h4 className="ui horizontal divider header">
@@ -164,4 +174,6 @@ class ViewInvoice extends Component {
   }
 }
 
-export default connect(null, {getInvoice, sendInvoiceEmail})(ViewInvoice);
+export default connect(state => ({
+  templates: state.invoices.templates
+}), {getInvoice, sendInvoiceEmail})(ViewInvoice);

@@ -49,4 +49,5 @@ export default {
   'invoice.select_customer.email': 'Customer email',
   'invoice.select_customer.remove_selection': 'Remove selection',
   'invoice.select_template': 'Select invoice template',
+  'invoice.template': 'Invoice template'
 }

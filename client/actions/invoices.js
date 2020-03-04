@@ -62,7 +62,7 @@ export function sendInvoiceEmail(invoice) {
 
 export function getEmptyInvoice() {
   return function (dispatch, getState) {
-    const settings = getState().invoices.settings;
+    const {settings, templates} = getState().invoices;
 
     const now = new Date();
     const due = new Date();
@@ -73,7 +73,7 @@ export function getEmptyInvoice() {
       interestOnArrears: settings.late_interest,
       created: dateToString(now),
       due: dateToString(due),
-      template: settings.templates[0]
+      template: templates[0].name
     });
   }
 }

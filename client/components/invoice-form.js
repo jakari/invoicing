@@ -102,16 +102,26 @@ class InvoiceForm extends Component {
 
     return <form onSubmit={this.submit} autoComplete="nope">
       <div className="ui form stackable grid">
-        <Dropdown
-          placeholder={formatMessage({id: 'invoice.select_template'})}
-          name="template"
-          fluid
-          selection
-          required
-          options={templates}
-          value={template}
-          onChange={this.onTemplateChange}
-        />
+        <div className="ui sixteen wide column">
+          <FormattedMessage id="invoice.template">
+            {(txt) => (
+              <h4 className="ui horizontal divider header">
+                <i className="address book icon" />
+                {txt}
+              </h4>
+            )}
+          </FormattedMessage>
+          <Dropdown
+            placeholder={formatMessage({id: 'invoice.select_template'})}
+            name="template"
+            fluid
+            selection
+            required
+            options={templates}
+            value={template}
+            onChange={this.onTemplateChange}
+          />
+        </div>
         <SelectCustomer
           customer={this.state.invoice.customer}
           onChange={this.changeCustomer}

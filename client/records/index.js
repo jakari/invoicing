@@ -49,6 +49,5 @@ export const InvoiceRecord = new Record({
 export const InvoiceSettingsRecord = new Record({
   default_due: 0,
   late_interest: 0,
-  remarking_time: 0,
-  templates: []
+  remarking_time: 0
 });
