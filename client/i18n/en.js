@@ -17,7 +17,7 @@ export default {
   'invoice.delivery': 'Delivery',
   'invoice.remarking_time': 'Remarking time',
   'invoice.remarking_time_days_suffix': 'days',
-  'invoice.hesitation_cost': 'Hesitation cost of interest',
+  'invoice.interest_on_arrears': 'Interest on arrears',
   'invoice.conditions_of_payment': 'Conditions of payment',
   'invoice.customer_reference': 'Customer reference',
   'invoice.view.header': 'Invoice { invoiceNumber }',

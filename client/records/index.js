@@ -39,7 +39,7 @@ export const InvoiceRecord = new Record({
   items: List([new InvoiceItemRecord()]),
   total: 0,
   remarkingTime: 0,
-  hesitationCostOfInterest: 0,
+  interestOnArrears: 0,
   customerReference: null,
   delivery: null,
   conditionsOfPayment: null,

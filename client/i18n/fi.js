@@ -17,7 +17,7 @@ export default {
   'invoice.delivery': 'Toimitusehdot',
   'invoice.remarking_time': 'Huomautusaika',
   'invoice.remarking_time_days_suffix': 'päivää',
-  'invoice.hesitation_cost': 'Viivästyskorko',
+  'invoice.interest_on_arrears': 'Viivästyskorko',
   'invoice.conditions_of_payment': 'Maksuehdot',
   'invoice.customer_reference': 'Asiakkaan viite',
   'invoice.view.header': 'Lasku { invoiceNumber }',

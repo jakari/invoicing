@@ -85,7 +85,7 @@ class InvoiceForm extends Component {
       items,
       delivery,
       remarkingTime,
-      hesitationCostOfInterest,
+      interestOnArrears,
       conditionsOfPayment,
       customerReference,
       template
@@ -179,13 +179,13 @@ class InvoiceForm extends Component {
           </div>
           <div className="two fields">
             <div className="required field">
-              <FormattedMessage id="invoice.hesitation_cost" tagName="label" />
+              <FormattedMessage id="invoice.interest_on_arrears" tagName="label" />
               <div className="ui right labeled input">
                   <input type="number"
-                         name="hesitationCostOfInterest"
-                         value={hesitationCostOfInterest}
+                         name="interestOnArrears"
+                         value={interestOnArrears}
                          onChange={this.changeInvoice}
-                         placeholder={formatMessage({id: 'invoice.hesitation_cost'})}
+                         placeholder={formatMessage({id: 'invoice.interest_on_arrears'})}
                          required
                          pattern="\d+"
                          min="0"

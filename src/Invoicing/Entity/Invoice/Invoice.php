@@ -79,10 +79,10 @@ class Invoice
     private $remarkingTime;
 
     /**
-     * @ORM\Column(name="hesitation_cost_of_interest", type="integer", nullable=false)
+     * @ORM\Column(name="interest_on_arrears", type="integer", nullable=false)
      * @var int
      */
-    private $hesitationCostOfInterest;
+    private $interestOnArrears;
 
     /**
      * @ORM\Column(name="customer_reference", type="string", nullable=true)
@@ -112,7 +112,7 @@ class Invoice
      * @param \DateTime   $created
      * @param \DateTime   $due
      * @param Customer    $customer
-     * @param int         $hesitationCostOfInterest
+     * @param int         $interestOnArrears
      * @param int         $remarkingTime
      * @param string      $template
      * @param string|null $customerReference
@@ -123,7 +123,7 @@ class Invoice
         \DateTime $created,
         \DateTime $due,
         Customer $customer,
-        int $hesitationCostOfInterest,
+        int $interestOnArrears,
         int $remarkingTime,
         string $template,
         string $customerReference = null,
@@ -135,7 +135,7 @@ class Invoice
         $this->customer = $customer;
         $this->status = InvoiceStatus::STATUS_PENDING;
         $this->items = new DoctrineCollection();
-        $this->hesitationCostOfInterest = $hesitationCostOfInterest;
+        $this->interestOnArrears = $interestOnArrears;
         $this->remarkingTime = $remarkingTime;
         $this->template = $template;
         $this->customerReference = $customerReference;
@@ -151,7 +151,7 @@ class Invoice
             $model->getCreated(),
             $model->getDue(),
             $customer,
-            $model->getHesitationCostOfInterest(),
+            $model->getInterestOnArrears(),
             $model->getRemarkingTime(),
             $model->getTemplate(),
             $model->getCustomerReference(),
@@ -194,7 +194,7 @@ class Invoice
                     return $item->createOutputModel();
                 })
                 ->toArray(),
-            $this->hesitationCostOfInterest,
+            $this->interestOnArrears,
             $this->remarkingTime,
             $this->template,
             $this->invoiceNumber,
@@ -244,7 +244,7 @@ class Invoice
     {
         $this->created = $model->getCreated();
         $this->due = $model->getDue();
-        $this->hesitationCostOfInterest = $model->getHesitationCostOfInterest();
+        $this->interestOnArrears = $model->getInterestOnArrears();
         $this->remarkingTime = $model->getRemarkingTime();
         $this->customerReference = $model->getCustomerReference();
         $this->delivery = $model->getDelivery();
@@ -347,7 +347,7 @@ class Invoice
      */
     public function getHesitationCostOfInterest(): int
     {
-        return $this->hesitationCostOfInterest;
+        return $this->interestOnArrears;
     }
 
     /**

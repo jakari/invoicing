@@ -72,14 +72,14 @@ class InvoiceModel
     private $remarkingTime;
 
     /**
-     * @Serialize\SerializedName("hesitationCostOfInterest")
+     * @Serialize\SerializedName("interestOnArrears")
      * @Serialize\Type("integer")
      * @Assert\NotBlank()
      * @Assert\Type("integer")
      * @Assert\Range(min=0, max=100)
      * @var int
      */
-    private $hesitationCostOfInterest;
+    private $interestOnArrears;
 
     /**
      * @Serialize\SerializedName("customerReference")
@@ -122,7 +122,7 @@ class InvoiceModel
      * @param \DateTime     $due
      * @param CustomerModel $customer
      * @param ItemModel[]   $items
-     * @param int           $hesitationCostOfInterest
+     * @param int           $interestOnArrears
      * @param int           $remarkingTime
      * @param string        $template
      * @param integer|null  $invoiceNumber
@@ -136,7 +136,7 @@ class InvoiceModel
         \DateTime $due,
         CustomerModel $customer,
         array $items,
-        int $hesitationCostOfInterest,
+        int $interestOnArrears,
         int $remarkingTime,
         string $template,
         $invoiceNumber = null,
@@ -149,7 +149,7 @@ class InvoiceModel
         $this->due = $due;
         $this->customer = $customer;
         $this->items = $items;
-        $this->hesitationCostOfInterest = $hesitationCostOfInterest;
+        $this->interestOnArrears = $interestOnArrears;
         $this->remarkingTime = $remarkingTime;
         $this->template = $template;
         $this->invoiceNumber = $invoiceNumber;
@@ -202,9 +202,9 @@ class InvoiceModel
     /**
      * @return int
      */
-    public function getHesitationCostOfInterest(): int
+    public function getInterestOnArrears(): int
     {
-        return $this->hesitationCostOfInterest;
+        return $this->interestOnArrears;
     }
 
     /**

@@ -1,8 +1,8 @@
 default:
   # Amount in days to calculate default due date
   default_due: 14
-  # Late interest, %
-  late_interest: 10
+  # Late interest, numeric value in percentage
+  late_interest: 18
   # Days for complaint period
   remarking_time: 14
 

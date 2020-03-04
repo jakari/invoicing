@@ -70,7 +70,7 @@ export function getEmptyInvoice() {
 
     return new InvoiceRecord({
       remarkingTime: settings.remarking_time,
-      hesitationCostOfInterest: settings.late_interest,
+      interestOnArrears: settings.late_interest,
       created: dateToString(now),
       due: dateToString(due),
       template: settings.templates[0]

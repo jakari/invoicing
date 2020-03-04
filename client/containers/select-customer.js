@@ -188,7 +188,7 @@ class SelectCustomer extends Component {
                        required
                 />
               </div>
-              <div className="field">
+              <div className="required field">
                 <FormattedMessage id="invoice.select_customer.city" tagName="label" />
                 <input type="text"
                        name="city"

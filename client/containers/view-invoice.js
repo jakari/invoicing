@@ -101,8 +101,8 @@ class ViewInvoice extends Component {
               </td>
             </tr>
             <tr>
-              <td><FormattedMessage id="invoice.hesitation_cost" /></td>
-              <td>{ invoice.hesitationCostOfInterest }</td>
+              <td><FormattedMessage id="invoice.interest_on_arrears" /></td>
+              <td>{ invoice.interestOnArrears } %</td>
             </tr>
             <tr>
               <td><FormattedMessage id="invoice.conditions_of_payment" /></td>
