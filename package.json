@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --mode development --history-api-fallback --hot --config webpack.config.js",
-    "build": "NODE_ENV=production webpack --mode production --config webpack.config.js",
+    "heroku-postbuild": "NODE_ENV=production webpack --mode production --config webpack.config.js",
     "deploy": "shipit production deploy",
     "deploy:migrate": "shipit production deploy:migrate"
   },

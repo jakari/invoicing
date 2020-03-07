@@ -1,5 +1,4 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
 
@@ -7,6 +6,20 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    database_host: "%env(DATABASE_HOST)%"
+    database_port: "%env(DATABASE_PORT)%"
+    database_name: "%env(DATABASE_NAME)%"
+    database_user: "%env(DATABASE_USER)%"
+    database_password: "%env(DATABASE_PASSWORD)%"
+    mailer_transport: "%env(MAILER_TRANSPORT)%"
+    mailer_host: "%env(MAILER_HOST)%"
+    mailer_user: "%env(MAILER_USER)%"
+    mailer_password: "%env(MAILER_PASSWORD)%"
+    secret: "%env(APP_SECRET)%"
+    node_bin: "%env(NODE_BIN)%"
+    use_mock_mailer: "%env(USE_MOCK_MAILER)%"
+    server_name: "%env(SERVER_NAME)%"
+
 
 framework:
     #esi:             ~
@@ -42,7 +55,7 @@ invoicing_app:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   "%database_driver%"
+        driver:   pdo_pgsql
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
