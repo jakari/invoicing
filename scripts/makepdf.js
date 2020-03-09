@@ -7,7 +7,7 @@ if (typeof process.argv.length < 4) {
 
 (async() => {
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.setViewport({width: 1588, height: 2244, deviceScaleFactor: 2});
     await page.goto('file://' + process.argv[2], {waitUntil: 'networkidle0'});
