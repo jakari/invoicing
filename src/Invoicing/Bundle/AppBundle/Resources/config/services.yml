@@ -85,7 +85,6 @@ services:
         arguments:
             - '%invoice_settings%'
             - '%kernel.project_dir%'
-            - '%node_bin%'
             - '@templating'
 
     invoicing.service.customer:

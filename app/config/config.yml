@@ -16,8 +16,7 @@ parameters:
     mailer_user: "%env(MAILER_USER)%"
     mailer_password: "%env(MAILER_PASSWORD)%"
     secret: "%env(APP_SECRET)%"
-    node_bin: "%env(NODE_BIN)%"
-    use_mock_mailer: "%env(USE_MOCK_MAILER)%"
+    use_mock_mailer: "%env(bool:USE_MOCK_MAILER)%"
     server_name: "%env(SERVER_NAME)%"
 
 
