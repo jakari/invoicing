@@ -19,10 +19,19 @@ class CustomerService
      */
     private $repository;
 
-    public function __construct(CustomerRepository $repository, Connection $connection)
-    {
+    /**
+     * @var CurrentCompanyService
+     */
+    private $currentCompanyService;
+
+    public function __construct(
+        CustomerRepository $repository,
+        Connection $connection,
+        CurrentCompanyService $currentCompanyService
+    ) {
         $this->repository = $repository;
         $this->conn = $connection;
+        $this->currentCompanyService = $currentCompanyService;
     }
 
     public function saveCustomer(CustomerModel $model)
@@ -35,6 +44,7 @@ class CustomerService
     public function createCustomer(CustomerModel $model)
     {
         $customer = new Customer(
+            $this->currentCompanyService->get(),
             $model->getName(),
             $model->getStreetName(),
             $model->getPostCode(),
@@ -71,7 +81,8 @@ class CustomerService
      */
     public function search(string $name)
     {
-        if ($customer = $this->repository->getFirst($name)) {
+        $company = $this->currentCompanyService->getId();
+        if ($customer = $this->repository->getFirst($company, $name)) {
             return $customer->createOutputModel();
         }
 

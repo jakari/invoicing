@@ -35,15 +35,17 @@ class CustomerRepository extends EntityRepository
     }
 
     /**
-     * @param $name
+     * @parmm  int    $companyId
+     * @param  string $name
      * @return Customer|null
      */
-    public function getFirst($name)
+    public function getFirst(int $companyId, string $name)
     {
         $customer = Customer::class;
-        $results = $this->_em->createQuery("SELECT c FROM {$customer} c WHERE c.name LIKE CONCAT(:name, '%') ORDER BY c.name ASC")
+        $results = $this->_em->createQuery("SELECT c FROM {$customer} c WHERE c.name LIKE CONCAT(:name, '%') AND c.company = :company ORDER BY c.name ASC")
             ->setMaxResults(1)
             ->setParameter(':name', $name)
+            ->setParameter(':company', $companyId)
             ->getResult();
 
         return !empty($results) ? $results[0] : null;

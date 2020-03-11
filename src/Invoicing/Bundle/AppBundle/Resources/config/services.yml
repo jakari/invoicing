@@ -21,6 +21,16 @@ services:
             - '%invoicing.database_password%'
             - '%invoicing.database_name%'
 
+    invoicing.repository.company:
+        class: Invoicing\Repository\CompanyRepository
+        arguments: [Invoicing\Entity\Company]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
+    invoicing.repository.parameters:
+        class: Invoicing\Repository\ParametersRepository
+        arguments: [Invoicing\Entity\Parameters]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
     invoicing.repository.customer:
         class: Invoicing\Repository\CustomerRepository
         arguments: [Invoicing\Entity\Customer\Customer]
@@ -51,6 +61,11 @@ services:
             - '@serializer'
             - '@invoicing.service.renderer'
 
+    invoicing.controller.company:
+        class: Invoicing\Bundle\AppBundle\Controller\CompanyController
+        arguments:
+            - '@invoicing.service.current_company'
+
     invoicing.controller.customer:
         class: Invoicing\Bundle\AppBundle\Controller\CustomerController
         arguments:
@@ -66,6 +81,8 @@ services:
             - '@invoicing.repository.invoice'
             - '@invoicing.value.reference_counter'
             - '%invoice_settings%'
+            - '@invoicing.service.current_company'
+            - '@invoicing.service.parameters'
 
     invoicing.service.sender:
       class: Invoicing\Service\Sender\InvoiceSenderService
@@ -87,11 +104,24 @@ services:
             - '%kernel.project_dir%'
             - '@templating'
 
+    invoicing.service.parameters:
+        class: Invoicing\Service\ParameterService
+        arguments:
+            - '@invoicing.service.current_company'
+            - '@invoicing.repository.parameters'
+
+    invoicing.service.current_company:
+        class: Invoicing\Service\CurrentCompanyService
+        arguments:
+            - '@invoicing.repository.company'
+            - '@session'
+
     invoicing.service.customer:
         class: Invoicing\Service\CustomerService
         arguments:
             - '@invoicing.repository.customer'
             - '@invoicing.database.connection'
+            - '@invoicing.service.current_company'
 
     invoicing.service.item:
         class: Invoicing\Service\ItemService

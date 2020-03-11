@@ -17,6 +17,7 @@ import {addLocaleData} from 'react-intl';
 import fi from 'react-intl/locale-data/fi';
 import messages from 'i18n/fi';
 import {IntlProvider} from 'react-intl';
+import {SelectCompany} from "./containers/select-company";
 
 addLocaleData([...fi]);
 
@@ -44,16 +45,20 @@ class Root extends Component {
       return <Login />;
     }
 
+    const routes = this.props.isCompanySelected
+      ?  <Switch>
+        <AuthRoute exact path="/invoice/:invoice/edit" component={addContainer(EditInvoice)} />
+        <AuthRoute exact path="/invoice/create" component={addContainer(CreateInvoice)} />
+        <AuthRoute exact path="/invoice/:invoice" component={addContainer(ViewInvoice)} />
+        <AuthRoute exact path="/" component={addContainer(ListInvoices)} />
+      </Switch>
+      : <SelectCompany/>;
+
     return <Router>
         <div>
           {/* Wrap Nav to pathless Route to prevent render blocking */}
           <Route component={Nav}/>
-          <Switch>
-            <AuthRoute exact path="/invoice/:invoice/edit" component={addContainer(EditInvoice)} />
-            <AuthRoute exact path="/invoice/create" component={addContainer(CreateInvoice)} />
-            <AuthRoute exact path="/invoice/:invoice" component={addContainer(ViewInvoice)} />
-            <AuthRoute exact path="/" component={addContainer(ListInvoices)} />
-          </Switch>
+          {routes}
         </div>
       </Router>;
   }
@@ -62,7 +67,8 @@ class Root extends Component {
 export default connect(
   state => ({
     authenticated: state.auth.isAuthenticated,
-    loading: state.loader
+    loading: state.loader,
+    isCompanySelected: state.invoices.selectedCompany !== undefined
   }),
   {getSettings}
 )(Root)

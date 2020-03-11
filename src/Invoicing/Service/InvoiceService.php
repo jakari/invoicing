@@ -3,9 +3,12 @@
 namespace Invoicing\Service;
 
 use Invoicing\Database\Connection\Connection;
+use Invoicing\Entity\Company;
 use Invoicing\Entity\Invoice\Invoice;
+use Invoicing\Exception\CompanyNotFoundException;
+use Invoicing\Exception\CompanyNotSelectedException;
 use Invoicing\Exception\InvoiceNotFoundException;
-use Invoicing\Exception\NoReferenceException;
+use Invoicing\Exception\NoValueException;
 use Invoicing\Model\Invoice\InvoiceListItemModel;
 use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Repository\InvoiceRepository;
@@ -44,13 +47,22 @@ class InvoiceService
      */
     private $defaultSettings;
 
+    /**
+     * @var CurrentCompanyService
+     */
+    private $currentCompanyService;
+
+    private $parameterService;
+
     public function __construct(
         Connection $conn,
         CustomerService $customerService,
         ItemService $itemService,
         InvoiceRepository $repository,
         ReferenceCounter $counter,
-        $defaultSettings
+        $defaultSettings,
+        CurrentCompanyService $currentCompanyService,
+        ParameterService $parameterService
     ) {
         $this->conn = $conn;
         $this->customerService = $customerService;
@@ -58,6 +70,8 @@ class InvoiceService
         $this->repository = $repository;
         $this->referenceCounter = $counter;
         $this->defaultSettings = $defaultSettings;
+        $this->currentCompanyService = $currentCompanyService;
+        $this->parameterService = $parameterService;
     }
 
     /**
@@ -66,26 +80,31 @@ class InvoiceService
      */
     public function createInvoice(InvoiceModel $model)
     {
-        return $this->repository->transactional(function () use ($model) {
+        $company = $this->currentCompanyService->get();
+
+        return $this->repository->transactional(function () use ($model, $company) {
             $customer = $this->customerService->saveCustomer($model->getCustomer());
-            $invoice = Invoice::createFromModel($customer, $model);
-            $this->repository->create($invoice);
-            $reference = 100;
+
+            $reference = null;
+            $invoiceNumber = null;
 
             try {
-                $reference = (int) substr(
-                    $this->repository->getNextReference(),
-                    0,
-                    -1
-                );
-                $reference++;
-            } catch (NoReferenceException $e) {
+                $reference = 1 + (int) substr(
+                        $this->repository->getMaxReference($company),
+                        0,
+                        -1
+                    );
+            } catch (NoValueException $e) {
+                $reference = $this->parameterService->getInitialReferenceNumber();
+            }
+            try {
+                $invoiceNumber = $this->repository->getMaxInvoiceNumber($company) + 1;
+            } catch (NoValueException $e) {
+                $invoiceNumber = $this->parameterService->getInitialInvoiceNumber();
             }
 
-            $invoice->setReferenceNumber(
-                $reference . $this->referenceCounter->checksum($reference)
-            );
-            $this->repository->update($invoice);
+            $invoice = Invoice::createFromModel($company, $customer, $model, $invoiceNumber, $reference);
+            $this->repository->create($invoice);
 
             foreach ($model->getItems() as $item) {
                 $this->itemService->addItem($invoice, $item);
@@ -119,7 +138,7 @@ class InvoiceService
      */
     public function getInvoices()
     {
-        return $this->repository->getAll();
+        return $this->repository->getAll($this->currentCompanyService->get());
     }
 
     /**
@@ -138,7 +157,6 @@ class InvoiceService
     public function remove($invoiceId)
     {
         $invoice = $this->getInvoice($invoiceId);
-        $this->customerService->removeCustomer($invoice->getCustomer());
 
         foreach ($invoice->getItems() as $item) {
             $this->itemService->removeItem($item);
@@ -152,9 +170,25 @@ class InvoiceService
     {
         $settings = Yaml::parseFile($this->defaultSettings);
 
+        $selectedCompany = null;
+
+        try {
+            $selectedCompany = $this->currentCompanyService->get();
+        } catch (CompanyNotSelectedException $e) {}
+
         return [
             'default' => $settings['default'],
-            'templates' => $settings['templates']
+            'templates' => $settings['templates'],
+            'companies' => array_map(
+                function (Company $comapny) {
+                    return [
+                        'id' => $comapny->getId(),
+                        'name' => $comapny->getName()
+                    ];
+                },
+                $this->currentCompanyService->getCompanies()
+            ),
+            'selected_company' => $selectedCompany
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace Invoicing\Entity\Customer;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineCollection;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Invoicing\Entity\Company;
 use Invoicing\Model\Invoice\CustomerModel;
 
 /**
@@ -27,6 +28,14 @@ class Customer
      * @var string
      */
     private $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Company")
+     * @ORM\JoinColumn(name="company", nullable=false)
+     *
+     * @var Company
+     */
+    private $company;
 
     /**
      * @ORM\Column(name="street_name", type="string", nullable=false)
@@ -79,8 +88,9 @@ class Customer
      * @param string $city
      * @param string $email
      */
-    public function __construct($name, $streetName, $postCode, $city, $email)
+    public function __construct(Company $company, $name, $streetName, $postCode, $city, $email)
     {
+        $this->company = $company;
         $this->name = $name;
         $this->streetName = $streetName;
         $this->postCode = $postCode;

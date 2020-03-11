@@ -88,3 +88,10 @@ export function getSettings() {
       dispatch({type: 'SET_AUTHENTICATED'});
     });
 }
+
+export function selectCompany(company) {
+  return dispatch => {
+    dispatch({type: 'SET_SELECTED_COMPANY', company});
+    rawFetch(dispatch, `/api/select-company/${company.id}`, {method: "POST"});
+  }
+}

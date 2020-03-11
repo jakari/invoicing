@@ -25,7 +25,7 @@ class InvoiceItem
 
     /**
      * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Invoice\Invoice")
-     * @ORM\JoinColumn(name="invoice", referencedColumnName="invoice_number", nullable=false)
+     * @ORM\JoinColumn(name="invoice", nullable=false)
      *
      * @var Invoice
      */

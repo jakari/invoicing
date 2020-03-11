@@ -5,6 +5,7 @@ namespace Invoicing\Entity\Invoice;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Invoicing\DBAL\Types\InvoiceStatusType;
+use Invoicing\Entity\Company;
 use Invoicing\Entity\Customer\Customer;
 use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Model\Invoice\ItemModel;
@@ -21,15 +22,30 @@ class Invoice
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer", name="invoice_number")
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Company")
+     * @ORM\JoinColumn(name="company", nullable=false)
+     *
+     * @var Company
+     */
+    private $company;
+
+    /**
+     * @ORM\Column(name="invoice_number", type="integer", nullable=false)
      *
      * @var integer
      */
     private $invoiceNumber;
 
     /**
-     * @ORM\Column(name="reference_number", type="integer", nullable=true)
+     * @ORM\Column(name="reference_number", type="integer", nullable=false)
      *
      * @var integer
      */
@@ -108,18 +124,10 @@ class Invoice
      */
     private $template;
 
-    /**
-     * @param \DateTime   $created
-     * @param \DateTime   $due
-     * @param Customer    $customer
-     * @param int         $interestOnArrears
-     * @param int         $remarkingTime
-     * @param string      $template
-     * @param string|null $customerReference
-     * @param string|null $delivery
-     * @param string|null $conditionsOfPayment
-     */
     public function __construct(
+        Company $company,
+        int $invoiceNumber,
+        int $referenceNumber,
         \DateTime $created,
         \DateTime $due,
         Customer $customer,
@@ -130,6 +138,9 @@ class Invoice
         string $delivery = null,
         string $conditionsOfPayment = null
     ) {
+        $this->company = $company;
+        $this->invoiceNumber = $invoiceNumber;
+        $this->referenceNumber = $referenceNumber;
         $this->created = $created;
         $this->due = $due;
         $this->customer = $customer;
@@ -144,10 +155,16 @@ class Invoice
     }
 
     public static function createFromModel(
+        Company $company,
         Customer $customer,
-        InvoiceModel $model
+        InvoiceModel $model,
+        int $invoiceNumber,
+        int $referenceNumber
     ) {
         return new self(
+            $company,
+            $invoiceNumber,
+            $referenceNumber,
             $model->getCreated(),
             $model->getDue(),
             $customer,

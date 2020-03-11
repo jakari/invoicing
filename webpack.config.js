@@ -26,12 +26,12 @@ if (isProduction) {
   );
 }
 
+const entry = isProduction
+  ? ['./client/index.js']
+  : ['react-hot-loader/patch', './client/index.js'];
+
 module.exports = {
-  entry: {
-    app: [
-      './client/index.js',
-    ],
-  },
+  entry,
 
   output: {
     path: path.resolve(__dirname, 'build/'),

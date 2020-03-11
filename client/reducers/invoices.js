@@ -12,7 +12,11 @@ const initial = new Record({
   // Default settings for invoices
   settings: null,
   // List of available templates
-  templates: []
+  templates: [],
+
+  companies: [],
+
+  selectedCompany: undefined
 });
 
 export default createReducer(new initial(), {
@@ -21,4 +25,7 @@ export default createReducer(new initial(), {
   SET_SETTINGS: (state, settings) => state
     .set('settings', new InvoiceSettingsRecord(settings.default))
     .set('templates', settings.templates)
+    .set('companies', settings.companies)
+    .set('selectedCompany', settings.selected_company),
+  SET_SELECTED_COMPANY: (state, company) => state.set('selectedCompany', company)
 });
