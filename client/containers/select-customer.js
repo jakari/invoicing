@@ -118,18 +118,19 @@ class SelectCustomer extends Component {
       </FormattedMessage>
       {!this.state.selected &&
         <div>
-          <Input
-            fluid
-            size="huge"
-            icon='search'
-            name="name-search"
-            loading={this.state.loading}
-            placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
-            value={this.state.name}
-            onChange={this.onSearch}
-            onBlur={this.onNameBlur}
-            onKeyPress={this.onNameSearchKeyPress}
-          />
+          <div className="ui fluid huge icon input">
+            <input
+              name="name-search"
+              className={this.state.loading ? 'loading' : ''}
+              placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
+              value={this.state.name}
+              onChange={this.onSearch}
+              onBlur={this.onNameBlur}
+              onKeyPress={this.onNameSearchKeyPress}
+              autoComplete="nope"
+            />
+            <i className="search icon" />
+          </div>
           <div className="ui hidden divider" />
         </div>}
       <div>

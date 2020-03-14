@@ -100,7 +100,7 @@ class InvoiceForm extends Component {
     const templates = this.props.templates
       .map(template => ({text: template.title, value: template.name}));
 
-    return <form onSubmit={this.submit} autoComplete="nope">
+    return <form onSubmit={this.submit} autocomplete="nope">
       <div className="ui form stackable grid">
         <div className="ui sixteen wide column">
           <FormattedMessage id="invoice.template">

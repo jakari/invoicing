@@ -91,7 +91,7 @@ export function getSettings() {
 
 export function selectCompany(company) {
   return dispatch => {
-    dispatch({type: 'SET_SELECTED_COMPANY', company});
-    rawFetch(dispatch, `/api/select-company/${company.id}`, {method: "POST"});
+    dispatch({type: 'SET_SELECTED_COMPANY', data: company});
+    rf(dispatch, `/api/select-company/${company.id}`, {method: "POST"});
   }
 }

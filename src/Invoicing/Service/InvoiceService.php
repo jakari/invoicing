@@ -85,17 +85,17 @@ class InvoiceService
         return $this->repository->transactional(function () use ($model, $company) {
             $customer = $this->customerService->saveCustomer($model->getCustomer());
 
-            $reference = null;
+            $base = null;
             $invoiceNumber = null;
 
             try {
-                $reference = 1 + (int) substr(
+                $base = 1 + (int) substr(
                         $this->repository->getMaxReference($company),
                         0,
                         -1
                     );
             } catch (NoValueException $e) {
-                $reference = $this->parameterService->getInitialReferenceNumber();
+                $base = $this->parameterService->getInitialReferenceNumber();
             }
             try {
                 $invoiceNumber = $this->repository->getMaxInvoiceNumber($company) + 1;
@@ -103,7 +103,15 @@ class InvoiceService
                 $invoiceNumber = $this->parameterService->getInitialInvoiceNumber();
             }
 
-            $invoice = Invoice::createFromModel($company, $customer, $model, $invoiceNumber, $reference);
+            $reference = $base . $this->referenceCounter->checksum($base);
+
+            $invoice = Invoice::createFromModel(
+                $company,
+                $customer,
+                $model,
+                $invoiceNumber,
+                $reference
+            );
             $this->repository->create($invoice);
 
             foreach ($model->getItems() as $item) {
