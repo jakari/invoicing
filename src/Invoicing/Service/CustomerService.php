@@ -49,7 +49,8 @@ class CustomerService
             $model->getStreetName(),
             $model->getPostCode(),
             $model->getCity(),
-            $model->getEmail()
+            $model->getEmail(),
+            $model->getVat()
         );
         $this->repository->save($customer);
         return $customer;

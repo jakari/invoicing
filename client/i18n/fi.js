@@ -28,6 +28,8 @@ export default {
   'invoice.form.save': 'Tallenna',
   'invoice.form.cancel': 'Peruuta',
   'customer.name': 'Nimi',
+  'customer.vat': 'Y-tunnus',
+  'customer.phone': 'Puhelin',
   'customer.address': 'Osoite',
   'invoice.items.header.name': 'Selite',
   'invoice.items.header.price': 'Hinta',

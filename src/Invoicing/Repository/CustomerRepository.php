@@ -3,6 +3,8 @@
 namespace Invoicing\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Invoicing\Entity\Customer\Customer;
 use Invoicing\Exception\CustomerNotFoundException;
 
@@ -41,9 +43,15 @@ class CustomerRepository extends EntityRepository
      */
     public function getFirst(int $companyId, string $name)
     {
-        $customer = Customer::class;
-        $results = $this->_em->createQuery("SELECT c FROM {$customer} c WHERE c.name LIKE CONCAT(:name, '%') AND c.company = :company ORDER BY c.name ASC")
-            ->setMaxResults(1)
+        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm->addRootEntityFromClassMetadata(Customer::class, 'c');
+
+        $query = $this->_em->createNativeQuery(
+            "SELECT c.* FROM customer c WHERE c.name ILIKE CONCAT(:name::text, '%') AND c.company = :company ORDER BY c.name ASC LIMIT 1",
+            $rsm
+        );
+
+        $results = $query
             ->setParameter(':name', $name)
             ->setParameter(':company', $companyId)
             ->getResult();

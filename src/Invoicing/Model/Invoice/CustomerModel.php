@@ -13,7 +13,7 @@ class CustomerModel
      * @var integer|null
      */
     private $id;
-    
+
     /**
      * @Serialize\Type("string")
      * @Assert\NotBlank()
@@ -62,12 +62,30 @@ class CustomerModel
     private $email;
 
     /**
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     *
+     * @var string|null
+     */
+    private $vat;
+
+    /**
+     * @Serialize\Type("string")
+     * @Assert\Type("string")
+     *
+     * @var string|null
+     */
+    private $phone;
+
+    /**
      * @param string       $name
      * @param string       $streetName
      * @param string       $postCode
      * @param string       $city
      * @param string       $email
      * @param integer|null $id
+     * @param string|null  $vat
+     * @param string|null  $phone
      */
     public function __construct(
         $name,
@@ -75,7 +93,9 @@ class CustomerModel
         $postCode,
         $city,
         $email,
-        $id
+        $id = null,
+        $vat = null,
+        $phone = null
     ) {
         $this->name = $name;
         $this->streetName = $streetName;
@@ -83,6 +103,8 @@ class CustomerModel
         $this->city = $city;
         $this->email = $email;
         $this->id = $id;
+        $this->vat = $vat;
+        $this->phone = $phone;
     }
 
     /**
@@ -139,6 +161,16 @@ class CustomerModel
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function getVat(): ?string
+    {
+        return $this->vat;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
     }
 
     public function shouldCreateNewCustomer()

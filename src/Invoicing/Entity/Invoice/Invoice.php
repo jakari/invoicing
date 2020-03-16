@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Invoicing\DBAL\Types\InvoiceStatusType;
 use Invoicing\Entity\Company;
 use Invoicing\Entity\Customer\Customer;
+use Invoicing\Model\Invoice\CustomerModel;
 use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Model\Invoice\ItemModel;
 use Invoicing\Value\InvoiceCalculator;
@@ -124,8 +125,49 @@ class Invoice
      */
     private $template;
 
+    /**
+     * @ORM\Column(name="customer_name", type="string", nullable=false)
+     * @var string
+     */
+    private $customerName;
+
+    /**
+     * @ORM\Column(name="customer_street_name", type="string", nullable=false)
+     * @var string
+     */
+    private $customerStreetName;
+
+    /**
+     * @ORM\Column(name="customer_post_code", type="string", nullable=false)
+     * @var string
+     */
+    private $customerPostCode;
+
+    /**
+     * @ORM\Column(name="customer_city", type="string", nullable=false)
+     * @var string
+     */
+    private $customerCity;
+
+    /**
+     * @ORM\Column(name="customer_email", type="string", nullable=false)
+     * @var string
+     */
+    private $customerEmail;
+
+    /**
+     * @ORM\Column(name="customer_phone", type="string", nullable=true)
+     * @var string
+     */
+    private $customerPhone;
+
+    /**
+     * @ORM\Column(name="customer_vat", type="string", nullable=true)
+     * @var string|null
+     */
+    private $customerVat;
+
     public function __construct(
-        Company $company,
         int $invoiceNumber,
         int $referenceNumber,
         \DateTime $created,
@@ -138,12 +180,19 @@ class Invoice
         string $delivery = null,
         string $conditionsOfPayment = null
     ) {
-        $this->company = $company;
         $this->invoiceNumber = $invoiceNumber;
         $this->referenceNumber = $referenceNumber;
         $this->created = $created;
         $this->due = $due;
         $this->customer = $customer;
+        $this->company = $customer->getCompany();
+        $this->customerName = $customer->getName();
+        $this->customerStreetName = $customer->getStreetName();
+        $this->customerCity = $customer->getCity();
+        $this->customerPostCode = $customer->getPostCode();
+        $this->customerEmail = $customer->getEmail();
+        $this->customerPhone = $customer->getPhone();
+        $this->customerVat = $customer->getVat();
         $this->status = InvoiceStatus::STATUS_PENDING;
         $this->items = new DoctrineCollection();
         $this->interestOnArrears = $interestOnArrears;
@@ -155,14 +204,12 @@ class Invoice
     }
 
     public static function createFromModel(
-        Company $company,
         Customer $customer,
         InvoiceModel $model,
         int $invoiceNumber,
         int $referenceNumber
     ) {
         return new self(
-            $company,
             $invoiceNumber,
             $referenceNumber,
             $model->getCreated(),
@@ -205,7 +252,16 @@ class Invoice
         return new InvoiceModel(
             $this->created,
             $this->due,
-            $this->customer->createOutputModel(),
+            new CustomerModel(
+                $this->customerName,
+                $this->customerStreetName,
+                $this->customerPostCode,
+                $this->customerCity,
+                $this->customerEmail,
+                $this->customer->getId(),
+                $this->customerVat,
+                $this->customerPhone
+            ),
             $this->items
                 ->map(function (InvoiceItem $item) {
                     return $item->createOutputModel();
@@ -267,6 +323,15 @@ class Invoice
         $this->delivery = $model->getDelivery();
         $this->conditionsOfPayment = $model->getConditionsOfPayment();
         $this->template = $model->getTemplate();
+
+        $customer =  $model->getCustomer();
+        $this->customerName = $customer->getName();
+        $this->customerStreetName = $customer->getStreetName();
+        $this->customerPostCode = $customer->getPostCode();
+        $this->customerCity = $customer->getCity();
+        $this->customerEmail = $customer->getEmail();
+        $this->customerVat = $customer->getVat();
+        $this->customerPhone = $customer->getPhone();
 
         $updatedItems = ArrayCollection::create($model->getItems());
         $itemsToUpdate = $updatedItems
@@ -362,7 +427,7 @@ class Invoice
     /**
      * @return int
      */
-    public function getHesitationCostOfInterest(): int
+    public function getInterestOnArrears(): int
     {
         return $this->interestOnArrears;
     }
@@ -397,5 +462,40 @@ class Invoice
     public function getTemplate(): string
     {
         return $this->template;
+    }
+
+    public function getCustomerName(): string
+    {
+        return $this->customerName;
+    }
+
+    public function getCustomerStreetName(): string
+    {
+        return $this->customerStreetName;
+    }
+
+    public function getCustomerPostCode(): string
+    {
+        return $this->customerPostCode;
+    }
+
+    public function getCustomerCity(): string
+    {
+        return $this->customerCity;
+    }
+
+    public function getCustomerVat(): ?string
+    {
+        return $this->customerVat;
+    }
+
+    public function getCustomerEmail(): string
+    {
+        return $this->customerEmail;
+    }
+
+    public function getCustomerPhone(): ?string
+    {
+        return $this->customerPhone;
     }
 }

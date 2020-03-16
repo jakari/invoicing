@@ -174,6 +174,7 @@ class SelectCustomer extends Component {
               <input type="text" name="streetName"
                      value={this.state.customer.streetName}
                      onChange={this.onChange}
+                     autoComplete="off"
                      placeholder={this.t({id: 'invoice.select_customer.street_name'})}
                      required
               />
@@ -183,6 +184,7 @@ class SelectCustomer extends Component {
                 <FormattedMessage id="invoice.select_customer.post_code" tagName="label" />
                 <input type="text"
                        name="postCode"
+                       autoComplete="off"
                        value={this.state.customer.postCode}
                        onChange={this.onChange}
                        placeholder={this.t({id: 'invoice.select_customer.post_code'})}
@@ -193,6 +195,7 @@ class SelectCustomer extends Component {
                 <FormattedMessage id="invoice.select_customer.city" tagName="label" />
                 <input type="text"
                        name="city"
+                       autoComplete="off"
                        value={this.state.customer.city}
                        onChange={this.onChange}
                        placeholder={this.t({id: 'invoice.select_customer.city'})}
@@ -200,13 +203,38 @@ class SelectCustomer extends Component {
                 />
               </div>
             </div>
-            <div className="required field">
-              <FormattedMessage id="invoice.select_customer.email" tagName="label" />
-              <input type="email"
-                     name="email"
-                     value={this.state.customer.email}
+            <div className="fields">
+              <div className="twelve wide field">
+                <FormattedMessage id="invoice.select_customer.email" tagName="label" />
+                <input type="email"
+                       name="email"
+                       autoComplete="off"
+                       value={this.state.customer.email}
+                       onChange={this.onChange}
+                       placeholder={this.t({id: 'invoice.select_customer.email'})}
+                       required
+                />
+              </div>
+              <div className="required four wide field">
+                <FormattedMessage id="customer.vat" tagName="label" />
+                <input type="text"
+                       name="vat"
+                       autoComplete="off"
+                       value={this.state.customer.vat}
+                       onChange={this.onChange}
+                       placeholder={this.t({id: 'customer.vat'})}
+                       required
+                />
+              </div>
+            </div>
+            <div className="six wide field">
+              <FormattedMessage id="customer.phone" tagName="label" />
+              <input type="text"
+                     name="phone"
+                     autoComplete="off"
+                     value={this.state.customer.phone}
                      onChange={this.onChange}
-                     placeholder={this.t({id: 'invoice.select_customer.email'})}
+                     placeholder={this.t({id: 'customer.phone'})}
                      required
               />
             </div>

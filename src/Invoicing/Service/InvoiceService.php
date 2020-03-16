@@ -5,7 +5,6 @@ namespace Invoicing\Service;
 use Invoicing\Database\Connection\Connection;
 use Invoicing\Entity\Company;
 use Invoicing\Entity\Invoice\Invoice;
-use Invoicing\Exception\CompanyNotFoundException;
 use Invoicing\Exception\CompanyNotSelectedException;
 use Invoicing\Exception\InvoiceNotFoundException;
 use Invoicing\Exception\NoValueException;
@@ -106,7 +105,6 @@ class InvoiceService
             $reference = $base . $this->referenceCounter->checksum($base);
 
             $invoice = Invoice::createFromModel(
-                $company,
                 $customer,
                 $model,
                 $invoiceNumber,

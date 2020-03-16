@@ -66,36 +66,37 @@ class Customer
     private $email;
 
     /**
-     * @param  CustomerModel $model
-     * @return Customer
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
-    public static function createFromModel(CustomerModel $model)
-    {
-        return new Customer(
-            $model->getName(),
-            $model->getStreetName(),
-            $model->getPostCode(),
-            $model->getPostCode(),
-            $model->getCity(),
-            $model->getEmail()
-        );
-    }
+    private $vat;
 
     /**
-     * @param string $name
-     * @param string $streetName
-     * @param string $postCode
-     * @param string $city
-     * @param string $email
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
      */
-    public function __construct(Company $company, $name, $streetName, $postCode, $city, $email)
-    {
+    private $phone;
+
+    public function __construct(
+        Company $company,
+        string $name,
+        string $streetName,
+        string $postCode,
+        string $city,
+        string $email,
+        string $vat = null,
+        string $phone = null
+    ) {
         $this->company = $company;
         $this->name = $name;
         $this->streetName = $streetName;
         $this->postCode = $postCode;
         $this->city = $city;
         $this->email = $email;
+        $this->vat = $vat;
+        $this->phone = $phone;
     }
 
     public function createOutputModel()
@@ -106,7 +107,9 @@ class Customer
             $this->postCode,
             $this->city,
             $this->email,
-            $this->id
+            $this->id,
+            $this->vat,
+            $this->phone
         );
     }
 
@@ -117,6 +120,24 @@ class Customer
         $this->postCode = $model->getPostCode();
         $this->city = $model->getCity();
         $this->email = $model->getEmail();
+        $this->vat = $model->getVat();
+        $this->phone = $model->getPhone();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Company
+     */
+    public function getCompany(): Company
+    {
+        return $this->company;
     }
 
     /**
@@ -157,5 +178,15 @@ class Customer
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getVat(): ?string
+    {
+        return $this->vat;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
     }
 }

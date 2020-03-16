@@ -10,7 +10,9 @@ export const CustomerRecord = new Record({
   streetName: '',
   postCode: '',
   city: '',
-  email: ''
+  email: '',
+  vat: '',
+  phone: ''
 });
 
 export const InvoiceListRecord = new Record({
@@ -34,6 +36,11 @@ export const InvoiceRecord = new Record({
   created: '',
   due: '',
   customer: null,
+  customerName: '',
+  customerStreetName: '',
+  customerPostCode: '',
+  customerCity: '',
+  customerVat: '',
   invoiceNumber: 0,
   referenceNumber: 0,
   items: List([new InvoiceItemRecord()]),

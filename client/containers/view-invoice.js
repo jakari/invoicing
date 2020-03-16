@@ -60,12 +60,22 @@ class ViewInvoice extends Component {
               <td>{ invoice.customer.name }</td>
             </tr>
             <tr>
+              <td><FormattedMessage id="customer.phone" /></td>
+              <td>{ invoice.customer.phone }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="customer.email" /></td>
+              <td>{ invoice.customer.email }</td>
+            </tr>
+            <tr>
+              <td><FormattedMessage id="customer.vat" /></td>
+              <td>{ invoice.customer.vat }</td>
+            </tr>
+            <tr>
               <td><FormattedMessage id="customer.address" /></td>
               <td>
                 { invoice.customer.streetName }<br />
-                { invoice.customer.postCode }<br />
-                { invoice.customer.city }<br />
-                { invoice.customer.email }
+                { invoice.customer.postCode } { invoice.customer.city }
               </td>
             </tr>
             </tbody>
