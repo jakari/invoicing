@@ -54,10 +54,6 @@ class InvoiceForm extends Component {
   onPlainInputChangeValue = index => e => {
     const {name, value} = e.target;
 
-    if (!e.target.checkValidity()) {
-        return;
-    }
-
     this.onChangeValue(index)(name)(value);
   };
   onChangeValue = index => name => value => {
@@ -100,7 +96,7 @@ class InvoiceForm extends Component {
     const templates = this.props.templates
       .map(template => ({text: template.title, value: template.name}));
 
-    return <form onSubmit={this.submit} autocomplete="nope">
+    return <form onSubmit={this.submit} autoComplete="nope">
       <div className="ui form stackable grid">
         <div className="ui sixteen wide column">
           <FormattedMessage id="invoice.template">
