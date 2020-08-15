@@ -2,7 +2,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {selectCompany} from "actions/invoices";
-import { Image, List } from 'semantic-ui-react'
+import { List } from 'semantic-ui-react'
 
 
 function SelectCompanyComponent({companies, selectCompany}) {

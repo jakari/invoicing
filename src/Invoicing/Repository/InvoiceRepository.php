@@ -57,8 +57,8 @@ class InvoiceRepository extends EntityRepository
                 $invoice['customer'],
                 $invoice['invoice_number'],
                 $invoice['reference_number'],
-                $invoice['created'],
-                $invoice['due'],
+                new \DateTime($invoice['created']),
+                new \DateTime($invoice['due']),
                 new Money($invoice['total'])
             );
         }, $stmt->fetchAll(\PDO::FETCH_ASSOC));

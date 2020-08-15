@@ -5,9 +5,7 @@ import { Route } from 'react-router-dom';
 function AuthRoute({ component: Component, ...rest }) {
   return <Route
     {...rest}
-    render={renderProps => <div>
-      <Component {...renderProps} />
-    </div>}
+    render={renderProps => <Component {...renderProps} />}
   />;
 }
 

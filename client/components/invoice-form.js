@@ -93,8 +93,7 @@ class InvoiceForm extends Component {
       return <Loader />;
     }
 
-    const templates = this.props.templates
-      .map(template => ({text: template.title, value: template.name}));
+    const {templates} = this.props
 
     return <form onSubmit={this.submit} autoComplete="nope">
       <div className="ui form stackable grid">
@@ -107,16 +106,9 @@ class InvoiceForm extends Component {
               </h4>
             )}
           </FormattedMessage>
-          <Dropdown
-            placeholder={formatMessage({id: 'invoice.select_template'})}
-            name="template"
-            fluid
-            selection
-            required
-            options={templates}
-            value={template}
-            onChange={this.onTemplateChange}
-          />
+          <select value={template} onChange={this.onTemplateChange} required>
+            {templates.map(({title, name}) => <option key={"template-" + name} value={name}>{title}</option>)}
+          </select>
         </div>
         <SelectCustomer
           customer={this.state.invoice.customer}

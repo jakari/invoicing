@@ -45,7 +45,7 @@ class ViewInvoice extends Component {
             )}
           </FormattedMessage>
           <Message visible>{templates.find(template => invoice.template === template.name).title}</Message>
-          <FormattedMessage id="invoice.customer_information">
+          <FormattedMessage id="customer.information">
             {(txt) => (
               <h4 className="ui horizontal divider header">
                 <i className="address book icon" />
@@ -56,7 +56,7 @@ class ViewInvoice extends Component {
           <table className="ui definition table">
             <tbody>
             <tr>
-              <td><FormattedMessage id="customer.name" /></td>
+              <td><FormattedMessage id="customer.company" /></td>
               <td>{ invoice.customer.name }</td>
             </tr>
             <tr>
@@ -72,7 +72,7 @@ class ViewInvoice extends Component {
               <td>{ invoice.customer.vat }</td>
             </tr>
             <tr>
-              <td><FormattedMessage id="customer.address" /></td>
+              <td><FormattedMessage id="customer.street_name" /></td>
               <td>
                 { invoice.customer.streetName }<br />
                 { invoice.customer.postCode } { invoice.customer.city }

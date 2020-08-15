@@ -1,3 +1,4 @@
+import {setLoadingAction, unsetLoadingAction} from "../actions/util";
 
 export function createReducer(initialState, reducers) {
   return (state = initialState, action) => {
@@ -25,9 +26,12 @@ export function rawFetch(dispatch, url, options) {
     'content-type': 'application/json'
   };
 
+  dispatch(setLoadingAction());
+
   options.credentials = 'include';
   return fetch(url, options)
     .then(response => {
+      dispatch(unsetLoadingAction());
       if (response.status === 401) {
         dispatch({
           type: 'SET_NOT_AUTHENTICATED'

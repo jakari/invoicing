@@ -41,6 +41,5 @@ services:
 volumes:
     dbdata:
     app-vendor:
-    var-logs:
     var-cache:
     var-sessions:

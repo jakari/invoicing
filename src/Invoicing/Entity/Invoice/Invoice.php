@@ -8,6 +8,7 @@ use Invoicing\DBAL\Types\InvoiceStatusType;
 use Invoicing\Entity\Company;
 use Invoicing\Entity\Customer\Customer;
 use Invoicing\Model\Invoice\CustomerModel;
+use Invoicing\Model\Invoice\InvoiceListItemModel;
 use Invoicing\Model\Invoice\InvoiceModel;
 use Invoicing\Model\Invoice\ItemModel;
 use Invoicing\Value\InvoiceCalculator;
@@ -275,6 +276,18 @@ class Invoice
             $this->customerReference,
             $this->delivery,
             $this->conditionsOfPayment
+        );
+    }
+
+    public function createListItemModel()
+    {
+        return new InvoiceListItemModel(
+            $this->customerName,
+            $this->invoiceNumber,
+            $this->referenceNumber,
+            $this->created,
+            $this->due,
+            $this->getTotalWithoutTax()
         );
     }
 

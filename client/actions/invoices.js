@@ -40,7 +40,6 @@ export function saveInvoice(invoice) {
   }
 }
 
-
 export function createInvoice(invoice) {
   return function (dispatch) {
     return rf(dispatch, `/api/invoice`, {
@@ -91,7 +90,7 @@ export function getSettings() {
 
 export function selectCompany(company) {
   return dispatch => {
-    dispatch({type: 'SET_SELECTED_COMPANY', data: company});
-    rf(dispatch, `/api/select-company/${company.id}`, {method: "POST"});
+    rf(dispatch, `/api/select-company/${company.id}`, {method: "POST"})
+      .then(() => dispatch({type: 'SET_SELECTED_COMPANY', data: company}));
   }
 }

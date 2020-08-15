@@ -1,7 +1,8 @@
 {
   "presets": [
     ["@babel/preset-env", { "modules": false, "targets": "defaults", "useBuiltIns": "usage", "corejs": 2 }],
-    "@babel/preset-react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": [
     "@babel/plugin-transform-runtime",

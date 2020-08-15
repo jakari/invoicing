@@ -33,13 +33,28 @@ class CustomerController
 
 
     /**
-     * @Route("/customers", name="customer.create", defaults={"_format": "json"})
-     * @Method("POST")
-     * @param CustomerModel $model
+     * @Route("/customers", name="customers.list", defaults={"_format": "json"})
+     * @Method("GET")
      */
-    public function createCustomerAction(CustomerModel $customer)
+    public function getCustomersAction()
     {
+        return new Response(
+            $this->serializer->serialize($this->service->getAll(), 'json'),
+            200
+        );
+    }
 
+
+    /**
+     * @Route("/customer/{customerId}", name="customer.get", defaults={"_format": "json"})
+     * @Method("GET")
+     */
+    public function getCustomerAction(string $customerId)
+    {
+        return new Response(
+            $this->serializer->serialize($this->service->get($customerId), 'json'),
+            200
+        );
     }
 
     /**

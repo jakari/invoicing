@@ -28,14 +28,14 @@ class InvoiceListItemModel
     private $referenceNumber;
 
     /**
-     * @Serialize\Type("string")
-     * @var string
+     * @Serialize\Type("DateTime<'d.m.Y'>")
+     * @var \DateTime
      */
     private $created;
 
     /**
-     * @Serialize\Type("string")
-     * @var string
+     * @Serialize\Type("DateTime<'d.m.Y'>")
+     * @var \DateTime
      */
     private $due;
 
@@ -49,16 +49,16 @@ class InvoiceListItemModel
      * @param string  $customer
      * @param integer $invoiceNumber
      * @param integer $referenceNumber
-     * @param string  $created
-     * @param string  $due
+     * @param \DateTime $created
+     * @param \DateTime $due
      * @param Money   $total
      */
     public function __construct(
         $customer,
         $invoiceNumber,
         $referenceNumber,
-        $created,
-        $due,
+        \DateTime $created,
+        \DateTime $due,
         Money $total
     ) {
         $this->customer = $customer;

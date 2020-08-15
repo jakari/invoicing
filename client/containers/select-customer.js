@@ -108,7 +108,7 @@ class SelectCustomer extends Component {
 
   render() {
     return <div className="eight wide column">
-      <FormattedMessage id="invoice.customer_information">
+      <FormattedMessage id="customer.information">
         {(txt) => (
           <h4 className="ui horizontal divider header">
             <i className="address book icon" />
@@ -151,12 +151,12 @@ class SelectCustomer extends Component {
             </div>}
             {!this.state.customer.id
               ? <div className="required field">
-                  <FormattedMessage id="customer.name" tagName="label" />
+                  <FormattedMessage id="customer.company" tagName="label" />
                   <Input
                     name="name"
                     label={this.getNameLabel()}
                     labelPosition='right'
-                    placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
+                    placeholder={this.t({id: 'customer.company'})}
                     value={this.state.customer.name}
                     onChange={this.onChange}
                     required
@@ -170,48 +170,48 @@ class SelectCustomer extends Component {
               </div>}
             <div className="ui hidden divider" />
             <div className="required field">
-              <FormattedMessage id="invoice.select_customer.street_name" tagName="label" />
+              <FormattedMessage id="customer.street_name" tagName="label" />
               <input type="text" name="streetName"
                      value={this.state.customer.streetName}
                      onChange={this.onChange}
                      autoComplete="off"
-                     placeholder={this.t({id: 'invoice.select_customer.street_name'})}
+                     placeholder={this.t({id: 'customer.street_name'})}
                      required
               />
             </div>
             <div className="two fields">
               <div className="required field">
-                <FormattedMessage id="invoice.select_customer.post_code" tagName="label" />
+                <FormattedMessage id="customer.post_code" tagName="label" />
                 <input type="text"
                        name="postCode"
                        autoComplete="off"
                        value={this.state.customer.postCode}
                        onChange={this.onChange}
-                       placeholder={this.t({id: 'invoice.select_customer.post_code'})}
+                       placeholder={this.t({id: 'customer.post_code'})}
                        required
                 />
               </div>
               <div className="required field">
-                <FormattedMessage id="invoice.select_customer.city" tagName="label" />
+                <FormattedMessage id="customer.city" tagName="label" />
                 <input type="text"
                        name="city"
                        autoComplete="off"
                        value={this.state.customer.city}
                        onChange={this.onChange}
-                       placeholder={this.t({id: 'invoice.select_customer.city'})}
+                       placeholder={this.t({id: 'customer.city'})}
                        required
                 />
               </div>
             </div>
             <div className="fields">
               <div className="twelve wide field">
-                <FormattedMessage id="invoice.select_customer.email" tagName="label" />
+                <FormattedMessage id="customer.email" tagName="label" />
                 <input type="email"
                        name="email"
                        autoComplete="off"
                        value={this.state.customer.email}
                        onChange={this.onChange}
-                       placeholder={this.t({id: 'invoice.select_customer.email'})}
+                       placeholder={this.t({id: 'customer.email'})}
                        required
                 />
               </div>

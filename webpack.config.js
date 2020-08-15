@@ -4,6 +4,7 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === "production";
 const plugins = [
@@ -15,7 +16,8 @@ const plugins = [
   }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-  })
+  }),
+  new ForkTsCheckerWebpackPlugin()
 ];
 
 if (isProduction) {
@@ -27,8 +29,8 @@ if (isProduction) {
 }
 
 const entry = isProduction
-  ? ['./client/index.js']
-  : ['react-hot-loader/patch', './client/index.js'];
+  ? ['./client/index.tsx']
+  : ['react-hot-loader/patch', './client/index.tsx'];
 
 module.exports = {
   entry,
@@ -40,7 +42,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js', '.jsx', '.sass', '.scss'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.sass', '.scss'],
     modules: ['node_modules', path.resolve(__dirname, 'client')],
   },
 
@@ -69,7 +71,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.[tj]sx?$/,
         use: {
           loader: "babel-loader",
           options: {
@@ -79,13 +81,12 @@ module.exports = {
         exclude: nodeModulesPath,
       },
       {
-        test: /\.s[ac]ss$/,
-        loaders: [
+        test: /\.s[ac]ss$/i,
+        use: [
           'style-loader',
           'css-loader',
           'sass-loader',
-        ],
-        exclude: nodeModulesPath,
+        ]
       },
       {
         test: /\.css$/,

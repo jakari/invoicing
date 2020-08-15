@@ -1,7 +1,6 @@
 
 import ReactDOM from 'react-dom';
 import React from 'react';
-import 'semantic-ui-css/semantic.min.css';
 import {Provider} from "react-redux";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import reducers from "./reducers";

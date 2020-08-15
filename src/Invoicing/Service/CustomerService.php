@@ -76,6 +76,21 @@ class CustomerService
             ->execute([':id' => $customer->getId()]);
     }
 
+    public function getAll()
+    {
+        return array_map(
+            function (Customer $customer) {
+                return $customer->createOutputModel();
+            },
+            $this->repository->getAll($this->currentCompanyService->get())
+        );
+    }
+
+    public function get(int $customerId)
+    {
+        return $this->repository->get($customerId)->createFullOutputModel();
+    }
+
     /**
      * @param  string             $name
      * @return CustomerModel|null

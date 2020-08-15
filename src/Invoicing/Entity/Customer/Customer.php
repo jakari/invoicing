@@ -6,7 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection as DoctrineCollection;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Invoicing\Entity\Company;
+use Invoicing\Entity\Invoice\Invoice;
 use Invoicing\Model\Invoice\CustomerModel;
+use Invoicing\Model\Customer\FullCustomerModel;
 
 /**
  * @Entity(repositoryClass="Invoicing\Repository\CustomerRepository")
@@ -79,6 +81,13 @@ class Customer
      */
     private $phone;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Invoicing\Entity\Invoice\Invoice", mappedBy="customer")
+     *
+     * @var DoctrineCollection
+     */
+    private $invoices;
+
     public function __construct(
         Company $company,
         string $name,
@@ -110,6 +119,25 @@ class Customer
             $this->id,
             $this->vat,
             $this->phone
+        );
+    }
+
+    public function createFullOutputModel()
+    {
+        return new FullCustomerModel(
+            $this->name,
+            $this->streetName,
+            $this->postCode,
+            $this->city,
+            $this->email,
+            $this->id,
+            $this->vat,
+            $this->phone,
+            $this->invoices
+                ->map(function (Invoice $invoice) {
+                    return $invoice->createListItemModel();
+                })
+                ->toArray()
         );
     }
 

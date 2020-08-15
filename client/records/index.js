@@ -4,6 +4,10 @@ export const AuthRecord = new Record({
   isAuthenticated: null
 });
 
+export const UtilRecord = new Record({
+  loading: false
+});
+
 export const CustomerRecord = new Record({
   id: 0,
   name: '',
@@ -13,6 +17,13 @@ export const CustomerRecord = new Record({
   email: '',
   vat: '',
   phone: ''
+});
+
+export const CustomerInvoiceListRecord = new Record({
+  invoiceNumber: null,
+  referenceNumber: null,
+  created: null,
+  due: null
 });
 
 export const InvoiceListRecord = new Record({

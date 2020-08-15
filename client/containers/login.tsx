@@ -1,25 +1,34 @@
 
-import React from 'react';
-import {Component} from 'react';
+import React, { SyntheticEvent } from "react"
+import {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {loginUser} from 'actions/auth';
 import {changeHandler} from "../utilities";
 import { Button } from 'semantic-ui-react'
-import {FormattedMessage, injectIntl} from "react-intl";
+import {FormattedMessage, injectIntl, WrappedComponentProps} from "react-intl";
 
-class Login extends Component {
-  constructor(props) {
+interface Props extends WrappedComponentProps {
+  loginUser: (username: string, password: string) => void
+}
+
+interface State {
+  username: string
+  password: string
+}
+
+class Login extends PureComponent<Props, State> {
+  private handleChange = changeHandler.bind(this)
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       username: '',
       password: ''
     };
-
-    this.handleChange = changeHandler.bind(this);
   }
 
-  loginUser = (e) => {
+  loginUser = (e: SyntheticEvent) => {
     e.stopPropagation();
     e.preventDefault();
 

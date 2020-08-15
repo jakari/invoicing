@@ -5,6 +5,7 @@ namespace Invoicing\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Invoicing\Entity\Company;
 use Invoicing\Entity\Customer\Customer;
 use Invoicing\Exception\CustomerNotFoundException;
 
@@ -34,6 +35,11 @@ class CustomerRepository extends EntityRepository
     public function update(Customer $customer)
     {
         $this->_em->flush($customer);
+    }
+
+    public function getAll(Company $company)
+    {
+        return $this->findBy(['company' => $company], ['name' => 'asc']);
     }
 
     /**
