@@ -69,7 +69,9 @@ doctrine:
         #     path:     "%database_path%"
 
         types:
-            invoice_status: Invoicing\DBAL\Types\InvoiceStatusType
+            invoice_status:
+                class: Invoicing\DBAL\Types\InvoiceStatusType
+                commented: false
         mapping_types:
             invoice_status: invoice_status
 

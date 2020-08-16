@@ -2,6 +2,14 @@ parameters:
     invoice_settings: '%kernel.project_dir%/src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml'
 
 services:
+    invoicing.command.create-user:
+        class: Invoicing\Bundle\AppBundle\Command\UserCreateCommand
+        arguments:
+            - "@invoicing.repository.user"
+            - "@security.password_encoder"
+        tags:
+            - { name: 'console.command', command: 'user:create' }
+
     serialization_money_handler:
         class: Invoicing\Serializer\Handler\MoneyHandler
         tags:
@@ -41,6 +49,11 @@ services:
         arguments: [Invoicing\Entity\Invoice\Invoice]
         factory: ["@doctrine.orm.default_entity_manager", getRepository]
 
+    invoicing.repository.user:
+        class: Invoicing\Repository\UsaerRepository
+        arguments: [Invoicing\Entity\User]
+        factory: ["@doctrine.orm.default_entity_manager", getRepository]
+
     invoicing.repository.invoice_item:
         class: Invoicing\Repository\InvoiceItemRepository
         arguments: [Invoicing\Entity\Invoice\InvoiceItem]
@@ -50,7 +63,7 @@ services:
         class: Invoicing\Bundle\AppBundle\Controller\SecurityController
         arguments:
             - '@invoicing.service.invoice'
-            - '@serializer'
+            - '@jms_serializer'
 
     invoicing.controller.invoice:
         class: Invoicing\Bundle\AppBundle\Controller\InvoiceController
@@ -58,7 +71,7 @@ services:
             - '@invoicing.repository.invoice'
             - '@invoicing.service.sender'
             - '@invoicing.service.invoice'
-            - '@serializer'
+            - '@jms_serializer'
             - '@invoicing.service.renderer'
 
     invoicing.controller.company:
@@ -70,7 +83,7 @@ services:
         class: Invoicing\Bundle\AppBundle\Controller\CustomerController
         arguments:
             - '@invoicing.service.customer'
-            - '@serializer'
+            - '@jms_serializer'
 
     invoicing.service.invoice:
         class: Invoicing\Service\InvoiceService

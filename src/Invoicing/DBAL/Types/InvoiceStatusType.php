@@ -46,4 +46,9 @@ class InvoiceStatusType extends Type
     {
         return self::STATUS_NAME;
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    {
+        return false;
+    }
 }
