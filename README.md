@@ -12,15 +12,17 @@ It's intended for small companies and it doesn't have many special features but 
 
 ## Development
 
-The Invoicing is built using Symfony3 and Angular2, but all of this might change in the future.
+The Invoicing is built using Symfony3 and React, but all of this might change in the future.
  
 ### Basic structure
 
-System is created using Angular 2 and Symfony 3 in the backend.
-
-Frontend code is in the `frontend` folder.
+Frontend code is in the `client` folder.
 
 Symfony is built with the Standard edition structure.
+
+## Usage
+
+To use the application, first install it according to the guide below, and add a user to be able to login. You should also add a company into the database to be able to use it.
 
 ## Installation
 
@@ -31,5 +33,9 @@ Symfony is built with the Standard edition structure.
 5. Point your webserver to the `web/` folder (look at the example nginx configuration `doc/nginx.example.conf`)
 6. Copy `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.example.yml` to `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml` and modify settings accordingly.
 7. Copy `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template-example.html` to `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html` and modify according to your needs. 
-8. Initialize the frontend by running `npm install` and `npm start`
+8. Initialize the frontend by running `npm install` and `npm start` in the `client` folder.
 9. Application is ready to use.
+
+### Adding a user
+
+To add a user to the application, run `php bin/console user:create`. The guide will ask for username and password. After user creation you may log in.

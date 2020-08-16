@@ -18,7 +18,7 @@ class ListCustomersComponent extends React.Component {
       <h1 className="ui header">
         <FormattedMessage id="customers.list" />
       </h1>
-      <table className="ui basic selectable very basic small table">
+      <table className="ui basic selectable small table">
         <tbody>
         {this.state.customers.map(customer => (
           <tr key={customer.id}>

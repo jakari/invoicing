@@ -44,3 +44,27 @@ export function rawFetch(dispatch, url, options) {
       return response;
     });
 }
+
+export function noInterruptFetch(dispatch, url, options) {
+  options = options || {};
+
+  options.headers = {
+    ...(options.headers || {}),
+    'content-type': 'application/json'
+  };
+
+  options.credentials = 'include';
+  return fetch(url, options)
+    .then(response => {
+      if (response.status === 401) {
+        dispatch({
+          type: 'SET_NOT_AUTHENTICATED'
+        });
+
+        // Fail silently
+        return new Promise(() => {});
+      }
+
+      return response;
+    });
+}

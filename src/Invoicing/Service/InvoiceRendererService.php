@@ -19,6 +19,11 @@ class InvoiceRendererService
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $nodeBin;
+
+    /**
      * @var TwigEngine
      */
     private $twig;
@@ -26,10 +31,12 @@ class InvoiceRendererService
     public function __construct(
         string $settingsPath,
         string $rootDir,
+        string $nodeBin,
         TwigEngine $twig
     ) {
         $this->settingsPath = $settingsPath;
         $this->rootDir = $rootDir;
+        $this->nodeBin = $nodeBin;
         $this->twig = $twig;
     }
 
@@ -64,7 +71,7 @@ class InvoiceRendererService
             $output = tempnam(sys_get_temp_dir(), 'invoice_');
             $path = $this->rootDir . '/scripts/makepdf.js';
 
-            $result = shell_exec("node {$path} {$input} {$output} 2>&1");
+            $result = shell_exec("{$this->nodeBin} {$path} {$input} {$output} 2>&1");
 
             if ($result !== null) {
                 throw new \ErrorException($result);

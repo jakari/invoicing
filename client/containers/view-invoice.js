@@ -174,9 +174,9 @@ class ViewInvoice extends Component {
           <FormattedMessage id="invoice.print" />
         </Button>
       </a>
-      <Button primary onClick={this.sendEmail}>
+      {/*<Button primary onClick={this.sendEmail}>
         <FormattedMessage id="invoice.send_email" />
-      </Button>
+      </Button>*/}
       <Link to={`/invoice/${invoice.invoiceNumber}/edit`}>
         <Button><FormattedMessage id="invoice.edit" /></Button>
       </Link>
