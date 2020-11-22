@@ -22,9 +22,11 @@ const plugins = [
 
 if (isProduction) {
   plugins.push(
-    new CopyPlugin([
-      { from: 'client/robots.txt' },
-    ])
+    new CopyPlugin({
+      patterns: [
+        { from: 'client/robots.txt' },
+      ]
+    })
   );
 }
 
