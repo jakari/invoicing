@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
-import {InvoiceItemRecord} from "../records";
-import {connect} from 'react-redux';
-import {recalcInvoice, recalcItem} from "../utilities/invoice";
-import {Button, Dropdown} from 'semantic-ui-react';
-import SelectCustomer from '../containers/select-customer';
-import Loader from './loader';
-import NumberInput from "./number-input";
-import Input from "./ui/input";
-import {FormattedMessage, injectIntl} from "react-intl";
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {recalcInvoice, recalcItem} from "../utilities/invoice"
+import {Button} from 'semantic-ui-react'
+import SelectCustomer from '../containers/select-customer'
+import Loader from './loader'
+import NumberInput from "./number-input"
+import Input from "./ui/input"
+import {FormattedMessage, injectIntl} from "react-intl"
+import {defaultInvoiceItem} from "records";
 
 class InvoiceForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { invoice: props.invoice, loading: false};
+    this.state = {invoice: props.invoice, loading: false};
   }
 
   submit = e => {
@@ -28,40 +28,53 @@ class InvoiceForm extends Component {
       : e.target.value;
 
     this.setState({
-      invoice: this.state.invoice.set(e.target.name, value)
+      invoice: {...this.state.invoice, [e.target.name]: value}
     });
   };
 
   changeCustomer = customer =>
-    this.setState({invoice: this.state.invoice.set('customer', customer)});
+    this.setState({invoice: {...this.state.invoice, customer}});
 
-  onTemplateChange = (_, data) => {
-    this.setState({invoice: this.state.invoice.set("template", data.value)});
+  onTemplateChange = (e) => {
+    this.setState({invoice: {...this.state.invoice, template: e.target.value}});
   }
 
   addItem = () => this.setState({
-    invoice: this.state.invoice.set(
-      'items',
-      this.state.invoice.items.push(new InvoiceItemRecord())
-    )
-  });
-  removeItem = index => () => this.setState({
-    invoice: this.state.invoice.set(
-      'items',
-      this.state.invoice.items.remove(index)
-    )
-  });
+    invoice: {
+      ...this.state.invoice,
+      items: [...this.state.invoice.items, Object.assign({}, defaultInvoiceItem)]
+    }
+  })
+
+  removeItem = index => () => {
+    const items = this.state.invoice.items
+
+    this.setState({
+      invoice: recalcInvoice('price', {
+        ...this.state.invoice,
+        items: [...items.slice(0, index), ...items.slice(index + 1)]
+      })
+    })
+  }
   onPlainInputChangeValue = index => e => {
     const {name, value} = e.target;
 
     this.onChangeValue(index)(name)(value);
   };
   onChangeValue = index => name => value => {
-    const item = this.state.invoice.items.get(index).set(name, value);
-    const items = this.state.invoice.items.set(index, recalcItem(name, item));
+    const {items} = this.state.invoice
+    const item = {
+      ...this.state.invoice.items[index],
+      [name]: value
+    }
+    const recalced = [
+      ...items.slice(0, index),
+      recalcItem(name, item),
+      ...items.slice(index + 1)
+    ]
 
     this.setState({
-      invoice: recalcInvoice(name, this.state.invoice.set('items', items))
+      invoice: recalcInvoice(name, {...this.state.invoice, items: recalced})
     });
   };
 
@@ -287,13 +300,13 @@ class InvoiceForm extends Component {
           primary
           disabled={!customer || this.areItemsEmpty()}
         >
-          <FormattedMessage id="invoice.form.save" />
+          <FormattedMessage id="button.save" />
         </Button>
         <Button
           type="button"
           onClick={this.cancel}
         >
-          <FormattedMessage id="invoice.form.cancel" />
+          <FormattedMessage id="button.cancel" />
         </Button>
       </div>
     </form>;

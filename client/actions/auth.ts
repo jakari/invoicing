@@ -1,13 +1,13 @@
 
 import {jsonFetch as jf, rawFetch as rf} from "utilities";
+import { Dispatch } from "redux"
 
-export function loginUser(username, password) {
-  return dispatch =>
-    jf(dispatch, '/api/login', {
+export function loginUser(username: string, password: string) {
+  return (dispatch: Dispatch) => jf('/api/login', {
       method: 'POST',
       body: JSON.stringify({username, password}),
-    })
-      .then(settings => {
+    })(dispatch)
+      .then((settings: any) => {
         dispatch({
           type: 'SET_SETTINGS',
           data: settings
@@ -17,8 +17,8 @@ export function loginUser(username, password) {
 }
 
 export function logout() {
-  return dispatch => {
+  return (dispatch: Dispatch) => {
     dispatch({type: 'SET_NOT_AUTHENTICATED'});
-    rf(dispatch, '/api/logout', {method: 'POST'});
+    rf('/api/logout', {method: 'POST'})(dispatch)
   }
 }

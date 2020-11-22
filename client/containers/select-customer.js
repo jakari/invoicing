@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import React, {Component} from 'react';
 import { Input, Button } from 'semantic-ui-react';
 import {searchCustomer} from "../utilities/customer";
-import {CustomerRecord} from "../records";
 import {FormattedMessage, injectIntl} from "react-intl";
+import {defaultCustomer} from "records";
 
 
 class SelectCustomer extends Component {
@@ -54,8 +54,8 @@ class SelectCustomer extends Component {
   };
 
   onChange = e => {
-    const {name, value} = e.target;
-    const customer = this.state.customer.set(name, value);
+    const {name, value} = e.target
+    const customer = {...this.state.customer, [name]: value}
 
     this.setState({customer});
     this.props.onChange(customer);
@@ -68,7 +68,7 @@ class SelectCustomer extends Component {
   };
 
   setNewCustomer = () => {
-    this.setCustomerState(new CustomerRecord({name: this.state.name}));
+    this.setCustomerState({...defaultCustomer, name: this.state.name});
   };
 
   setCustomerState = (customer) => {

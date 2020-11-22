@@ -3,7 +3,9 @@ import React from 'react';
 import {FormattedMessage} from "react-intl";
 import {connect} from "react-redux";
 import {getCustomer} from "actions/customers";
-import {CustomerInvoiceListRecord, CustomerRecord} from "../records";
+import {CustomerInvoiceList, Customer} from "records";
+import {NavLink} from "react-router-dom";
+import {Button} from "semantic-ui-react";
 
 class ViewCustomerComponent extends React.Component {
   constructor(props) {
@@ -16,8 +18,8 @@ class ViewCustomerComponent extends React.Component {
     const {getCustomer, match} = this.props;
     getCustomer(match.params.customerId)
       .then(customer => this.setState({
-        customer: new CustomerRecord(customer),
-        invoices: customer.invoices.map(invoice => new CustomerInvoiceListRecord(invoice))
+        customer,
+        invoices: customer.invoices
       }));
   }
 
@@ -32,6 +34,9 @@ class ViewCustomerComponent extends React.Component {
       {customer
         ? <div>
             <h1 className="ui header">{customer.name}</h1>
+            <NavLink to={`/customer/${customer.id}/edit`}>
+              <Button><FormattedMessage id="invoice.edit" /></Button>
+            </NavLink>
             <FormattedMessage id="customer.information">
               {(txt) => (
                 <h4 className="ui horizontal divider header">

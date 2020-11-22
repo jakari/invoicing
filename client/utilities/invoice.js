@@ -13,7 +13,7 @@ export function calculateTotal(invoice) {
 }
 
 export function calculateItemTotal(item) {
-  if (isNaN(item.price) || isNaN(item.tax) || isNaN(item.amount)) {
+  if (isNaN(item.price) || isNaN(item.tax) || isNaN(item.amount)) {
     return 0;
   }
 
@@ -27,23 +27,9 @@ export function shouldRecalculate(name) {
   return ['price', 'amount', 'tax'].includes(name)
 }
 
-export function recalcItem(name, item) {
-  if (!shouldRecalculate(name)) {
-    return item;
-  }
-
-  return item.set('total', calculateItemTotal(item));
-}
-
-export function recalcInvoice(name, invoice) {
-  if (!shouldRecalculate(name)) {
-    return invoice;
-  }
-
-  return invoice.set('total', calculateTotal(invoice));
-}
+export const recalcItem = (name, item) => (!shouldRecalculate(name) ? item : {...item, total: calculateItemTotal(item)})
+export const recalcInvoice = (name, invoice) => (!shouldRecalculate(name) ? invoice : {...invoice, total: calculateTotal(invoice)})
 
 function roundToTwo(num) {
   return +(Math.round(num + "e+2")  + "e-2");
 }
-

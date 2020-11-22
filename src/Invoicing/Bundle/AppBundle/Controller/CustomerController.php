@@ -57,6 +57,17 @@ class CustomerController
         );
     }
 
+
+    /**
+     * @Route("/customer/{customerId}", name="customer.update", defaults={"_format": "json"})
+     * @Method("PATCH")
+     */
+    public function updateCustomerAction(CustomerModel $customer)
+    {
+        $this->service->updateCustomer($customer);
+        return new Response(null, 204);
+    }
+
     /**
      * @Route("/customers/{name}", name="customer.search", defaults={"_format": "json"})
      * @Method("GET")

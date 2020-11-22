@@ -3,7 +3,7 @@ import React from 'react';
 import {Component} from 'react';
 import {connect} from 'react-redux';
 import {getInvoice, sendInvoiceEmail} from "actions/invoices";
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {Button, Message} from 'semantic-ui-react';
 import Loader from 'components/loader';
 import {FormattedMessage} from "react-intl";
@@ -177,9 +177,9 @@ class ViewInvoice extends Component {
       {/*<Button primary onClick={this.sendEmail}>
         <FormattedMessage id="invoice.send_email" />
       </Button>*/}
-      <Link to={`/invoice/${invoice.invoiceNumber}/edit`}>
+      <NavLink to={`/invoice/${invoice.invoiceNumber}/edit`}>
         <Button><FormattedMessage id="invoice.edit" /></Button>
-      </Link>
+      </NavLink>
   </div>;
   }
 }

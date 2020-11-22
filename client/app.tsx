@@ -1,7 +1,6 @@
 
-import React, {Component} from 'react'
+import React, { PureComponent } from "react"
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import AuthRoute from 'components/auth-route'
 import ListInvoices from 'containers/list-invoices'
 import EditInvoice from 'containers/edit-invoice'
 import CreateInvoice from 'containers/create-invoice'
@@ -18,33 +17,35 @@ import {IntlProvider} from 'react-intl'
 import {SelectCompany} from "./containers/select-company"
 import {ListCustomers} from "./components/list-customers"
 import {ViewCustomer} from "./components/view-customer"
+import { EditCustomer } from "components/edit-customer"
 
 type Props = ConnectedProps<typeof connected>
 
 const RootApp = React.memo(({isCompanySelected}: {isCompanySelected: boolean}) => (
   isCompanySelected
     ? <Switch>
-      <AuthRoute exact path="/invoice/:invoice/edit" component={EditInvoice} />
-      <AuthRoute exact path="/invoice/create" component={CreateInvoice} />
-      <AuthRoute exact path="/invoice/:invoice" component={ViewInvoice} />
-      <AuthRoute exact path="/customers" component={ListCustomers} />
-      <AuthRoute exact path="/customer/:customerId" component={ViewCustomer} />
-      <AuthRoute exact path="/" component={ListInvoices} />
+      <Route exact path="/invoice/:invoice/edit" component={EditInvoice} />
+      <Route exact path="/invoice/create" component={CreateInvoice} />
+      <Route exact path="/invoice/:invoice" component={ViewInvoice} />
+      <Route exact path="/customers" component={ListCustomers} />
+      <Route exact path="/customer/:customerId" component={ViewCustomer} />
+      <Route exact path="/customer/:customerId/edit" component={EditCustomer} />
+      <Route exact path="/" component={ListInvoices} />
     </Switch>
     : <SelectCompany/>
 ))
 
-class Root extends Component<Props> {
+class Root extends PureComponent<Props> {
   constructor(props: Props) {
-    super(props);
+    super(props)
 
-    this.props.getSettings();
+    this.props.getSettings()
   }
 
   render() {
     return <IntlProvider locale={'fi'} messages={messages}>
       {this.renderApp()}
-      </IntlProvider>;
+    </IntlProvider>
   }
 
   renderApp() {
