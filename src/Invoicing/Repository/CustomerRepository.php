@@ -43,25 +43,23 @@ class CustomerRepository extends EntityRepository
     }
 
     /**
-     * @parmm  int    $companyId
+     * @param  int    $companyId
      * @param  string $name
-     * @return Customer|null
+     * @return Customer[]
      */
-    public function getFirst(int $companyId, string $name)
+    public function findByName(int $companyId, string $name)
     {
         $rsm = new ResultSetMappingBuilder($this->_em);
         $rsm->addRootEntityFromClassMetadata(Customer::class, 'c');
 
         $query = $this->_em->createNativeQuery(
-            "SELECT c.* FROM customer c WHERE c.name ILIKE CONCAT(:name::text, '%') AND c.company = :company ORDER BY c.name ASC LIMIT 1",
+            "SELECT c.* FROM customer c WHERE c.name ILIKE CONCAT(:name::text, '%') AND c.company = :company ORDER BY c.name ASC",
             $rsm
         );
 
-        $results = $query
+        return $query
             ->setParameter(':name', $name)
             ->setParameter(':company', $companyId)
             ->getResult();
-
-        return !empty($results) ? $results[0] : null;
     }
 }

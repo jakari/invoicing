@@ -1,17 +1,30 @@
 
-import {connect} from 'react-redux';
-import React, {Component} from 'react';
+import { connect, ConnectedProps } from "react-redux"
+import React, { PureComponent, KeyboardEvent, ChangeEvent } from "react"
 import { Input, Button } from 'semantic-ui-react';
 import {searchCustomer} from "../utilities/customer";
-import {FormattedMessage, injectIntl} from "react-intl";
-import {defaultCustomer} from "records";
+import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
+import { Customer, defaultCustomer } from "records"
 
+type InputProps = WrappedComponentProps & ConnectedProps<typeof connected>
+interface Props extends InputProps {
+  customer: Customer | null
+  onChange: (customer: Customer | null) => void
+}
 
-class SelectCustomer extends Component {
-  timeout = null;
-  t = null;
+interface State {
+  customer: Customer | null
+  customers: Customer[]
+  name: string
+  selected: boolean
+  loading: boolean
+}
 
-  constructor(props) {
+class SelectCustomer extends PureComponent<Props, State> {
+  timeout: any = null
+  private t: any
+
+  constructor(props: Props) {
     super(props);
     this.t = this.props.intl.formatMessage;
 
@@ -19,62 +32,62 @@ class SelectCustomer extends Component {
       customer: props.customer,
       name: props.customer ? props.customer.name : '',
       selected: !!props.customer,
-      loading: false
+      loading: false,
+      customers: []
     };
   }
 
-  onSearch = async e => {
+  onSearch = async (e: ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
-    let customer = null;
-    let loading = true;
 
     if (e.target.value.length > 0) {
+      this.setState({loading: true})
+
       if (this.timeout) {
-        clearTimeout(this.timeout);
+        clearTimeout(this.timeout)
       }
       this.timeout = setTimeout(async () => {
         try {
-          customer = await this.props.searchCustomer(name);
-          this.setCustomerState(customer);
+          const customers = await this.props.searchCustomer(name)
+          this.setState({customers})
         } catch (e) {
-          this.setNewCustomer();
-        } finally {
-          // Timeout might have been cleared by quick blurring etc. Check that
-          // async is not obsolete
-          if (this.timeout) {
-            this.timeout = null;
-          }
         }
+
+        this.setState({loading: false})
+
+        // Timeout might have been cleared by quick blurring etc. Check that
+        // async is not obsolete
+        if (this.timeout) {
+          this.timeout = null;
+        }
+
+        // this.setState({loading: false})
       }, 150);
-    } else {
-      loading = false;
     }
 
-    this.setState({name, loading});
+    this.setState({name});
   };
 
-  onChange = e => {
+  onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target
-    const customer = {...this.state.customer, [name]: value}
+    const customer: Customer = {...this.state.customer, [name]: value} as Customer
 
     this.setState({customer});
     this.props.onChange(customer);
   };
-  onNameSearchKeyPress = e => {
+  onNameSearchKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.charCode === 13) {
       e.preventDefault();
-      e.target.blur();
+      (e.target as any)?.blur();
     }
   };
 
-  setNewCustomer = () => {
-    this.setCustomerState({...defaultCustomer, name: this.state.name});
-  };
-
-  setCustomerState = (customer) => {
-    this.setState({customer, loading: false});
+  selectCustomer = (customer: Customer) => {
+    this.setState({customer, selected: true});
     this.props.onChange(customer);
-  };
+  }
+
+  setNewCustomer = () => this.selectCustomer({...defaultCustomer, name: this.state.name})
 
   onNameBlur = () => {
     if (this.timeout) {
@@ -82,17 +95,11 @@ class SelectCustomer extends Component {
       this.timeout = null;
     }
 
-    let selected = false;
-
-    if (!this.state.customer && this.state.name) {
-      selected = true;
-      this.setNewCustomer();
-    } else if (this.state.customer) {
-      selected = true;
-      this.setCustomerState(this.state.customer);
-    }
-
-    this.setState({selected: selected, name: ''});
+    // Dirty hack to allow an eventual click in the result field before actual blur
+    setTimeout(() => {
+      if (!this.state.customer && this.state.name) this.setNewCustomer();
+      else this.setState({name: '', customers: []})
+    }, 100)
   };
 
   unselectCustomer = () => {
@@ -102,11 +109,14 @@ class SelectCustomer extends Component {
 
   getNameLabel = () => {
     if (!this.state.selected) return {content: this.t({id: 'invoice.select_customer.not_selected'}), color: 'teal'};
-    if (this.state.customer.id) return {content: this.t({id: 'invoice.select_customer.selected'}), color: 'blue'};
+    if (this.state.customer?.id) return {content: this.t({id: 'invoice.select_customer.selected'}), color: 'blue'};
     else return {content: this.t({id: 'invoice.select_customer.create_new'}), color: 'yellow'};
   };
 
   render() {
+    const {formatMessage: t} = this.props.intl
+    const {customers, loading} = this.state
+
     return <div className="eight wide column">
       <FormattedMessage id="customer.information">
         {(txt) => (
@@ -118,18 +128,35 @@ class SelectCustomer extends Component {
       </FormattedMessage>
       {!this.state.selected &&
         <div>
-          <div className="ui fluid huge icon input">
-            <input
-              name="name-search"
-              className={this.state.loading ? 'loading' : ''}
-              placeholder={this.t({id: 'invoice.select_customer.customer_name'})}
-              value={this.state.name}
-              onChange={this.onSearch}
-              onBlur={this.onNameBlur}
-              onKeyPress={this.onNameSearchKeyPress}
-              autoComplete="nope"
-            />
-            <i className="search icon" />
+          <div className={"ui fluid search" + (loading ? " loading double" : "")}>
+            <div className="ui fluid huge icon input">
+              <input
+                className="prompt"
+                type="text"
+                placeholder={t({id: 'invoice.select_customer.customer_name'})}
+                value={this.state.name}
+                onChange={this.onSearch}
+                onKeyPress={this.onNameSearchKeyPress}
+                autoComplete="nope"
+                onBlur={this.onNameBlur}
+              />
+              <i className="search icon" />
+            </div>
+            {
+              !!customers.length
+                && <div className="results transition visible">
+                  {customers.map(customer => (
+                    <a key={"customer-" + customer.id} className="result" onClick={() => this.selectCustomer(customer)}>
+                      <div className="content">
+                        <div className="title">{customer.name}</div>
+                        <div className="description">{customer.streetName}</div>
+                        <div className="description">{customer.postCode} {customer.city}</div>
+                        <div className="description">{customer.phone}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+            }
           </div>
           <div className="ui hidden divider" />
         </div>}
@@ -251,4 +278,6 @@ class SelectCustomer extends Component {
     </div>;
   }
 }
-export default injectIntl(connect(null, {searchCustomer})(SelectCustomer));
+const connected = connect(null, {searchCustomer})
+
+export default connected(injectIntl(SelectCustomer))

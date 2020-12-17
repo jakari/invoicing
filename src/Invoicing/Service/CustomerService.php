@@ -92,16 +92,17 @@ class CustomerService
     }
 
     /**
-     * @param  string             $name
-     * @return CustomerModel|null
+     * @param  string          $name
+     * @return CustomerModel[]
      */
     public function search(string $name)
     {
         $company = $this->currentCompanyService->getId();
-        if ($customer = $this->repository->getFirst($company, $name)) {
-            return $customer->createOutputModel();
-        }
-
-        return null;
+        return array_map(
+            function (Customer $customer) {
+                return $customer->createOutputModel();
+            },
+            $this->repository->findByName($company, $name)
+        );
     }
 }

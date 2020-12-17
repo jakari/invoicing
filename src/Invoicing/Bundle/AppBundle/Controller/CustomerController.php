@@ -76,9 +76,9 @@ class CustomerController
      */
     public function searchCustomersAction(string $name)
     {
-        if ($customer = $this->service->search($name)) {
+        if ($customers = $this->service->search($name)) {
             return new Response(
-                $this->serializer->serialize($customer, 'json'),
+                $this->serializer->serialize($customers, 'json'),
                 200,
                 ['Content-Type' => 'application/json']
             );
