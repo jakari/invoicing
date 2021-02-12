@@ -53,7 +53,7 @@ class CustomerRepository extends EntityRepository
         $rsm->addRootEntityFromClassMetadata(Customer::class, 'c');
 
         $query = $this->_em->createNativeQuery(
-            "SELECT c.* FROM customer c WHERE c.name ILIKE CONCAT(:name::text, '%') AND c.company = :company ORDER BY c.name ASC",
+            "SELECT c.* FROM customer c WHERE c.name ILIKE CONCAT('%', :name::text, '%') AND c.company = :company ORDER BY c.name ASC",
             $rsm
         );
 
