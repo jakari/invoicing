@@ -239,10 +239,9 @@ class SelectCustomer extends PureComponent<Props, State> {
                        value={this.state.customer.email}
                        onChange={this.onChange}
                        placeholder={this.t({id: 'customer.email'})}
-                       required
                 />
               </div>
-              <div className="required four wide field">
+              <div className="four wide field">
                 <FormattedMessage id="customer.vat" tagName="label" />
                 <input type="text"
                        name="vat"
@@ -250,7 +249,6 @@ class SelectCustomer extends PureComponent<Props, State> {
                        value={this.state.customer.vat}
                        onChange={this.onChange}
                        placeholder={this.t({id: 'customer.vat'})}
-                       required
                 />
               </div>
             </div>
@@ -262,7 +260,6 @@ class SelectCustomer extends PureComponent<Props, State> {
                      value={this.state.customer.phone}
                      onChange={this.onChange}
                      placeholder={this.t({id: 'customer.phone'})}
-                     required
               />
             </div>
             {this.state.selected && <Button

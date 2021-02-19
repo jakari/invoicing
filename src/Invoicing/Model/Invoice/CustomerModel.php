@@ -54,7 +54,7 @@ class CustomerModel
 
     /**
      * @Serialize\Type("string")
-     * @Assert\NotBlank()
+     * @Assert\NotNull()
      * @Assert\Type("string")
      *
      * @var string
