@@ -515,6 +515,11 @@ class Invoice
         return $this->customerCity;
     }
 
+    public function getCustomerAdditionalName(): string
+    {
+        return $this->customerAdditionalName;
+    }
+
     public function getCustomerVat(): ?string
     {
         return $this->customerVat;

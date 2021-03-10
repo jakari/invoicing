@@ -7,7 +7,7 @@ export const useInvoiceApi = () => {
   const api = useApi()
 
   return {
-    create: (invoice: Invoice) => api.post(`/api/invoice`, invoice),
+    create: (invoice: Invoice) => api.post<{invoiceNumber: number}>(`/api/invoice`, invoice),
     list: () => api.get("/api/invoices"),
     get: async (id: string) => {
       const invoiceWithoutTotals = await api.get<Invoice>(`/api/invoice/${id}`)

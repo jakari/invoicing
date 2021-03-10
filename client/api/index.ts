@@ -17,7 +17,7 @@ export const useApi = (options?: Partial<Options>) => {
   return {
     get: <T>(url: string) => doRequest<T>(url, "GET"),
     patch: <T>(url: string, body?: Object) => doRequest<T>(url, "PATCH", body),
-    post: (url: string, body?: Object) => doRequest(url, "POST", body)
+    post: <T>(url: string, body?: Object) => doRequest<T>(url, "POST", body)
   }
 }
 
