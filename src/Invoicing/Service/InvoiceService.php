@@ -183,7 +183,7 @@ class InvoiceService
         } catch (CompanyNotSelectedException $e) {}
 
         return [
-            'default' => $settings['default'],
+            'default_values' => $settings['default'],
             'templates' => $settings['templates'],
             'companies' => array_map(
                 function (Company $comapny) {

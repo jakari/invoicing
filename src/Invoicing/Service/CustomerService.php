@@ -41,16 +41,19 @@ class CustomerService
             : $this->updateCustomer($model);
     }
 
-    public function createCustomer(CustomerModel $model)
+    public function createCustomer(CustomerModel $model): Customer
     {
         $customer = new Customer(
             $this->currentCompanyService->get(),
             $model->getName(),
+            $model->getAdditionalName(),
+            $model->getContactPerson(),
             $model->getStreetName(),
             $model->getPostCode(),
             $model->getCity(),
             $model->getEmail(),
-            $model->getVat()
+            $model->getVat(),
+            $model->getPhone()
         );
         $this->repository->save($customer);
         return $customer;

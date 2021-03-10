@@ -10,6 +10,6 @@ class LogoutHandler implements LogoutSuccessHandlerInterface
 {
     public function onLogoutSuccess(Request $request)
     {
-        return new Response();
+        return new Response('', 204);
     }
 }

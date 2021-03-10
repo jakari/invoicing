@@ -67,10 +67,7 @@ class InvoiceController
      */
     public function createInvoiceAction(InvoiceModel $invoice)
     {
-        return new Response(
-            $this->invoiceService->createInvoice($invoice),
-            200
-        );
+        return $this->serializeResponse(['invoiceNumber' => $this->invoiceService->createInvoice($invoice)]);
     }
 
     /**

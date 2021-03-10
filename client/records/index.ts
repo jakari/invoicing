@@ -1,10 +1,14 @@
 
-export type Auth = Readonly<{isAuthenticated: Boolean|null}>
-export type Util = Readonly<{loading: false}>
+export interface Company {
+  id: number
+  name: string
+}
 
 export type Customer = Readonly<{
   id: number
   name: string
+  additionalName: string
+  contactPerson: string
   streetName: string
   postCode: string
   city: string
@@ -15,6 +19,8 @@ export type Customer = Readonly<{
 export const defaultCustomer: Customer = {
   id: 0,
   name: '',
+  additionalName: "",
+  contactPerson: "",
   streetName: '',
   postCode: '',
   city: '',
@@ -22,6 +28,8 @@ export const defaultCustomer: Customer = {
   vat: '',
   phone: ''
 }
+
+export type CustomerWithInvoiceList = Customer & {invoices: CustomerInvoiceList[]}
 
 export type CustomerInvoiceList = Readonly<{
   invoiceNumber: string,
@@ -122,27 +130,10 @@ export interface Template {
 }
 
 export type AppConfiguration = Readonly<{
-  // List of invoices
-  invoices: InvoiceList[]
-  // The selected invoice
-  open_invoice: Invoice | null
   // Default settings for invoices
-  settings: InvoiceSettings
+  default_values: InvoiceSettings
   // List of available templates
   templates: Template[]
-  companies: string[]
-  selectedCompany: string | undefined
+  companies: Company[]
+  selected_company?: Company
 }>
-
-export const defaultAppConfiguration: AppConfiguration = {
-  // List of invoices
-  invoices: [],
-  // The selected invoice
-  open_invoice: null,
-  // Default settings for invoices
-  settings: defaultInvoiceSettings,
-  // List of available templates
-  templates: [],
-  companies: [],
-  selectedCompany: undefined
-}

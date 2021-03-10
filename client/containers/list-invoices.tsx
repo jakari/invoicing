@@ -1,21 +1,22 @@
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {listInvoices} from "actions/invoices";
-import {FormattedMessage} from "react-intl";
+import React, { useEffect, useState } from "react"
+import {FormattedMessage} from "react-intl"
+import { RouteComponentProps } from "react-router"
+import { useInvoiceApi } from "api/invoices"
+import { Invoice } from "records"
 
-class ListInvoices extends Component {
-  constructor(props) {
-    super(props);
+export function ListInvoices({history}: RouteComponentProps) {
+  const [invoices, setInvoices] = useState<Invoice[]>([])
+  const invoiceApi = useInvoiceApi()
 
-    this.props.listInvoices();
-  }
+  useEffect(() => {
+    invoiceApi.list().then(setInvoices)
+  }, [])
 
-  viewInvoice = invoiceNumber => () => this.props.history.push(
+  const viewInvoice = (invoiceNumber: number) => () => history.push(
     '/invoice/' + invoiceNumber
   );
 
-  render(){
     return <div>
       <h1 className="ui header">
         <FormattedMessage id="list.header" />
@@ -31,8 +32,8 @@ class ListInvoices extends Component {
         </tr>
         </thead>
         <tbody>
-          {this.props.invoices.map((invoice, key) =>
-            <tr key={key} className="invoice list row" onClick={this.viewInvoice(invoice.invoiceNumber)}>
+          {invoices.map((invoice, key) =>
+            <tr key={key} className="invoice list row" onClick={viewInvoice(invoice.invoiceNumber)}>
               <td>{invoice.customer}</td>
               <td>{invoice.invoiceNumber}</td>
               <td>{invoice.referenceNumber}</td>
@@ -42,15 +43,5 @@ class ListInvoices extends Component {
           )}
         </tbody>
       </table>
-    </div>;
-  }
+    </div>
 }
-
-export default connect(
-  state => ({
-    invoices: state.invoices.invoices
-  }),
-  {
-    listInvoices
-  }
-)(ListInvoices)

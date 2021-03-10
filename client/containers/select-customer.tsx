@@ -1,15 +1,20 @@
 
-import { connect, ConnectedProps } from "react-redux"
 import React, { PureComponent, KeyboardEvent, ChangeEvent } from "react"
 import { Input, Button } from 'semantic-ui-react';
-import {searchCustomer} from "../utilities/customer";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
 import { Customer, defaultCustomer } from "records"
+import { useSearchcustomers } from "api/customers"
 
-type InputProps = WrappedComponentProps & ConnectedProps<typeof connected>
-interface Props extends InputProps {
+type InputProps = WrappedComponentProps & ProxyProps
+
+interface ProxyProps {
   customer: Customer | null
+  value: Customer | null
   onChange: (customer: Customer | null) => void
+}
+
+interface Props extends InputProps {
+  searchCustomer: (value: string) => Promise<Customer[]>
 }
 
 interface State {
@@ -20,7 +25,7 @@ interface State {
   loading: boolean
 }
 
-class SelectCustomer extends PureComponent<Props, State> {
+class SelectCustomerComponent extends PureComponent<Props, State> {
   timeout: any = null
   private t: any
 
@@ -149,6 +154,7 @@ class SelectCustomer extends PureComponent<Props, State> {
                     <a key={"customer-" + customer.id} className="result" onClick={() => this.selectCustomer(customer)}>
                       <div className="content">
                         <div className="title">{customer.name}</div>
+                        {customer.additionalName && <div className="description">{customer.additionalName}</div>}
                         <div className="description">{customer.streetName}</div>
                         <div className="description">{customer.postCode} {customer.city}</div>
                         <div className="description">{customer.phone}</div>
@@ -196,6 +202,15 @@ class SelectCustomer extends PureComponent<Props, State> {
                 </div>
               </div>}
             <div className="ui hidden divider" />
+            <div className="field">
+              <FormattedMessage id="customer.additional_name" tagName="label" />
+              <input type="text" name="additionalName"
+                     value={this.state.customer.additionalName}
+                     onChange={this.onChange}
+                     autoComplete="off"
+                     placeholder={this.t({id: 'customer.additional_name'})}
+              />
+            </div>
             <div className="required field">
               <FormattedMessage id="customer.street_name" tagName="label" />
               <input type="text" name="streetName"
@@ -252,7 +267,18 @@ class SelectCustomer extends PureComponent<Props, State> {
                 />
               </div>
             </div>
-            <div className="six wide field">
+            <div className="fields">
+              <div className="eight wide field">
+                <FormattedMessage id="customer.contact_person" tagName="label" />
+                <input type="text"
+                       name="contactPerson"
+                       autoComplete="off"
+                       value={this.state.customer.contactPerson}
+                       onChange={this.onChange}
+                       placeholder={this.t({id: 'customer.contact_person'})}
+                />
+              </div>
+              <div className="required six wide field">
               <FormattedMessage id="customer.phone" tagName="label" />
               <input type="text"
                      name="phone"
@@ -260,7 +286,7 @@ class SelectCustomer extends PureComponent<Props, State> {
                      value={this.state.customer.phone}
                      onChange={this.onChange}
                      placeholder={this.t({id: 'customer.phone'})}
-              />
+              /></div>
             </div>
             {this.state.selected && <Button
               type='button'
@@ -272,9 +298,14 @@ class SelectCustomer extends PureComponent<Props, State> {
           </div>
         }
       </div>
-    </div>;
+    </div>
   }
 }
-const connected = connect(null, {searchCustomer})
 
-export default connected(injectIntl(SelectCustomer))
+const InjectedComponent = injectIntl(SelectCustomerComponent)
+
+export function SelectCustomer(props: ProxyProps) {
+  const searchcustomers = useSearchcustomers()
+
+  return <InjectedComponent {...props} searchCustomer={searchcustomers} />
+}

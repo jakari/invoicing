@@ -24,6 +24,26 @@ class CustomerModel
     private $name;
 
     /**
+     * @Serialize\SerializedName("additionalName")
+     * @Serialize\Type("string")
+     * @Assert\NotNull()
+     * @Assert\Type("string")
+     *
+     * @var string
+     */
+    private $additionalName;
+
+    /**
+     * @Serialize\SerializedName("contactPerson")
+     * @Serialize\Type("string")
+     * @Assert\NotNull()
+     * @Assert\Type("string")
+     *
+     * @var string
+     */
+    private $contactPerson;
+
+    /**
      * @Serialize\SerializedName("streetName")
      * @Serialize\Type("string")
      * @Assert\NotBlank()
@@ -79,6 +99,8 @@ class CustomerModel
 
     /**
      * @param string       $name
+     * @param string       $additionalName
+     * @param string       $contactPerson
      * @param string       $streetName
      * @param string       $postCode
      * @param string       $city
@@ -89,6 +111,8 @@ class CustomerModel
      */
     public function __construct(
         $name,
+        $additionalName,
+        $contactPerson,
         $streetName,
         $postCode,
         $city,
@@ -98,6 +122,8 @@ class CustomerModel
         $phone = null
     ) {
         $this->name = $name;
+        $this->additionalName = $additionalName;
+        $this->contactPerson = $contactPerson;
         $this->streetName = $streetName;
         $this->postCode = $postCode;
         $this->city = $city;
@@ -129,6 +155,22 @@ class CustomerModel
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalName(): string
+    {
+        return $this->additionalName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContactPerson(): string
+    {
+        return $this->contactPerson;
     }
 
     /**

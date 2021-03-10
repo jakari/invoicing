@@ -1,114 +1,97 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {recalcInvoice, recalcItem} from "../utilities/invoice"
+import React, { FormEvent, useState } from "react"
+import { calculateTotal, recalcItem } from "../utilities/invoice"
 import {Button} from 'semantic-ui-react'
-import SelectCustomer from '../containers/select-customer'
+import {SelectCustomer} from '../containers/select-customer'
 import Loader from './loader'
 import NumberInput from "./number-input"
-import Input from "./ui/input"
-import {FormattedMessage, injectIntl} from "react-intl"
-import {defaultInvoiceItem} from "records";
+import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
+import { defaultInvoiceItem, Invoice, InvoiceItem } from "records"
+import { userSettingsState } from "state/atoms"
+import { useRecoilValue } from "recoil"
+import { useComponentInput, useInput } from "utilities/input-hook"
 
-class InvoiceForm extends Component {
-  constructor(props) {
-    super(props);
+interface Props extends WrappedComponentProps {
+  invoice: Invoice
+  submit: (invoice: Invoice) => void
+  cancel: () => void
+}
 
-    this.state = {invoice: props.invoice, loading: false};
-  }
+const useArrayInput = <T extends Object>(
+  initial: Array<T>
+) => {
+  const [array, setValue] = useState(initial)
 
-  submit = e => {
-    e.preventDefault();
-    this.setState({loading: true});
-    this.props.submit(this.state.invoice);
-  }
-
-  changeInvoice = e => {
-    const value = typeof e.target.value === 'string' && !e.target.value
-      ? null
-      : e.target.value;
-
-    this.setState({
-      invoice: {...this.state.invoice, [e.target.name]: value}
-    });
-  };
-
-  changeCustomer = customer =>
-    this.setState({invoice: {...this.state.invoice, customer}});
-
-  onTemplateChange = (e) => {
-    this.setState({invoice: {...this.state.invoice, template: e.target.value}});
-  }
-
-  addItem = () => this.setState({
-    invoice: {
-      ...this.state.invoice,
-      items: [...this.state.invoice.items, Object.assign({}, defaultInvoiceItem)]
+  return {
+    value: array,
+    edit: (index: number, item: T) => {
+      setValue([
+        ...array.slice(0, index),
+        item,
+        ...array.slice(index + 1)
+      ])
+    },
+    add: (item: T) => setValue([...array, item]),
+    remove: (item: T) => {
+      const index = array.indexOf(item)
+      setValue([...array.slice(0, index), ...array.slice(index + 1)])
     }
-  })
-
-  removeItem = index => () => {
-    const items = this.state.invoice.items
-
-    this.setState({
-      invoice: recalcInvoice('price', {
-        ...this.state.invoice,
-        items: [...items.slice(0, index), ...items.slice(index + 1)]
-      })
-    })
   }
-  onPlainInputChangeValue = index => e => {
-    const {name, value} = e.target;
+}
 
-    this.onChangeValue(index)(name)(value);
-  };
-  onChangeValue = index => name => value => {
-    const {items} = this.state.invoice
-    const item = {
-      ...this.state.invoice.items[index],
-      [name]: value
-    }
-    const recalced = [
-      ...items.slice(0, index),
-      recalcItem(name, item),
-      ...items.slice(index + 1)
-    ]
+function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, intl: {formatMessage}}: Props) {
+  const {templates} = useRecoilValue(userSettingsState)
+  const [loading, setLoading] = useState(false)
 
-    this.setState({
-      invoice: recalcInvoice(name, {...this.state.invoice, items: recalced})
-    });
-  };
+  const [customer, customerInput] = useComponentInput(injectedInvoice.customer)
+  const [created, createdInput] = useInput(injectedInvoice.created)
+  const [due, dueInput] = useInput(injectedInvoice.due)
+  const {value: items, edit: editItem, add: addItem, remove: removeItem} = useArrayInput(injectedInvoice.items)
+  const [delivery, deliveryInput] = useInput(injectedInvoice.delivery)
+  const [remarkingTime, remarkingTimeInput] = useInput(injectedInvoice.remarkingTime.toString())
+  const [interestOnArrears, interestOnArrearsInput] = useInput(injectedInvoice.interestOnArrears.toString())
+  const [conditionsOfPayment, conditionsOfPaymentInput] = useInput(injectedInvoice.conditionsOfPayment)
+  const [customerReference, customerReferenceInput] = useInput(injectedInvoice.customerReference)
+  const [template, templateInput] = useInput(injectedInvoice.template)
 
-  areItemsEmpty = () => this.state.invoice.items.size === 0;
+  const total = calculateTotal(items)
 
-  cancel = () => {
-    if (confirm('Are you sure you want to cancel?')) {
-      this.props.cancel();
-    }
-  };
-
-  render() {
-    const {
+  const submitForm = (e: FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    submit({
       customer,
+      customerName: customer?.name || "",
+      customerStreetName: customer?.streetName || "",
+      customerPostCode: customer?.postCode || "",
+      customerCity: customer?.city || "",
+      customerVat: customer?.vat || "",
+      invoiceNumber: injectedInvoice.invoiceNumber,
+      referenceNumber: injectedInvoice.referenceNumber,
       created,
       due,
       items,
       delivery,
-      remarkingTime,
-      interestOnArrears,
+      remarkingTime: parseInt(remarkingTime),
+      interestOnArrears: parseInt(interestOnArrears),
       conditionsOfPayment,
       customerReference,
-      template
-    } = this.state.invoice;
+      template,
+      total
+    })
+  }
 
-    const {formatMessage} = this.props.intl;
-
-    if (this.state.loading) {
-      return <Loader />;
+  const cancel = () => {
+    if (confirm('Are you sure you want to cancel?')) {
+      cancelInvoice()
     }
+  };
 
-    const {templates} = this.props
+  if (loading) {
+    return <Loader />;
+  }
 
-    return <form onSubmit={this.submit} autoComplete="nope">
+  return (
+    <form onSubmit={submitForm} autoComplete="nope">
       <div className="ui form stackable grid">
         <div className="ui sixteen wide column">
           <FormattedMessage id="invoice.template">
@@ -119,14 +102,11 @@ class InvoiceForm extends Component {
               </h4>
             )}
           </FormattedMessage>
-          <select value={template} onChange={this.onTemplateChange} required>
+          <select {...templateInput} required>
             {templates.map(({title, name}) => <option key={"template-" + name} value={name}>{title}</option>)}
           </select>
         </div>
-        <SelectCustomer
-          customer={this.state.invoice.customer}
-          onChange={this.changeCustomer}
-        />
+        <SelectCustomer {...customerInput} customer={customer} />
         <div className="ui eight wide column">
           <FormattedMessage id="invoice.information">
             {(txt) => (
@@ -142,8 +122,7 @@ class InvoiceForm extends Component {
               <input
                 type="date"
                 name="created"
-                value={created}
-                onChange={this.changeInvoice}
+                {...createdInput}
                 required
               />
             </div>
@@ -152,8 +131,7 @@ class InvoiceForm extends Component {
               <input
                 type="date"
                 name="due"
-                value={due}
-                onChange={this.changeInvoice}
+                {...dueInput}
                 required
               />
             </div>
@@ -162,8 +140,8 @@ class InvoiceForm extends Component {
             <div className="field">
               <FormattedMessage id="invoice.delivery" tagName="label" />
               <input type="text"
-                     name="delivery" value={delivery || ''}
-                     onChange={this.changeInvoice}
+                     name="delivery"
+                     {...deliveryInput}
                      placeholder={formatMessage({id: 'invoice.delivery'})}
                      max="255"
               />
@@ -173,8 +151,7 @@ class InvoiceForm extends Component {
               <div className="ui right labeled input">
                 <input type="number"
                        name="remarkingTime"
-                       value={remarkingTime}
-                       onChange={this.changeInvoice}
+                       {...remarkingTimeInput}
                        placeholder={formatMessage({id: 'invoice.remarking_time'})}
                        required
                        pattern="\d+"
@@ -194,8 +171,7 @@ class InvoiceForm extends Component {
               <div className="ui right labeled input">
                   <input type="number"
                          name="interestOnArrears"
-                         value={interestOnArrears}
-                         onChange={this.changeInvoice}
+                         {...interestOnArrearsInput}
                          placeholder={formatMessage({id: 'invoice.interest_on_arrears'})}
                          required
                          pattern="\d+"
@@ -208,8 +184,7 @@ class InvoiceForm extends Component {
               <FormattedMessage id="invoice.conditions_of_payment" tagName="label" />
               <input type="text"
                      name="conditionsOfPayment"
-                     value={conditionsOfPayment || ''}
-                     onChange={this.changeInvoice}
+                     {...conditionsOfPaymentInput}
                      placeholder={formatMessage({id: 'invoice.conditions_of_payment'})}
                      max="255" />
             </div>
@@ -218,8 +193,7 @@ class InvoiceForm extends Component {
             <FormattedMessage id="invoice.customer_reference" tagName="label" />
             <input type="text"
                    name="customerReference"
-                   value={customerReference || ''}
-                   onChange={this.changeInvoice}
+                   {...customerReferenceInput}
                    placeholder={formatMessage({id: 'invoice.customer_reference'})}
             />
           </div>
@@ -237,38 +211,54 @@ class InvoiceForm extends Component {
         </thead>
         <tbody>
         {items.map((item, key) => {
-          const valueChanger = this.onChangeValue(key);
-          const plainInputValueChanger = this.onPlainInputChangeValue(key);
+          const editAndRecalc = (item: InvoiceItem) => editItem(key, recalcItem(item))
 
           return <tr key={key}>
             <td>
               <div className="ui fluid transparent action input">
                 <input
-                  name="description"
                   required
-                  onChange={plainInputValueChanger}
                   value={item.description}
+                  onChange={e => editItem(key, {...item, description: e.target.value})}
                   className="ui input"
                   type="text"
                 />
-                <div onClick={this.removeItem(key)} className="ui compact mini red icon button">
+                <div onClick={() => removeItem(item)} className="ui compact mini red icon button">
                   <i className="trash alternate icon" />
                 </div>
               </div>
             </td>
             <td className="amount">
               <div className="ui fluid transparent input">
-                <input name="amount" required onChange={plainInputValueChanger} value={item.amount} className="ui input" type="text" pattern="\d+" />
+                <input
+                  required
+                  value={item.amount.toString()}
+                  onChange={e => editAndRecalc({...item, amount: parseInt(e.target.value)})}
+                  className="ui input"
+                  type="text"
+                  pattern="\d+"
+                />
               </div>
             </td>
             <td className="price">
               <div className="ui fluid transparent input">
-                  <NumberInput required onValueChange={valueChanger('price')} value={item.price} customInput={Input} />
+                  <NumberInput
+                    required
+                    value={item.price}
+                    onChange={price => editAndRecalc({...item, price})}
+                  />
               </div>
             </td>
             <td className="tax">
               <div className="ui fluid transparent input">
-                <input name="tax" required onChange={plainInputValueChanger} value={item.tax} className="ui input" type="text" pattern="\d+" />
+                <input
+                  required
+                  value={item.tax.toString()}
+                  onChange={e => editAndRecalc({...item, tax: parseInt(e.target.value)})}
+                  className="ui input"
+                  type="text"
+                  pattern="\d+"
+                />
               </div>
             </td>
             <td className="total">{item.total.toFixed(2)}</td>
@@ -277,20 +267,20 @@ class InvoiceForm extends Component {
         </tbody>
         <tfoot>
         <tr>
-          <th colSpan="4" className="footer header">
-            <button onClick={this.addItem} type="button" className="ui mini left floated button">
+          <td colSpan={4} className="footer header">
+            <button onClick={() => addItem(Object.assign({}, defaultInvoiceItem))} type="button" className="ui mini left floated button">
               <FormattedMessage id="invoice.form.add_item" />
             </button>
-            {this.areItemsEmpty() && <div className="ui left pointing red label">
+            {items.length === 0 && <div className="ui left pointing red label">
               <FormattedMessage id="invoice.form.error.at_least_one_item_required" />
             </div>}
             <h4 className="ui right floated header">
               <FormattedMessage id="invoice.total" />
             </h4>
-          </th>
-          <th className="footer value">
-            { this.state.invoice.total }
-          </th>
+          </td>
+          <td className="footer value">
+            { total }
+          </td>
         </tr>
         </tfoot>
       </table>
@@ -298,23 +288,19 @@ class InvoiceForm extends Component {
         <Button
           type="submit"
           primary
-          disabled={!customer || this.areItemsEmpty()}
+          disabled={!customer || items.length === 0}
         >
           <FormattedMessage id="button.save" />
         </Button>
         <Button
           type="button"
-          onClick={this.cancel}
+          onClick={cancel}
         >
           <FormattedMessage id="button.cancel" />
         </Button>
       </div>
-    </form>;
-  }
+    </form>
+  )
 }
 
-export default connect(
-  state => ({
-    templates: state.invoices.templates
-  })
-)(injectIntl(InvoiceForm));
+export default injectIntl(InvoiceForm)

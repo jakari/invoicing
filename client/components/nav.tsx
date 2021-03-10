@@ -1,11 +1,14 @@
 
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { logout } from "actions/auth"
 import {FormattedMessage} from 'react-intl'
+import { isCompanySelectedValue } from "state/user-settings"
+import { useLogout } from "api/user"
 
-function Nav({logout, isCompanySelected}) {
+export function Nav() {
+  const isCompanySelected = isCompanySelectedValue()
+  const logout = useLogout()
+
   return <div className="ui inverted menu">
     <div className="ui container">
       <div className="header item">
@@ -27,20 +30,16 @@ function Nav({logout, isCompanySelected}) {
                  to="/customers">
           <FormattedMessage id="nav.list_customers" />
         </NavLink>
+        </>}
+      <div className="right menu">
         <NavLink className="item"
                  to="/"
                  activeClassName=""
                  onClick={logout}>
           <FormattedMessage id="nav.logout" />
         </NavLink>
-        </>}
+      </div>
     </div>
-  </div>;
+  </div>
 }
 
-export default connect(
-  state => ({
-    isCompanySelected: state.invoices.selectedCompany !== undefined
-  }),
-  {logout}
-)(Nav)

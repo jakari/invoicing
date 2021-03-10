@@ -17,6 +17,8 @@ class FullCustomerModel extends CustomerModel
 
     /**
      * @param string       $name
+     * @param string       $additionalName
+     * @param string       $contactPerson
      * @param string       $streetName
      * @param string       $postCode
      * @param string       $city
@@ -28,6 +30,8 @@ class FullCustomerModel extends CustomerModel
      */
     public function __construct(
         $name,
+        $additionalName,
+        $contactPerson,
         $streetName,
         $postCode,
         $city,
@@ -39,6 +43,8 @@ class FullCustomerModel extends CustomerModel
     ) {
         parent::__construct(
             $name,
+            $additionalName,
+            $contactPerson,
             $streetName,
             $postCode,
             $city,

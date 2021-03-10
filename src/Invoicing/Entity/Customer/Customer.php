@@ -32,6 +32,20 @@ class Customer
     private $name;
 
     /**
+     * @ORM\Column(type="string", nullable=false)
+     *
+     * @var string
+     */
+    private $additionalName;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     *
+     * @var string
+     */
+    private $contactPerson;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Invoicing\Entity\Company")
      * @ORM\JoinColumn(name="company", nullable=false)
      *
@@ -91,6 +105,8 @@ class Customer
     public function __construct(
         Company $company,
         string $name,
+        string $additionalName,
+        string $contactPerson,
         string $streetName,
         string $postCode,
         string $city,
@@ -100,6 +116,8 @@ class Customer
     ) {
         $this->company = $company;
         $this->name = $name;
+        $this->additionalName = $additionalName;
+        $this->contactPerson = $contactPerson;
         $this->streetName = $streetName;
         $this->postCode = $postCode;
         $this->city = $city;
@@ -112,6 +130,8 @@ class Customer
     {
         return new CustomerModel(
             $this->name,
+            $this->additionalName,
+            $this->contactPerson,
             $this->streetName,
             $this->postCode,
             $this->city,
@@ -126,6 +146,8 @@ class Customer
     {
         return new FullCustomerModel(
             $this->name,
+            $this->additionalName,
+            $this->contactPerson,
             $this->streetName,
             $this->postCode,
             $this->city,
@@ -144,6 +166,8 @@ class Customer
     public function updateFromModel(CustomerModel $model)
     {
         $this->name = $model->getName();
+        $this->additionalName = $model->getAdditionalName();
+        $this->contactPerson = $model->getContactPerson();
         $this->streetName = $model->getStreetName();
         $this->postCode = $model->getPostCode();
         $this->city = $model->getCity();
@@ -174,6 +198,22 @@ class Customer
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalName(): string
+    {
+        return $this->additionalName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContactPerson(): string
+    {
+        return $this->contactPerson;
     }
 
     /**

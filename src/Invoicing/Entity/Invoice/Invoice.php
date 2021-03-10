@@ -133,6 +133,18 @@ class Invoice
     private $customerName;
 
     /**
+     * @ORM\Column(name="customer_additional_name", type="string", nullable=false)
+     * @var string
+     */
+    private $customerAdditionalName;
+
+    /**
+     * @ORM\Column(name="customer_contact_person", type="string", nullable=false)
+     * @var string
+     */
+    private $customerContactPerson;
+
+    /**
      * @ORM\Column(name="customer_street_name", type="string", nullable=false)
      * @var string
      */
@@ -188,6 +200,8 @@ class Invoice
         $this->customer = $customer;
         $this->company = $customer->getCompany();
         $this->customerName = $customer->getName();
+        $this->customerAdditionalName = $customer->getAdditionalName();
+        $this->customerContactPerson = $customer->getContactPerson();
         $this->customerStreetName = $customer->getStreetName();
         $this->customerCity = $customer->getCity();
         $this->customerPostCode = $customer->getPostCode();
@@ -255,6 +269,8 @@ class Invoice
             $this->due,
             new CustomerModel(
                 $this->customerName,
+                $this->customerAdditionalName,
+                $this->customerContactPerson,
                 $this->customerStreetName,
                 $this->customerPostCode,
                 $this->customerCity,
@@ -339,6 +355,8 @@ class Invoice
 
         $customer =  $model->getCustomer();
         $this->customerName = $customer->getName();
+        $this->customerAdditionalName = $customer->getAdditionalName();
+        $this->customerContactPerson = $customer->getContactPerson();
         $this->customerStreetName = $customer->getStreetName();
         $this->customerPostCode = $customer->getPostCode();
         $this->customerCity = $customer->getCity();
