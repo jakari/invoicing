@@ -10,7 +10,10 @@ export const jsonFetch = (url: string, method: string = "GET", body?: Object) =>
   credentials: 'include'
 })
   .then(assertAuthorized)
-  .then(response => response.status === 204 || response.json())
+  .then(async response => {
+    if (!response.ok) throw new ResponseError(response)
+    return response.status === 204 || response.json()
+  })
 
 const assertAuthorized = (response: Response) => {
   if (response.status === 401) {
@@ -18,4 +21,14 @@ const assertAuthorized = (response: Response) => {
   }
 
   return response
+}
+
+export class ResponseError extends Error {
+  response: Response
+
+  constructor(response: Response) {
+    super("Error from response, status: " + response.status)
+
+    this.response = response
+  }
 }

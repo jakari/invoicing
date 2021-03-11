@@ -1,9 +1,10 @@
 
-import React, { PureComponent, KeyboardEvent, ChangeEvent } from "react"
+import React, { PureComponent, ChangeEvent } from "react"
 import { Input, Button } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
 import { Customer, defaultCustomer } from "records"
 import { useSearchcustomers } from "api/customers"
+import { SelectCustomerInput } from "components/customer/select-customer-input"
 
 type InputProps = WrappedComponentProps & ProxyProps
 
@@ -26,7 +27,6 @@ interface State {
 }
 
 class SelectCustomerComponent extends PureComponent<Props, State> {
-  timeout: any = null
   private t: any
 
   constructor(props: Props) {
@@ -42,37 +42,6 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
     };
   }
 
-  onSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-
-    if (e.target.value.length > 0) {
-      this.setState({loading: true})
-
-      if (this.timeout) {
-        clearTimeout(this.timeout)
-      }
-      this.timeout = setTimeout(async () => {
-        try {
-          const customers = await this.props.searchCustomer(name)
-          this.setState({customers})
-        } catch (e) {
-        }
-
-        this.setState({loading: false})
-
-        // Timeout might have been cleared by quick blurring etc. Check that
-        // async is not obsolete
-        if (this.timeout) {
-          this.timeout = null;
-        }
-
-        // this.setState({loading: false})
-      }, 150);
-    }
-
-    this.setState({name});
-  };
-
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target
     const customer: Customer = {...this.state.customer, [name]: value} as Customer
@@ -80,32 +49,15 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
     this.setState({customer});
     this.props.onChange(customer);
   };
-  onNameSearchKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.charCode === 13) {
-      e.preventDefault();
-      (e.target as any)?.blur();
-    }
-  };
 
-  selectCustomer = (customer: Customer) => {
-    this.setState({customer, selected: true});
-    this.props.onChange(customer);
+  selectCustomer = (customer: Customer | null) => {
+    if (customer) {
+      this.setState({customer, selected: true})
+    } else this.setState({name: '', customer: null, selected: false})
+    this.props.onChange(customer)
   }
 
   setNewCustomer = () => this.selectCustomer({...defaultCustomer, name: this.state.name})
-
-  onNameBlur = () => {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = null;
-    }
-
-    // Dirty hack to allow an eventual click in the result field before actual blur
-    setTimeout(() => {
-      if (!this.state.customer && this.state.name) this.setNewCustomer();
-      else this.setState({name: '', customers: []})
-    }, 100)
-  };
 
   unselectCustomer = () => {
     this.setState({customer: null, selected: false});
@@ -119,9 +71,6 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
   };
 
   render() {
-    const {formatMessage: t} = this.props.intl
-    const {customers, loading} = this.state
-
     return <div className="eight wide column">
       <FormattedMessage id="customer.information">
         {(txt) => (
@@ -133,37 +82,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
       </FormattedMessage>
       {!this.state.selected &&
         <div>
-          <div className={"ui fluid search" + (loading ? " loading double" : "")}>
-            <div className="ui fluid huge icon input">
-              <input
-                className="prompt"
-                type="text"
-                placeholder={t({id: 'invoice.select_customer.customer_name'})}
-                value={this.state.name}
-                onChange={this.onSearch}
-                onKeyPress={this.onNameSearchKeyPress}
-                autoComplete="nope"
-                onBlur={this.onNameBlur}
-              />
-              <i className="search icon" />
-            </div>
-            {
-              !!customers.length
-                && <div className="results transition visible">
-                  {customers.map(customer => (
-                    <a key={"customer-" + customer.id} className="result" onClick={() => this.selectCustomer(customer)}>
-                      <div className="content">
-                        <div className="title">{customer.name}</div>
-                        {customer.additionalName && <div className="description">{customer.additionalName}</div>}
-                        <div className="description">{customer.streetName}</div>
-                        <div className="description">{customer.postCode} {customer.city}</div>
-                        <div className="description">{customer.phone}</div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-            }
-          </div>
+          <SelectCustomerInput selected={!!this.state.customer} selectCustomer={this.selectCustomer} />
           <div className="ui hidden divider" />
         </div>}
       <div>
