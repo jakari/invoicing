@@ -4,7 +4,6 @@ import { useSearchcustomers } from "api/customers"
 import { injectIntl, WrappedComponentProps } from "react-intl"
 
 interface Props extends  WrappedComponentProps {
-  selected: boolean
   selectCustomer: (customer: Customer | null) => void
 }
 
@@ -19,13 +18,19 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue
 }
 
-function SelectCustomer({selectCustomer, intl: {formatMessage}}: Props) {
+function SelectCustomer({selectCustomer: selectCustomerCallback, intl: {formatMessage}}: Props) {
   const searchCustomers = useSearchcustomers()
   const [searchTerm, setSearchTerm] = useState("")
   const [results, setResults] = useState<Customer[]>([])
   const [searching, setSearching] = useState(false)
   const debouncedSearchTerm = useDebounce(searchTerm, 150)
-  const [dropdownCustomer, setDropdownCustomer] = useState<Customer | null>(null)
+  const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(null)
+  const [createTimeout, setCreateTimeout] = useState<number | null>(null)
+
+  const selectCustomer = (customer: Customer | null) => {
+    if (createTimeout) clearTimeout(createTimeout)
+    selectCustomerCallback(customer)
+  }
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -33,19 +38,23 @@ function SelectCustomer({selectCustomer, intl: {formatMessage}}: Props) {
       searchCustomers(debouncedSearchTerm)
         .then(customers => {
           setResults(customers)
-          if (customers[0]) setDropdownCustomer(customers[0])
+          if (customers[0]) setCurrentCustomer(customers[0])
           setSearching(false)
         })
     } else setResults([])
   }, [debouncedSearchTerm])
 
-  const createNewCustomer = () => selectCustomer(searchTerm.length > 0 ? {...defaultCustomer, name: searchTerm} : null)
+  const createNewCustomer = () => {
+    setCreateTimeout(
+      setTimeout(() => selectCustomer(searchTerm.length > 0 ? {...defaultCustomer, name: searchTerm} : null), 100)
+    )
+  }
 
   const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "Enter":
-        if (dropdownCustomer) {
-          selectCustomer(dropdownCustomer)
+        if (currentCustomer) {
+          selectCustomer(currentCustomer)
         }
         break
       case "Escape":
@@ -53,17 +62,17 @@ function SelectCustomer({selectCustomer, intl: {formatMessage}}: Props) {
         e.currentTarget.blur()
         break
       case "ArrowUp":
-        if (dropdownCustomer) {
-          const current = results.indexOf(dropdownCustomer)
-          if (current === 0) setDropdownCustomer(results[results.length - 1])
-          else setDropdownCustomer(results[current - 1])
+        if (currentCustomer) {
+          const current = results.indexOf(currentCustomer)
+          if (current === 0) setCurrentCustomer(results[results.length - 1])
+          else setCurrentCustomer(results[current - 1])
         }
         break
       case "ArrowDown":
-        if (dropdownCustomer) {
-          const current = results.indexOf(dropdownCustomer)
-          if (current === results.length - 1) setDropdownCustomer(results[0])
-          else setDropdownCustomer(results[current + 1])
+        if (currentCustomer) {
+          const current = results.indexOf(currentCustomer)
+          if (current === results.length - 1) setCurrentCustomer(results[0])
+          else setCurrentCustomer(results[current + 1])
         }
         break
     }
@@ -89,7 +98,11 @@ function SelectCustomer({selectCustomer, intl: {formatMessage}}: Props) {
           !!results.length
           && <div className="results transition visible">
             {results.map(customer => (
-              <a key={"customer-" + customer.id} className={"result" + (customer === dropdownCustomer ? " active" : "")} onClick={() => {}}>
+              <a
+                key={"customer-" + customer.id}
+                className={"result" + (customer === currentCustomer ? " active" : "")}
+                onClick={() => selectCustomer(customer)}
+              >
                 <div className="content">
                   <div className="title">{customer.name}</div>
                   {customer.additionalName && <div className="description">{customer.additionalName}</div>}

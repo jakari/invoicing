@@ -17,6 +17,7 @@
     "experimentalDecorators": true,
     "target": "es6",
     "module": "commonjs",
+    "types": [],
     "lib": [
       "dom",
       "es2017"

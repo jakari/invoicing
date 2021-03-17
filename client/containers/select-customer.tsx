@@ -64,13 +64,15 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
     this.props.onChange(null);
   };
 
-  getNameLabel = () => {
+  getNameLabel = (): {content: string, color: string} => {
     if (!this.state.selected) return {content: this.t({id: 'invoice.select_customer.not_selected'}), color: 'teal'};
     if (this.state.customer?.id) return {content: this.t({id: 'invoice.select_customer.selected'}), color: 'blue'};
     else return {content: this.t({id: 'invoice.select_customer.create_new'}), color: 'yellow'};
   };
 
   render() {
+    const nameLabel = this.getNameLabel()
+
     return <div className="eight wide column">
       <FormattedMessage id="customer.information">
         {(txt) => (
@@ -82,7 +84,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
       </FormattedMessage>
       {!this.state.selected &&
         <div>
-          <SelectCustomerInput selected={!!this.state.customer} selectCustomer={this.selectCustomer} />
+          <SelectCustomerInput selectCustomer={this.selectCustomer} />
           <div className="ui hidden divider" />
         </div>}
       <div>
@@ -104,15 +106,18 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
             {!this.state.customer.id
               ? <div className="required field">
                   <FormattedMessage id="customer.company" tagName="label" />
-                  <Input
-                    name="name"
-                    label={this.getNameLabel()}
-                    labelPosition='right'
-                    placeholder={this.t({id: 'customer.company'})}
-                    value={this.state.customer.name}
-                    onChange={this.onChange}
-                    required
-                  />
+                  <div className="ui right labeled input">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder={this.t({id: 'customer.company'})}
+                      value={this.state.customer.name}
+                      onChange={this.onChange}
+                      autoComplete="off"
+                      required
+                    />
+                    <div className={`ui ${nameLabel.color} label`}>{nameLabel.content}</div>
+                  </div>
                 </div>
               :
               <div>
@@ -197,7 +202,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
                        placeholder={this.t({id: 'customer.contact_person'})}
                 />
               </div>
-              <div className="required six wide field">
+              <div className="six wide field">
               <FormattedMessage id="customer.phone" tagName="label" />
               <input type="text"
                      name="phone"

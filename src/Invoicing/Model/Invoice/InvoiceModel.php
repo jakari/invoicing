@@ -55,6 +55,7 @@ class InvoiceModel
      * @Assert\All({
      * @Assert\Type("Invoicing\Model\Invoice\ItemModel")
      * })
+     * @Assert\Count(min=1)
      * @Serialize\Type("array<Invoicing\Model\Invoice\ItemModel>")
      *
      * @var ItemModel[]
