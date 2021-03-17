@@ -1,6 +1,6 @@
 
 import React, { PureComponent, ChangeEvent } from "react"
-import { Input, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
 import { Customer, defaultCustomer } from "records"
 import { useSearchcustomers } from "api/customers"

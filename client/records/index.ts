@@ -102,7 +102,7 @@ export const defaultInvoice: Invoice = {
   customerVat: '',
   invoiceNumber: 0,
   referenceNumber: 0,
-  items: [],
+  items: [defaultInvoiceItem],
   total: 0,
   remarkingTime: 0,
   interestOnArrears: 0,

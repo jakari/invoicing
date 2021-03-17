@@ -15,12 +15,12 @@
     "noFallthroughCasesInSwitch": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "types": [],
     "lib": [
       "dom",
-      "es2017"
+      "ESNext"
     ],
     "baseUrl": "./client",
     "paths": {
