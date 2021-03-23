@@ -1,6 +1,6 @@
 
 import React from 'react'
-import InvoiceForm from '../components/invoice-form'
+import InvoiceForm from 'components/invoice/invoice-form'
 import {FormattedMessage} from "react-intl"
 import {getEmptyInvoice} from "state/selectors/invoices"
 import { RouteComponentProps } from "react-router"

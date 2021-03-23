@@ -1,14 +1,24 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, FocusEvent } from "react"
 
-export const useInput = (initial: string):
-  [string, {value: string, onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void}] => {
+export const useCheckValidityInput = (form: HTMLFormElement) => (initial: string) => useInput(initial, () => form.reportValidity())
+
+export const useInput = (initial: string, onBlur?: () => void):
+  [
+    string,
+    {
+      value: string,
+      onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
+      onBlur?: (event: FocusEvent<HTMLInputElement | HTMLSelectElement>) => void
+    }
+  ] => {
   const [value, setValue] = useState(initial)
 
   return [
     value,
     {
       value,
-      onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setValue(event.target.value)
+      onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setValue(event.target.value),
+      onBlur
     }
   ]
 }

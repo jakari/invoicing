@@ -1,9 +1,7 @@
 
 import React, { useEffect } from "react"
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { ListInvoices } from 'containers/list-invoices'
-import EditInvoice from 'containers/edit-invoice'
-import {CreateInvoice} from 'containers/create-invoice'
+import { ListInvoices, CreateInvoice, EditInvoice } from 'containers/invoice'
 import Login from 'containers/login'
 import 'style.css'
 import { ViewInvoice } from 'containers/view-invoice'

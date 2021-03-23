@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react"
-import InvoiceForm from '../components/invoice-form'
+import InvoiceForm from 'components/invoice/invoice-form'
 import {FormattedMessage} from "react-intl"
 import { useInvoiceApi } from "api/invoices"
 import { Invoice } from "records"
@@ -8,7 +8,7 @@ import { RouteComponentProps } from "react-router"
 import Loader from "components/loader"
 
 
-function EditInvoice({match: {params}, history}: RouteComponentProps<{invoice: string}>) {
+export function EditInvoice({match: {params}, history}: RouteComponentProps<{invoice: string}>) {
   const api = useInvoiceApi()
   const [invoice, setInvoice]  = useState<Invoice | null>(null)
 
@@ -40,4 +40,3 @@ function EditInvoice({match: {params}, history}: RouteComponentProps<{invoice: s
   </div>
 }
 
-export default EditInvoice

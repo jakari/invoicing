@@ -1,14 +1,15 @@
-import React, { FormEvent, useState } from "react"
-import { calculateTotal, recalcItem } from "../utilities/invoice"
+import React, { FormEvent, useRef, useState } from "react"
+import { calculateTotal } from "utilities/invoice"
 import {Button} from 'semantic-ui-react'
-import {SelectCustomer} from '../containers/select-customer'
-import Loader from './loader'
-import NumberInput from "./number-input"
+import {SelectCustomer} from './select-customer'
+import Loader from '../loader'
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
-import { defaultInvoiceItem, Invoice, InvoiceItem } from "records"
+import { defaultInvoiceItem, Invoice } from "records"
 import { userSettingsState } from "state/atoms"
 import { useRecoilValue } from "recoil"
-import { useComponentInput, useInput } from "utilities/input-hook"
+import { useInput, useComponentInput } from "utilities/input-hook"
+import { InvoiceItem } from "./invoice-item"
+import {v4 as uuidv4} from "uuid"
 
 interface Props extends WrappedComponentProps {
   invoice: Invoice
@@ -16,23 +17,30 @@ interface Props extends WrappedComponentProps {
   cancel: () => void
 }
 
-const useArrayInput = <T extends Object>(
+interface Key<T> {
+  key: string
+  value: T
+}
+
+const useKeyedArrayInput = <T extends Object>(
   initial: Array<T>
 ) => {
-  const [array, setValue] = useState(initial)
+  const applyValue = (value: T): Key<T> => ({key: uuidv4(), value})
+  const [array, setValue] = useState(initial.map(applyValue))
 
   return {
-    value: array,
-    edit: (index: number, item: T) => {
+    value: array.map(item => item.value),
+    array: array,
+    edit: (index: number, value: T) => {
       setValue([
         ...array.slice(0, index),
-        item,
+        {key: array[index].key, value: value},
         ...array.slice(index + 1)
       ])
     },
-    add: (item: T) => setValue([...array, item]),
+    add: (item: T) => setValue([...array, applyValue(item)]),
     remove: (item: T) => {
-      const index = array.indexOf(item)
+      const index = array.findIndex(current => current.value === item)
       setValue([...array.slice(0, index), ...array.slice(index + 1)])
     }
   }
@@ -40,12 +48,13 @@ const useArrayInput = <T extends Object>(
 
 function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, intl: {formatMessage}}: Props) {
   const {templates} = useRecoilValue(userSettingsState)
+  const formEl = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false)
 
   const [customer, customerInput] = useComponentInput(injectedInvoice.customer)
   const [created, createdInput] = useInput(injectedInvoice.created)
   const [due, dueInput] = useInput(injectedInvoice.due)
-  const {value: items, edit: editItem, add: addItem, remove: removeItem} = useArrayInput(injectedInvoice.items)
+  const {value: items, array: itemsArray, edit: editItem, add: addItem, remove: removeItem} = useKeyedArrayInput(injectedInvoice.items)
   const [delivery, deliveryInput] = useInput(injectedInvoice.delivery)
   const [remarkingTime, remarkingTimeInput] = useInput(injectedInvoice.remarkingTime.toString())
   const [interestOnArrears, interestOnArrearsInput] = useInput(injectedInvoice.interestOnArrears.toString())
@@ -91,7 +100,7 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
   }
 
   return (
-    <form onSubmit={submitForm} autoComplete="nope">
+    <form onSubmit={submitForm} autoComplete="nope" ref={formEl}>
       <div className="ui form stackable grid">
         <div className="ui sixteen wide column">
           <FormattedMessage id="invoice.template">
@@ -210,60 +219,9 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
         </tr>
         </thead>
         <tbody>
-        {items.map((item, key) => {
-          const editAndRecalc = (item: InvoiceItem) => editItem(key, recalcItem(item))
-
-          return <tr key={key}>
-            <td>
-              <div className="ui fluid transparent action input">
-                <input
-                  required
-                  value={item.description}
-                  onChange={e => editItem(key, {...item, description: e.target.value})}
-                  className="ui input"
-                  type="text"
-                />
-                <div onClick={() => removeItem(item)} className="ui compact mini red icon button">
-                  <i className="trash alternate icon" />
-                </div>
-              </div>
-            </td>
-            <td className="amount">
-              <div className="ui fluid transparent input">
-                <input
-                  required
-                  value={item.amount.toString()}
-                  onChange={e => editAndRecalc({...item, amount: parseInt(e.target.value)})}
-                  className="ui input"
-                  type="text"
-                  pattern="\d+"
-                />
-              </div>
-            </td>
-            <td className="price">
-              <div className="ui fluid transparent input">
-                  <NumberInput
-                    required
-                    value={item.price}
-                    onChange={price => editAndRecalc({...item, price})}
-                  />
-              </div>
-            </td>
-            <td className="tax">
-              <div className="ui fluid transparent input">
-                <input
-                  required
-                  value={item.tax.toString()}
-                  onChange={e => editAndRecalc({...item, tax: parseInt(e.target.value)})}
-                  className="ui input"
-                  type="text"
-                  pattern="\d+"
-                />
-              </div>
-            </td>
-            <td className="total">{item.total.toFixed(2)}</td>
-          </tr>;
-        })}
+        {itemsArray.map(({key, value}, index) => (
+          <InvoiceItem key={key} index={index} item={value} edit={editItem} remove={removeItem} />
+        ))}
         </tbody>
         <tfoot>
         <tr>
