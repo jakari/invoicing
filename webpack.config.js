@@ -49,21 +49,20 @@ module.exports = {
   },
 
   plugins,
-  devtool: 'none',
+  devtool: 'eval-cheap-module-source-map',
 
   devServer: {
     hot: true,
-    contentBase: path.resolve(__dirname, 'build/'),
+    static: path.resolve(__dirname, 'build/'),
     historyApiFallback: true,
-    publicPath: '/',
     proxy: {
       '/api': {
-        target: 'http://invoicing.tunk.io',
+        target: 'http://invoicing.tunk.io:8080',
         changeOrigin: true,
         secure: false
       },
       '/bundles': {
-        target: 'http://invoicing.tunk.io',
+        target: 'http://invoicing.tunk.io:8080',
         changeOrigin: true,
         secure: false
       }

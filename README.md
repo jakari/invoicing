@@ -34,7 +34,9 @@ To use the application, first install it according to the guide below, and add a
 6. Copy `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.example.yml` to `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml` and modify settings accordingly.
 7. Copy `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template-example.html` to `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html` and modify according to your needs. 
 8. Initialize the frontend by running `npm install` and `npm start` in the `client` folder.
-9. Application is ready to use.
+9. Add a user using the command below.
+10. Add a company to the database: `INSERT INTO company(name) VALUES('Yritys Oy');`
+11. Application is ready to use.
 
 ### Adding a user
 

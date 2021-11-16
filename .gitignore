@@ -18,3 +18,4 @@
 /src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml
 /build/*
 /.env
+composer.phar
