@@ -5,6 +5,10 @@ default:
   late_interest: 18
   # Days for complaint period
   remarking_time: 14
+  # Initial reference number
+  initial_reference_number: 100
+  # Initial invoice number
+  initial_invoice_number: 1
 
 company:
   marketing_name: company
