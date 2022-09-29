@@ -154,6 +154,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
                        value={this.state.customer.postCode}
                        onChange={this.onChange}
                        placeholder={this.t({id: 'customer.post_code'})}
+                       maxLength={10}
                        required
                 />
               </div>
