@@ -13,7 +13,7 @@ export function FloatNumberInput({value: initial, onChange, required}: Props<num
       decimalScale={2}
       value={value}
       onValueChange={({floatValue}) => {
-        if (!Number.isNaN(floatValue)) {
+        if (floatValue !== undefined && !Number.isNaN(floatValue)) {
           onChange(floatValue)
           setValue(floatValue)
         } else {

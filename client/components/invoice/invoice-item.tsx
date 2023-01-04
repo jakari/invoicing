@@ -1,8 +1,9 @@
 import React  from "react"
 import { recalcItem } from "../../utilities/invoice"
 import { InvoiceItem as InvoiceItemRecord } from "../../records"
-import { FloatNumberInput, IntNumberInput } from "components/inputs/number-input"
 import { StringInput } from "components/inputs/string-input"
+import { NumberInput } from "components/number-input"
+import { moneyFormatter } from "utilities/money-formatter"
 
 interface Props {
   index: number
@@ -32,7 +33,7 @@ export function InvoiceItem({index, item, edit, remove}: Props) {
     </td>
     <td className="amount">
       <div className="ui fluid transparent input">
-        <IntNumberInput
+        <NumberInput
           required={true}
           value={item.amount}
           onChange={changeValue(index, "amount")}
@@ -41,7 +42,7 @@ export function InvoiceItem({index, item, edit, remove}: Props) {
     </td>
     <td className="price">
       <div className="ui fluid transparent input">
-        <FloatNumberInput
+        <NumberInput
           required
           value={item.price}
           onChange={changeValue(index, "price")}
@@ -50,13 +51,13 @@ export function InvoiceItem({index, item, edit, remove}: Props) {
     </td>
     <td className="tax">
       <div className="ui fluid transparent input">
-        <IntNumberInput
+        <NumberInput
           required={true}
           value={item.tax}
           onChange={changeValue(index, "tax")}
         />
       </div>
     </td>
-    <td className="total">{item.total.toFixed(2)}</td>
-  </tr>;
+    <td className="total">{moneyFormatter.format(item.totalWithoutTax)}</td>
+  </tr>
 }

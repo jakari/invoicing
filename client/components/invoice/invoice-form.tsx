@@ -10,6 +10,7 @@ import { useRecoilValue } from "recoil"
 import { useInput, useComponentInput } from "utilities/input-hook"
 import { InvoiceItem } from "./invoice-item"
 import {v4 as uuidv4} from "uuid"
+import {moneyFormatter} from "utilities/money-formatter"
 
 interface Props extends WrappedComponentProps {
   invoice: Invoice
@@ -237,7 +238,7 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
             </h4>
           </td>
           <td className="footer value">
-            { total }
+            { moneyFormatter.format(total) }
           </td>
         </tr>
         </tfoot>

@@ -16,10 +16,12 @@ export function calculateTotal(items: InvoiceItem[]): number {
 export function recalcItem(item: InvoiceItem): InvoiceItem {
   const price = item.price || 0
   const tax = (item.tax / 100) + 1
+  const totalWithoutTax = price * item.amount
 
   return {
     ...item,
-    total: roundToTwo((item.amount * price) * tax)
+    total: roundToTwo(totalWithoutTax * tax),
+    totalWithoutTax: roundToTwo(totalWithoutTax)
   }
 }
 

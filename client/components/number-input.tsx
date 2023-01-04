@@ -1,7 +1,7 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
 
-export default function NumberInput({value, onChange, required}: {value: number, onChange: (value: number) => void, required: boolean}) {
+export function NumberInput({value, onChange, required}: {value: number, onChange: (value: number) => void, required: boolean}) {
     const inputProps: any = {};
 
     if (required) {

@@ -60,6 +60,7 @@ export type InvoiceItem = Readonly<{
   price: number
   tax: number
   total: number
+  totalWithoutTax: number
 }>
 
 export const defaultInvoiceItem: InvoiceItem = {
@@ -67,7 +68,8 @@ export const defaultInvoiceItem: InvoiceItem = {
   amount: 1,
   price: 0,
   tax: 24,
-  total: 0
+  total: 0,
+  totalWithoutTax: 0
 }
 
 export type Invoice = Readonly<{

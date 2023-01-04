@@ -57,12 +57,12 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       '/api': {
-        target: 'http://invoicing.tunk.io:8080',
+        target: 'http://invoicing.tunk.io:8081',
         changeOrigin: true,
         secure: false
       },
       '/bundles': {
-        target: 'http://invoicing.tunk.io:8080',
+        target: 'http://invoicing.tunk.io:8081',
         changeOrigin: true,
         secure: false
       }

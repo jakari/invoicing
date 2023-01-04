@@ -23,6 +23,7 @@ class InvoiceExtension extends AbstractExtension
     {
         return array(
             new TwigFilter('itemTotal', array($this, 'itemTotal')),
+            new TwigFilter('itemTotalWithoutTax', array($this, 'itemTotalWithoutTax')),
             new TwigFilter('total', array($this, 'total')),
             new TwigFilter('totalWithoutTax', array($this, 'totalWithoutTax')),
             new TwigFilter('taxTotal', array($this, 'taxTotal')),
@@ -34,6 +35,11 @@ class InvoiceExtension extends AbstractExtension
     public function itemTotal(InvoiceItem $item)
     {
         return $this->format(InvoiceCalculator::calculateItemTotal($item));
+    }
+
+    public function itemTotalWithoutTax(InvoiceItem $item)
+    {
+        return $this->format(InvoiceCalculator::calculateItemTotalWithoutTax($item));
     }
 
     public function taxTotal(Invoice $invoice)

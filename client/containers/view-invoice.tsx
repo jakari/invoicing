@@ -8,6 +8,7 @@ import {FormattedMessage} from "react-intl"
 import { Invoice } from "records"
 import { useSettings } from "state/user-settings"
 import { useInvoiceApi } from "api/invoices"
+import {moneyFormatter} from "utilities/money-formatter"
 
 export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
   const [invoice, setInvoice] = useState<Invoice | undefined>()
@@ -144,9 +145,9 @@ export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
       {invoice.items.map((item, key) => (<tr key={key}>
           <td>{ item.description }</td>
           <td className="amount">{ item.amount }</td>
-          <td className="price">{ item.price.toFixed(2) }</td>
+          <td className="price">{ moneyFormatter.format(item.price) }</td>
           <td className="tax">{ item.tax }</td>
-          <td className="total">{ item.total.toFixed(2) }</td>
+          <td className="total">{ moneyFormatter.format(item.totalWithoutTax) }</td>
         </tr>))}
       </tbody>
       <tfoot>
@@ -156,7 +157,7 @@ export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
             <FormattedMessage id="invoice.total" />
           </h4>
         </th>
-        <th className="footer value">{ invoice.total.toFixed(2) }</th>
+        <th className="footer value">{ moneyFormatter.format(invoice.total) }</th>
       </tr>
       </tfoot>
     </table>
