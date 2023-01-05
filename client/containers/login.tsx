@@ -1,9 +1,9 @@
 
 import React, { FormEvent } from "react"
-import { userLoginCallback } from "api/user"
+import { userLoginCallback } from "../api-helper/user"
 import { Button } from 'semantic-ui-react'
 import {FormattedMessage, injectIntl, WrappedComponentProps} from "react-intl";
-import { useInput } from "utilities/input-hook"
+import { useInput } from "../utilities/input-hook"
 
 function Login({intl: {formatMessage}}: WrappedComponentProps) {
   const loginUser = userLoginCallback()

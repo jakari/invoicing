@@ -2,8 +2,8 @@
 import React from "react"
 import { List } from "semantic-ui-react"
 import { useRecoilValue } from "recoil"
-import { setSelectCompany } from "state/user-settings"
-import { userSettingsState } from "state/atoms"
+import { setSelectCompany } from "../state/user-settings"
+import { userSettingsState } from "../state/atoms"
 
 
 export function SelectCompany() {

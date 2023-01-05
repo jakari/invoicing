@@ -2,8 +2,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
-import { isCompanySelectedValue } from "state/user-settings"
-import { useLogout } from "api/user"
+import { isCompanySelectedValue } from "../state/user-settings"
+import { useLogout } from "../api-helper/user"
 
 export function Nav() {
   const isCompanySelected = isCompanySelectedValue()

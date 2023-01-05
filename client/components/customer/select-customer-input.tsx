@@ -1,6 +1,6 @@
 import React, { KeyboardEvent, useEffect, useState } from "react"
-import { Customer, defaultCustomer } from "records"
-import { useSearchcustomers } from "api/customers"
+import { Customer, defaultCustomer } from "../../records"
+import { useSearchcustomers } from "../../api-helper/customers"
 import { injectIntl, WrappedComponentProps } from "react-intl"
 
 interface Props extends  WrappedComponentProps {

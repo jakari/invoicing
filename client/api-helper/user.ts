@@ -3,7 +3,7 @@ import { selectedCompanyState, userSettingsState } from "../state/atoms"
 import { isAuthenticatedState, useSetIsAuthenticated } from "../state/auth"
 import { useCallback } from "react"
 import { AppConfiguration } from "../records"
-import { useApi } from "api"
+import { useApi } from "."
 
 export const fetchUserSettings = () => {
   const {get} = useApi()

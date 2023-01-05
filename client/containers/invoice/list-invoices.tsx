@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react"
 import {FormattedMessage} from "react-intl"
 import { RouteComponentProps } from "react-router"
-import { useInvoiceApi } from "api/invoices"
-import { Invoice } from "records"
+import { useInvoiceApi } from "../../api-helper/invoices"
+import { Invoice } from "../../records"
 
 export function ListInvoices({history}: RouteComponentProps) {
   const [invoices, setInvoices] = useState<Invoice[]>([])

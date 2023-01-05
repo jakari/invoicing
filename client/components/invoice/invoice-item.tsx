@@ -1,9 +1,9 @@
 import React  from "react"
 import { recalcItem } from "../../utilities/invoice"
 import { InvoiceItem as InvoiceItemRecord } from "../../records"
-import { StringInput } from "components/inputs/string-input"
-import { NumberInput } from "components/number-input"
-import { moneyFormatter } from "utilities/money-formatter"
+import { StringInput } from "../inputs/string-input"
+import { NumberInput } from "../number-input"
+import { moneyFormatter } from "../../utilities/money-formatter"
 
 interface Props {
   index: number

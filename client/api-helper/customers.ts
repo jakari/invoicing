@@ -1,7 +1,7 @@
 
-import { useApi } from "api"
+import { useApi } from "."
 import { Customer, CustomerWithInvoiceList } from "../records"
-import { ResponseError } from "utilities/api"
+import { ResponseError } from "../utilities/api"
 
 export const useSearchcustomers = (): (name: string) => Promise<Customer[]> => {
   const {get} = useApi({useMainLoading: false})

@@ -1,7 +1,7 @@
 
 import { Invoice } from "../records"
-import { useApi } from "api"
-import { calculateTotal, recalcItem } from "utilities/invoice"
+import { useApi } from "."
+import { calculateTotal, recalcItem } from "../utilities/invoice"
 
 export const useInvoiceApi = () => {
   const api = useApi()

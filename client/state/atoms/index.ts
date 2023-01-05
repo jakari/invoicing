@@ -1,5 +1,5 @@
 import { atom } from "recoil"
-import { AppConfiguration, defaultInvoiceSettings, Invoice, Company } from "records"
+import { AppConfiguration, defaultInvoiceSettings, Invoice, Company } from "../../records"
 
 export const userSettingsState = atom<AppConfiguration>({
   key: 'userSettingsState',

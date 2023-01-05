@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react"
 import {NavLink} from 'react-router-dom'
 import {Button, Message} from 'semantic-ui-react'
 import { RouteComponentProps } from "react-router"
-import Loader from 'components/loader'
+import Loader from '../components/loader'
 import {FormattedMessage} from "react-intl"
-import { Invoice } from "records"
-import { useSettings } from "state/user-settings"
-import { useInvoiceApi } from "api/invoices"
-import {moneyFormatter} from "utilities/money-formatter"
+import { Invoice } from "../records"
+import { useSettings } from "../state/user-settings"
+import { useInvoiceApi } from "../api-helper/invoices"
+import {moneyFormatter} from "../utilities/money-formatter"
 
 export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
   const [invoice, setInvoice] = useState<Invoice | undefined>()

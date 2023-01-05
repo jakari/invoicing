@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from "react"
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
-import { Customer } from "records"
+import { Customer } from "../records"
 import { RouteComponentProps } from "react-router"
-import { useCustomerApi } from "api/customers"
+import { useCustomerApi } from "../api-helper/customers"
 
 const ListCustomersComponent = ({history, intl: {formatMessage}}: WrappedComponentProps & RouteComponentProps) => {
   const [customers, setCustomers] = useState<Customer[]>([])

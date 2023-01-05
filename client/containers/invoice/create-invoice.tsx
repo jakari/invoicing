@@ -1,11 +1,11 @@
 
 import React from 'react'
-import InvoiceForm from 'components/invoice/invoice-form'
+import InvoiceForm from '../../components/invoice/invoice-form'
 import {FormattedMessage} from "react-intl"
-import {getEmptyInvoice} from "state/selectors/invoices"
+import {getEmptyInvoice} from "../../state/selectors/invoices"
 import { RouteComponentProps } from "react-router"
-import {useInvoiceApi} from "api/invoices"
-import { Invoice } from "client/records"
+import {useInvoiceApi} from "../../api-helper/invoices"
+import { Invoice } from "../../records"
 
 export function CreateInvoice({history}: RouteComponentProps) {
   const invoiceApi = useInvoiceApi()

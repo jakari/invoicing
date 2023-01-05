@@ -1,7 +1,7 @@
 import { useRecoilCallback } from "recoil"
-import { isAuthenticatedState } from "state/auth"
-import { jsonFetch, NotAuthorizedError } from "utilities/api"
-import { mainLoadingState } from "state/atoms"
+import { isAuthenticatedState } from "../state/auth"
+import { jsonFetch, NotAuthorizedError } from "../utilities/api"
+import { mainLoadingState } from "../state/atoms"
 
 interface Options {
   useMainLoading: boolean

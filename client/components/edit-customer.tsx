@@ -3,8 +3,8 @@ import React, { FormEvent, useEffect, useState } from "react"
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
 import { Customer } from "../records"
 import { RouteComponentProps } from "react-router"
-import { useCustomerApi } from "api/customers"
-import { useNamedInput } from "utilities/input-hook"
+import { useCustomerApi } from "../api-helper/customers"
+import { useNamedInput } from "../utilities/input-hook"
 
 type Props = RouteComponentProps<{customerId: string}> & WrappedComponentProps
 

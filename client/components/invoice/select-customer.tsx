@@ -1,10 +1,10 @@
 
 import React, { PureComponent, ChangeEvent } from "react"
-import { Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
-import { Customer, defaultCustomer } from "records"
-import { useSearchcustomers } from "api/customers"
-import { SelectCustomerInput } from "components/customer/select-customer-input"
+import { Customer, defaultCustomer } from "../../records"
+import { useSearchcustomers } from "../../api-helper/customers"
+import { SelectCustomerInput } from "../../components/customer/select-customer-input"
 
 type InputProps = WrappedComponentProps & ProxyProps
 

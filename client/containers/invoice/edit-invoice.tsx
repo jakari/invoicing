@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from "react"
-import InvoiceForm from 'components/invoice/invoice-form'
+import InvoiceForm from '../../components/invoice/invoice-form'
 import {FormattedMessage} from "react-intl"
-import { useInvoiceApi } from "api/invoices"
-import { Invoice } from "records"
+import { useInvoiceApi } from "../../api-helper/invoices"
+import { Invoice } from "../../records"
 import { RouteComponentProps } from "react-router"
-import Loader from "components/loader"
+import Loader from "../../components/loader"
 
 
 export function EditInvoice({match: {params}, history}: RouteComponentProps<{invoice: string}>) {

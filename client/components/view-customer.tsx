@@ -4,8 +4,8 @@ import { FormattedMessage, WrappedComponentProps } from "react-intl"
 import {NavLink} from "react-router-dom"
 import {Button} from "semantic-ui-react"
 import { RouteComponentProps } from "react-router"
-import { useCustomerApi } from "api/customers"
-import { CustomerWithInvoiceList } from "records"
+import { useCustomerApi } from "../api-helper/customers"
+import { CustomerWithInvoiceList } from "../records"
 
 
 type Props = RouteComponentProps<{customerId: string}> & WrappedComponentProps

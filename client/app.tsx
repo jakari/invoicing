@@ -1,24 +1,24 @@
 
 import React, { useEffect } from "react"
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { ListInvoices, CreateInvoice, EditInvoice } from 'containers/invoice'
-import Login from 'containers/login'
-import 'style.css'
-import { ViewInvoice } from 'containers/view-invoice'
-import 'app.sass'
-import Loader from 'components/loader'
-import { Nav } from 'components/nav'
-import messages from 'i18n/fi'
+import { ListInvoices, CreateInvoice, EditInvoice } from './containers/invoice'
+import Login from './containers/login'
+import './style.css'
+import { ViewInvoice } from './containers/view-invoice'
+import './app.sass'
+import Loader from './components/loader'
+import { Nav } from './components/nav'
+import messages from './i18n/fi'
 import {IntlProvider} from 'react-intl'
 import {SelectCompany} from "./containers/select-company"
 import {ListCustomers} from "./components/list-customers"
 import {ViewCustomer} from "./components/view-customer"
-import { EditCustomer } from "components/edit-customer"
+import { EditCustomer } from "./components/edit-customer"
 import { RecoilRoot, useRecoilValue } from "recoil"
-import { isAuthenticatedState } from "state/auth"
-import { isCompanySelectedValue } from "state/user-settings"
-import { mainLoadingState } from "state/atoms"
-import { fetchUserSettings } from "api/user"
+import { isAuthenticatedState } from "./state/auth"
+import { isCompanySelectedValue } from "./state/user-settings"
+import { mainLoadingState } from "./state/atoms"
+import { fetchUserSettings } from "./api-helper/user"
 
 const RootApp = () => {
   const isCompanySelected = isCompanySelectedValue()

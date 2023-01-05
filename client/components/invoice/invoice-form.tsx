@@ -1,16 +1,16 @@
 import React, { FormEvent, useRef, useState } from "react"
-import { calculateTotal } from "utilities/invoice"
+import { calculateTotal } from "../../utilities/invoice"
 import {Button} from 'semantic-ui-react'
 import {SelectCustomer} from './select-customer'
 import Loader from '../loader'
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl"
-import { defaultInvoiceItem, Invoice } from "records"
-import { userSettingsState } from "state/atoms"
+import { defaultInvoiceItem, Invoice } from "../../records"
+import { userSettingsState } from "../../state/atoms"
 import { useRecoilValue } from "recoil"
-import { useInput, useComponentInput } from "utilities/input-hook"
+import { useInput, useComponentInput } from "../../utilities/input-hook"
 import { InvoiceItem } from "./invoice-item"
 import {v4 as uuidv4} from "uuid"
-import {moneyFormatter} from "utilities/money-formatter"
+import {moneyFormatter} from "../../utilities/money-formatter"
 
 interface Props extends WrappedComponentProps {
   invoice: Invoice

@@ -1,7 +1,7 @@
 import { useRecoilCallback, useRecoilValue } from "recoil"
-import { useApi } from "api"
-import { selectedCompanyState, userSettingsState } from "state/atoms"
-import { Company } from "records"
+import { useApi } from "../api-helper"
+import { selectedCompanyState, userSettingsState } from "./atoms"
+import { Company } from "../records"
 
 
 export const isCompanySelectedValue = () => useRecoilValue(selectedCompanyState)
