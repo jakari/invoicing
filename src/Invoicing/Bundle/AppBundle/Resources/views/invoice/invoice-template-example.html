@@ -84,34 +84,35 @@
 
             section.sum table.tax {
                 margin-bottom: 2mm;
-                font-size: 10pt;
+                font-size: 3.4mm;
             }
-            section.sum table.tax .total {
+            section.summary table.tax .total {
                 width: 35mm;
                 text-align: right;
             }
 
-            section.sum table.total {
+            section.summary table.total {
+                align-self: flex-end;
                 border-collapse: collapse;
                 width: 139mm;
                 font-size: 10pt;
             }
-            section.sum table.total .helper-text {
+            section.summary table.total .helper-text {
                 font-size: 6pt;
             }
-            section.sum table.total td {
+            section.summary table.total td {
                 padding: 0 3mm;
             }
-            section.sum table.total .reference {
+            section.summary table.total .reference {
                 width: 60mm;
             }
-            section.sum table.total .total {
+            section.summary table.total .total {
                 text-align: right;
                 font-weight: 700;
                 width: 29mm;
             }
 
-            section.sum table.total td {
+            section.summary table.total td {
                 border: 0.3mm solid black;
             }
 
@@ -145,7 +146,7 @@
             .lower-invoice {
                 page-break-inside: avoid;
                 font-size: 6.5pt;
-                border-top: 1px dashed #000;
+                border-top: 0.2mm dashed #000;
                 height: 100mm;
                 vertical-align: bottom;
             }
@@ -210,6 +211,7 @@
             }
             .lower-invoice .left.content.customer-name {
                 border-bottom: 0 none;
+                font-size: 3mm;
             }
             .lower-invoice .right {
                 border-left: 0.55mm solid #000;
@@ -297,9 +299,11 @@
                         <div>{{ company.postcode }} {{ company.city }}</div>
                     </div>
                     <div class="recipient">
-                        {{ invoice.customer.name }}<br />
-                        {{ invoice.customer.streetName }}<br />
-                        {{ invoice.customer.postCode }} {{ invoice.customer.city }}<br />
+                        <div class="customer-name">{{ invoice.customerName }}</div>
+                        {% if invoice.customerAdditionalName %}<div class="customer-additional-name">{{ invoice.customerAdditionalName }}</div>{% endif %}
+                        {% if invoice.customerVat %}<div class="customer-vat">{{ invoice.customerVat }}</div>{% endif %}
+                        <div class="customer-address">{{ invoice.customerStreetName }}</div>
+                        <div class="customer-address">{{ invoice.customerPostCode }} {{ invoice.customerCity }}</div>
                     </div>
                 </div>
                 <div class="right">
@@ -318,10 +322,11 @@
                             <td>{{ invoice.due | date("d.m.Y") }}</td>
                         </tr>
                     </table>
+                    {% set difference = date(invoice.due).diff(invoice.created) %}
                     <table class="invoice-info">
                         <tr>
                             <td>Maksuehdot</td>
-                            <td>{{ invoice.conditionsOfPayment }}</td>
+                            <td>{{ difference.days }} pv</td>
                         </tr>
                         <tr>
                             <td>Viivästyskorko</td>
@@ -345,7 +350,8 @@
                         <th class="name">Nimike</th>
                         <th class="amount">Määrä</th>
                         <th class="tax">ALV %</th>
-                        <th class="price">Hinta ALV 0%</th>
+                        <th class="price">Hinta / kpl</th>
+                        <th class="price">Yhteensä</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -355,32 +361,45 @@
                         <td class="amount">{{ item.amount }}</td>
                         <td class="tax">{{ item.tax }}</td>
                         <td class="price">{{ item.price|money }}</td>
+                        <td class="price">{{ item | itemTotalWithoutTax }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </section>
-            <section class="sum">
-                <table class="tax">
-                    <tr>
-                        <td>Yhteensä ALV 0 %</td>
-                        <td class="total">{{ invoice |totalWithoutTax }} €</td>
-                    </tr>
-                    <tr>
-                        <td>ALV Yhteensä</td>
-                        <td class="total">{{ invoice |taxTotal }} €</td>
-                    </tr>
-                </table>
-                <table class="total">
-                    <tr>
-                        <td class="reference">
-                            <div class="helper-text">Viitenumero</div>
-                            {{ invoice.referenceNumber }}
-                        </td>
-                        <td class="total-text">Yhteensä</td>
-                        <td class="total">{{ invoice|total }} €</td>
-                    </tr>
-                </table>
+            <section class="summary">
+                <div class="summary-left">
+                    <div class="aaa-logo">
+                    </div>
+                </div>
+                <div class="summary-right">
+                    <div class="summary-upper">
+                        <div class="summary-text">
+                            Tavaroiden omistusoikeus siirtyy ostajalle kun lasku on kokonaisuudessaan maksettu.<br />
+                            Myyjä pidättää omistusoikeuden siihen asti.
+                        </div>
+                        <table class="tax">
+                            <tr>
+                                <td>Yhteensä ALV 0 %</td>
+                                <td class="total">{{ invoice |totalWithoutTax }} €</td>
+                            </tr>
+                            <tr>
+                                <td>ALV Yhteensä</td>
+                                <td class="total">{{ invoice |taxTotal }} €</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <table class="total">
+                        <tr>
+                            <td class="reference">
+                                <div class="helper-text">Viitenumero</div>
+                                {{ invoice.referenceNumber }}
+                            </td>
+                            <td class="total-text">Yhteensä</td>
+                            <td class="total">{{ invoice|total }} €</td>
+                        </tr>
+                    </table>
+                </div>
             </section>
             <section class="contact-information">
                 <table>
@@ -439,6 +458,8 @@
                             Maksajan<br />nimi ja<br/> osoite Betalarens <br />namn och<br /> adress</td>
                         <td class="left content customer-name">
                             {{ invoice.customer.name }}<br />
+                            {% if invoice.customerAdditionalName %}{{ invoice.customerAdditionalName }}<br />{% endif %}
+                            {% if invoice.customerVat %}{{ invoice.customerVat }}<br />{% endif %}
                             {{ invoice.customer.streetName }}<br />
                             {{ invoice.customer.postCode }} {{ invoice.customer.city }}<br />
                         </td>
