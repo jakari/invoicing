@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer'
 
 if (typeof process.argv.length < 4) {
   console.log('Error: missing input and/or output arguments, usage: node makepdf.js input.html output.pdf');
