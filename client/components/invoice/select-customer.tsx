@@ -21,6 +21,7 @@ interface Props extends InputProps {
 interface State {
   customer: Customer | null
   customers: Customer[]
+  foundCount: number
   name: string
   selected: boolean
   loading: boolean
@@ -35,6 +36,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
 
     this.state = {
       customer: props.customer,
+      foundCount: -1,
       name: props.customer ? props.customer.name : '',
       selected: !!props.customer,
       loading: false,
@@ -60,14 +62,16 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
   setNewCustomer = () => this.selectCustomer({...defaultCustomer, name: this.state.name})
 
   unselectCustomer = () => {
-    this.setState({customer: null, selected: false});
+    this.setState({customer: null, selected: false, name: ""});
     this.props.onChange(null);
   };
+
+  setSearchTerm = (term: string, foundCount: number) => this.setState({name: term, foundCount})
 
   getNameLabel = (): {content: string, color: string} => {
     if (!this.state.selected) return {content: this.t({id: 'invoice.select_customer.not_selected'}), color: 'teal'};
     if (this.state.customer?.id) return {content: this.t({id: 'invoice.select_customer.selected'}), color: 'blue'};
-    else return {content: this.t({id: 'invoice.select_customer.create_new'}), color: 'yellow'};
+    else return {content: this.t({id: 'invoice.select_customer.creating_new'}), color: 'yellow'};
   };
 
   render() {
@@ -84,7 +88,7 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
       </FormattedMessage>
       {!this.state.selected &&
         <div>
-          <SelectCustomerInput selectCustomer={this.selectCustomer} />
+          <SelectCustomerInput selectCustomer={this.selectCustomer} searchTerm={this.setSearchTerm} />
           <div className="ui hidden divider" />
         </div>}
       <div>
@@ -92,18 +96,29 @@ class SelectCustomerComponent extends PureComponent<Props, State> {
         {
           !!this.state.name &&
           !this.state.loading &&
-          !this.state.customer &&
-          <h4 className="ui center aligned header">
-            <FormattedMessage id="invoice.select_customer.not_found" />
-          </h4>
+          this.state.foundCount === 0 &&
+          !this.state.customer && (
+            <div className="ui center aligned container">
+              <h4 className="ui center aligned header">
+                <FormattedMessage id="invoice.select_customer.not_found"/>
+              </h4>
+              <Button
+                type="button"
+                color="blue"
+                onClick={this.setNewCustomer}
+              >
+                <FormattedMessage id="invoice.select_customer.create_new"/>
+              </Button>
+            </div>
+          )
         }
         {
           this.state.customer &&
-          <div>
-            {this.state.loading && <div className="ui active inverted dimmer">
-              <div className="ui loader" />
-            </div>}
-            {!this.state.customer.id
+            <div>
+              {this.state.loading && <div className="ui active inverted dimmer">
+                  <div className="ui loader"/>
+              </div>}
+              {!this.state.customer.id
               ? <div className="required field">
                   <FormattedMessage id="customer.company" tagName="label" />
                   <div className="ui right labeled input">

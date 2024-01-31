@@ -4,7 +4,8 @@ import { useSearchcustomers } from "../../api-helper/customers"
 import { injectIntl, WrappedComponentProps } from "react-intl"
 
 interface Props extends  WrappedComponentProps {
-  selectCustomer: (customer: Customer | null) => void
+  selectCustomer: (customer: Customer | null) => void,
+  searchTerm: (term: String, foundCount: number) => void
 }
 
 const useDebounce = (value: string, delay: number) => {
@@ -18,17 +19,16 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue
 }
 
-function SelectCustomer({selectCustomer: selectCustomerCallback, intl: {formatMessage}}: Props) {
+function SelectCustomer({selectCustomer: selectCustomerCallback, intl: {formatMessage}, searchTerm: searchTermCallback}: Props) {
   const searchCustomers = useSearchcustomers()
   const [searchTerm, setSearchTerm] = useState("")
   const [results, setResults] = useState<Customer[]>([])
   const [searching, setSearching] = useState(false)
+  const [pendingResults, setPendingResults] = useState(false)
   const debouncedSearchTerm = useDebounce(searchTerm, 150)
   const [currentCustomer, setCurrentCustomer] = useState<Customer | null>(null)
-  const [createTimeout, setCreateTimeout] = useState<number | null>(null)
 
   const selectCustomer = (customer: Customer | null) => {
-    if (createTimeout) clearTimeout(createTimeout)
     selectCustomerCallback(customer)
   }
 
@@ -40,14 +40,21 @@ function SelectCustomer({selectCustomer: selectCustomerCallback, intl: {formatMe
           setResults(customers)
           if (customers[0]) setCurrentCustomer(customers[0])
           setSearching(false)
+          setPendingResults(false)
         })
     } else setResults([])
   }, [debouncedSearchTerm])
 
+  useEffect(() => {
+    const customerCount =
+      searchTerm.length == 0 || pendingResults
+        ? -1
+        : results.length
+    searchTermCallback(searchTerm, customerCount)
+  }, [searchTerm, results, pendingResults])
+
   const createNewCustomer = () => {
-    setCreateTimeout(
-      setTimeout(() => selectCustomer(searchTerm.length > 0 ? {...defaultCustomer, name: searchTerm} : null), 100)
-    )
+    selectCustomer(searchTerm.length > 0 ? {...defaultCustomer, name: searchTerm} : null)
   }
 
   const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -87,10 +94,12 @@ function SelectCustomer({selectCustomer: selectCustomerCallback, intl: {formatMe
             type="text"
             placeholder={formatMessage({id: 'invoice.select_customer.customer_name'})}
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={e => {
+              setSearchTerm(e.target.value)
+              setPendingResults(true)
+            }}
             onKeyDown={onKeyPress}
             autoComplete="nope"
-            onBlur={createNewCustomer}
           />
           <i className="search icon" />
         </div>
