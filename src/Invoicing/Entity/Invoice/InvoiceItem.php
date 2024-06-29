@@ -46,9 +46,9 @@ class InvoiceItem
     private $amount;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="decimal", nullable=false, precision=4, scale=2)
      *
-     * @var integer
+     * @var string
      */
     private $tax;
 
@@ -74,7 +74,7 @@ class InvoiceItem
         Invoice $invoice,
         string $description,
         int $amount,
-        int $tax,
+        string $tax,
         Money $price
     ) {
         $this->invoice = $invoice;
@@ -135,9 +135,6 @@ class InvoiceItem
         return $this->amount;
     }
 
-    /**
-     * @return integer
-     */
     public function getTax(): string
     {
         return $this->tax;

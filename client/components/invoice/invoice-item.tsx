@@ -2,7 +2,7 @@ import React  from "react"
 import { recalcItem } from "../../utilities/invoice"
 import { InvoiceItem as InvoiceItemRecord } from "../../records"
 import { StringInput } from "../inputs/string-input"
-import { NumberInput } from "../number-input"
+import {NumberInput, TaxInput} from "../number-input"
 import { moneyFormatter } from "../../utilities/money-formatter"
 
 interface Props {
@@ -51,7 +51,7 @@ export function InvoiceItem({index, item, edit, remove}: Props) {
     </td>
     <td className="tax">
       <div className="ui fluid transparent input">
-        <NumberInput
+        <TaxInput
           required={true}
           value={item.tax}
           onChange={changeValue(index, "tax")}

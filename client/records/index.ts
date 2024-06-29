@@ -67,7 +67,7 @@ export const defaultInvoiceItem: InvoiceItem = {
   description: '',
   amount: 1,
   price: 0,
-  tax: 24,
+  tax: 25.5,
   total: 0,
   totalWithoutTax: 0
 }

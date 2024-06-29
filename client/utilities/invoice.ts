@@ -15,12 +15,15 @@ export function calculateTotal(items: InvoiceItem[]): number {
 
 export function recalcItem(item: InvoiceItem): InvoiceItem {
   const price = item.price || 0
-  const tax = (item.tax / 100) + 1
+  // @ts-ignore Sanitize input from API with parsefloat
+  const tax = parseFloat(item.tax)
+  const taxMultiplier = (tax / 100) + 1
   const totalWithoutTax = price * item.amount
 
   return {
     ...item,
-    total: roundToTwo(totalWithoutTax * tax),
+    tax,
+    total: roundToTwo(totalWithoutTax * taxMultiplier),
     totalWithoutTax: roundToTwo(totalWithoutTax)
   }
 }

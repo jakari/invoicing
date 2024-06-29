@@ -44,10 +44,10 @@ class ItemModel
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Type("integer")
-     * @Serialize\Type("integer")
+     * @Assert\Type("string")
+     * @Serialize\Type("string")
      *
-     * @var integer
+     * @var string
      */
     private $tax;
 
@@ -55,7 +55,7 @@ class ItemModel
         string $description,
         int $amount,
         Money $price,
-        int $tax,
+        string $tax,
         int $id = null
     ) {
         $this->description = $description;
@@ -91,7 +91,7 @@ class ItemModel
         return $this->price;
     }
 
-    public function getTax(): int
+    public function getTax(): string
     {
         return $this->tax;
     }
