@@ -1,0 +1,542 @@
+<html>
+    <head>
+        <style type="text/css">
+            @page {
+                size: A4 portrait;
+            }
+
+            body, html {
+                font-family: Arial;
+                margin: 0;
+                padding: 0;
+            }
+
+            table {
+                font-size: 4mm;
+            }
+
+            section {
+                width: 195.09mm;
+                margin: 0 auto;
+            }
+
+            section.upper {
+                height: 61mm;
+                border-bottom: 0.3mm solid black;
+                width: 176mm;
+                display: flex;
+            }
+
+            section.upper .left {
+                padding-left: 5mm;
+                width: 85mm;
+            }
+            section.upper .sender {
+                font-size: 3mm;
+            }
+            section.upper .logo {
+                font-size: 7mm;
+                line-height: 10mm;
+                font-weight: 700;
+                margin: 5mm 0 0 0;
+            }
+
+            section.upper .recipient {
+                font-size: 5mm;
+                margin-top: 6mm;
+            }
+
+            .recipient .customer-name {
+                font-size: 4mm;
+            }
+
+            .recipient .customer-additional-name {
+                font-size: 3.5mm;
+            }
+
+            .recipient .customer-vat {
+                font-size: 3.5mm;
+            }
+
+            .recipient .customer-address {
+                font-size: 3.5mm;
+            }
+
+            section.upper .right {
+                padding-right: 5mm;
+                flex-grow: 2;
+            }
+
+            section.rows {
+                width: 175mm;
+            }
+            section.rows table {
+                width: 100%;
+            }
+            section.rows th.name {
+                text-align: left;
+            }
+            section.rows th {
+                text-align: right;
+                font-weight: normal;
+                font-size: 8pt;
+                padding-bottom: 2mm;
+            }
+            section.rows .amount {
+                text-align: right;
+                width: 10mm;
+                vertical-align: top;
+            }
+            section.rows .tax {
+                text-align: right;
+                width: 12mm;
+                vertical-align: top;
+            }
+            section.rows .price {
+                text-align: right;
+                width: 25mm;
+                vertical-align: top;
+            }
+
+            section.summary {
+                height: 20mm;
+                display: flex;
+                flex-direction: row;
+            }
+
+            section.summary .summary-right {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+            }
+
+            section.summary .aaa-logo img {
+                width: 25mm;
+                height: auto;
+            }
+
+            section.summary .summary-upper {
+                display: flex;
+                flex-direction: row;
+            }
+
+            section.summary .summary-text {
+                width: 98mm;
+                padding-left: 2mm;
+                flex-grow: 1;
+                font-size: 2.5mm;
+            }
+
+            section.summary table.tax {
+                width: 70mm;
+                margin-bottom: 2mm;
+                font-size: 3.4mm;
+            }
+            section.summary table.tax .total {
+                width: 35mm;
+                text-align: right;
+            }
+
+            section.summary table.total {
+                align-self: flex-end;
+                border-collapse: collapse;
+                width: 139mm;
+                font-size: 10pt;
+            }
+            section.summary table.total .helper-text {
+                font-size: 6pt;
+            }
+            section.summary table.total td {
+                padding: 0 3mm;
+            }
+            section.summary table.total .reference {
+                width: 60mm;
+            }
+            section.summary table.total .total {
+                text-align: right;
+                font-weight: 700;
+                width: 29mm;
+            }
+
+            section.summary table.total td {
+                border: 0.3mm solid black;
+            }
+
+            .upper .invoice-info {
+                margin-top: 5mm;
+            }
+            .upper .invoice-info td:first-child {
+                width: 38mm;
+            }
+
+            .upper .invoice-info td {
+                font-size: 10pt;
+            }
+
+            section.rows {
+                min-height: 99mm;
+            }
+
+            section.contact-information {
+                height: 14mm;
+            }
+            section.contact-information table {
+                padding-left: 10mm;
+                font-size: 6pt;
+                width: 100%;
+            }
+            section.contact-information table td {
+                padding: 0;
+            }
+
+            .lower-invoice {
+                page-break-inside: avoid;
+                font-size: 6.5pt;
+                border-top: 0.2mm dashed #000;
+                height: 100mm;
+                vertical-align: bottom;
+            }
+            .lower-invoice table {
+                border-collapse: collapse;
+            }
+            .lower-invoice .left.help {
+                width: 16.52mm;
+                border-right: 0.55mm solid #000;
+                border-bottom: 0.55mm solid #000;
+                height: 14.82mm;
+                font-family: Arial;
+                font-size: 6.5pt;
+                text-align: right;
+                font-weight: 500;
+                padding-right: 1mm;
+                position: relative;
+            }
+            .lower-invoice .left.help.recipient {
+                height: 13.30mm;
+            }
+            .lower-invoice .left.content {
+                border-right: 0.55mm solid #000;
+                border-bottom: 0.55mm solid #000;
+                width: 88.51mm;
+            }
+            .lower-invoice .content {
+                position: relative;
+                padding-left: 2mm;
+            }
+            .lower-invoice .content.guided {
+                font-size: 10pt;
+                vertical-align: bottom;
+            }
+
+            .lower-invoice .guide {
+                font-family: Arial;
+                font-size: 6.5pt;
+            }
+
+            .lower-invoice .content .guide {
+                left: 1.4mm;
+                top: 0.5mm;
+                position: absolute;
+            }
+
+            .lower-invoice .content.amount .guide {
+                left: 1.2mm;
+            }
+            .lower-invoice .content.amount {
+                text-align: right;
+                padding-right: 2mm;
+                padding-top: 2mm;
+            }
+
+            .lower-invoice .left.help.customer-name {
+                padding-top: 1mm;
+                vertical-align: top;
+                height: 25.8mm;
+                border-right: 0 none;
+                border-bottom: 0 none;
+            }
+            .lower-invoice .left.content.customer-name {
+                border-bottom: 0 none;
+                font-size: 3mm;
+            }
+            .lower-invoice .right {
+                border-left: 0.55mm solid #000;
+            }
+            .lower-invoice .right.bic {
+                width: 89.6mm;
+            }
+            .lower-invoice .left.signature {
+                border-top: 0 none;
+                border-right: 0 none;
+                border-bottom: 0.55mm solid #000;
+                text-align: right;
+                font-weight: 500;
+                padding-right: 1mm;
+                font-family: Arial;
+                font-size: 6.5pt;
+
+            }
+            .lower-invoice .signature-line {
+                position: absolute;
+                left: 4mm;
+                right: 0;
+                top: 4.5mm;
+                border-top: 1px solid #000;
+            }
+
+            .lower-invoice .right.reference {
+                border-top: 0.55mm solid #000;
+                border-bottom: 0.55mm solid #000;
+                height: 8.3mm;
+            }
+            .lower-invoice .right.guide {
+                padding-left: 1mm;
+                width: 13.06mm;
+            }
+            .lower-invoice .border-bottom {
+                border-bottom: 0.55mm solid #000;
+            }
+            .lower-invoice .due.content {
+                width: 32.51mm;
+            }
+            .lower-invoice .left.help.from-account {
+                border-right: 0.125mm dashed #000;
+                height: 8.3mm;
+            }
+            .spec {
+                position: absolute;
+                -webkit-transform: rotate(270deg);
+                -moz-transform: rotate(270deg);
+                -ms-transform: rotate(270deg);
+                -o-transform: rotate(270deg);
+                transform: rotate(270deg);
+
+                left: -15mm;
+                bottom: 7.2mm;
+                width: 33mm;
+                text-align: left;
+                padding-left: 2mm;
+                text-transform: uppercase;
+                font-weight: bold;
+                font-size: 7.8pt;
+                font-family: Arial;
+                white-space: nowrap;
+            }
+
+            .lower-invoice .footer {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+            .lower-invoice .terms {
+                margin: 2mm 3mm 0 0;
+                width: 55mm;
+            }
+        </style>
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div class="container">
+            <section class="upper">
+                <div class="left">
+                    <div class="sender">
+                        <h1 class="logo">{{ company.marketing_name }}</h1>
+                        <div>{{ company.name }}</div>
+                        <div>{{ company.street }}</div>
+                        <div>{{ company.postcode }} {{ company.city }}</div>
+                    </div>
+                    <div class="recipient">
+                        <div class="customer-name">{{ invoice.customerName }}</div>
+                        {% if invoice.customerAdditionalName %}<div class="customer-additional-name">{{ invoice.customerAdditionalName }}</div>{% endif %}
+                        {% if invoice.customerVat %}<div class="customer-vat">{{ invoice.customerVat }}</div>{% endif %}
+                        <div class="customer-address">{{ invoice.customerStreetName }}</div>
+                        <div class="customer-address">{{ invoice.customerPostCode }} {{ invoice.customerCity }}</div>
+                    </div>
+                </div>
+                <div class="right">
+                    <h2>LASKU</h2>
+                    <table class="invoice-info">
+                        <tr>
+                            <td>Laskun numero</td>
+                            <td>{{ invoice.invoiceNumber }}</td>
+                        </tr>
+                        <tr>
+                            <td>Laskun päivämäärä:</td>
+                            <td>{{ invoice.created | date("d.m.Y") }}</td>
+                        </tr>
+                        <tr>
+                            <td>Eräpäivä</td>
+                            <td>{{ invoice.due | date("d.m.Y") }}</td>
+                        </tr>
+                    </table>
+                    {% set difference = date(invoice.due).diff(invoice.created) %}
+                    <table class="invoice-info">
+                        <tr>
+                            <td>Maksuehdot</td>
+                            <td>{{ difference.days }} pv</td>
+                        </tr>
+                        <tr>
+                            <td>Viivästyskorko</td>
+                            <td>{{ invoice.interestOnArrears }} %</td>
+                        </tr>
+                        <tr>
+                            <td>Huomautusaika</td>
+                            <td>{{ invoice.remarkingTime }} pv</td>
+                        </tr>
+                        <tr>
+                            <td>Asiakkaan viite</td>
+                            <td>{{ invoice.customerReference }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+            <section class="rows">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="name">Nimike</th>
+                        <th class="amount">Määrä</th>
+                        <th class="tax">ALV %</th>
+                        <th class="price">Hinta / kpl</th>
+                        <th class="price">Yhteensä</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in invoice.items %}
+                    <tr>
+                        <td class="name">{{ item.description }}</td>
+                        <td class="amount">{{ item.amount }}</td>
+                        <td class="tax">{{ item.tax|number_format(2, ",", "") }}</td>
+                        <td class="price">{{ item.price|money }}</td>
+                        <td class="price">{{ item | itemTotalWithoutTax }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            <section class="summary">
+                <div class="summary-left">
+                    <div class="aaa-logo">
+                        <img src="{{ "@InvoicingAppBundle/Resources/views/invoice/aaa.gif"|base64image }}" />
+                    </div>
+                </div>
+                <div class="summary-right">
+                    <div class="summary-upper">
+                        <div class="summary-text">
+                            Tavaroiden omistusoikeus siirtyy ostajalle kun lasku on kokonaisuudessaan maksettu.<br />
+                            Myyjä pidättää omistusoikeuden siihen asti.
+                        </div>
+                        <table class="tax">
+                            <tr>
+                                <td>Yhteensä ALV 0 %</td>
+                                <td class="total">{{ invoice |totalWithoutTax }} €</td>
+                            </tr>
+                            <tr>
+                                <td>ALV Yhteensä</td>
+                                <td class="total">{{ invoice |taxTotal }} €</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <table class="total">
+                        <tr>
+                            <td class="reference">
+                                <div class="helper-text">Viitenumero</div>
+                                {{ invoice.referenceNumber }}
+                            </td>
+                            <td class="total-text">Yhteensä</td>
+                            <td class="total">{{ invoice|total }} €</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+            <section class="contact-information">
+                <table>
+                    <tr>
+                        <td>{{ company.name }}</td>
+                        <td>Puhelin</td>
+                        <td>Pankki</td>
+                        <td>WWW-osoite</td>
+                    </tr>
+                    <tr>
+                        <td>{{ company.street }}</td>
+                        <td>{{ company.telephone }}</td>
+                        <td>{{ bank.name }}</td>
+                        <td>{{ company.www }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ company.postcode }} {{ company.city }}</td>
+                        <td></td>
+                        <td>IBAN: {{ bank.iban }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>{{ company.vat }}</td>
+                        <td></td>
+                        <td>BIC: {{ bank.bic }}</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </section>
+            <section class="lower-invoice" id="lower-invoice">
+                <table>
+                    <tr>
+                        <td class="left help recipient-accno">Saajan tilinumero<br />Mottagarens kontonummer</td>
+                        <td class="left content">
+                            <div class="guide">IBAN</div>
+                            {{ bank.iban }}
+                        </td>
+                        <td colspan="3" class="right content bic">
+                            <div class="guide">BIC</div>
+                            {{ bank.bic }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="left help recipient">Saaja<br />Mottagare</td>
+                        <td rowspan="2" class="left content recipient">
+                            {{ company.name }}
+                        </td>
+                        <td colspan="3" class="right"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" rowspan="2" class="right"></td>
+                    </tr>
+                    <tr>
+                        <td class="left help customer-name">
+                            <div class="spec">Tilisiirto. Girering</div>
+                            Maksajan<br />nimi ja<br/> osoite Betalarens <br />namn och<br /> adress</td>
+                        <td class="left content customer-name">
+                            {{ invoice.customer.name }}<br />
+                            {% if invoice.customerAdditionalName %}{{ invoice.customerAdditionalName }}<br />{% endif %}
+                            {% if invoice.customerVat %}{{ invoice.customerVat }}<br />{% endif %}
+                            {{ invoice.customer.streetName }}<br />
+                            {{ invoice.customer.postCode }} {{ invoice.customer.city }}<br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="left signature">Allekirjoitus<br />Underskrift</td>
+                        <td class="left signature content">
+                            <div class="signature-line"></div>
+                        </td>
+                        <td class="right guide reference">Viitenumero<br />Ref. nr</td>
+                        <td colspan="2" class="right guided content border-bottom">{{ invoice.referenceNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td class="left help from-account">Tililtä nro<br />Från konto nr</td>
+                        <td class="left content"></td>
+                        <td class="right guide border-bottom">Eräpäivä<br />Förfallodag</td>
+                        <td class="right border-bottom guided content due">{{ invoice.due | date("d.m.Y") }}</td>
+                        <td class="right guided content amount border-bottom">
+                            <div class="guide">Euro</div>
+                            {{ invoice|total }}
+                        </td>
+                    </tr>
+                </table>
+                <div class="footer">
+                    <div class="terms">
+                        Maksu välitetään saajalle maksujenvälityksen ehtojen mukaisesti ja vain maksajan ilmoittaman tilinumeron perusteella.<br />
+                        Betalningen förmedlas till mottagaren enligt villkoren för betalningsflörmedling och endast till det kontonummer some betalaren angivit.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>
