@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
         chromium \
     && docker-php-ext-install -j$(nproc) pgsql zip pdo_pgsql
 SHELL ["/bin/bash", "-c"]
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
     apt-get install -y nodejs
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
