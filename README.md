@@ -41,3 +41,21 @@ To use the application, first install it according to the guide below, and add a
 ### Adding a user
 
 To add a user to the application, run `php bin/console user:create`. The guide will ask for username and password. After user creation you may log in.
+
+### Deployment in dokku
+
+Run `git push [environment]` to push to the desired environment. 
+Applications are ran as `herokuishuser`, so if you need to run migration or other commands on the server do the following:
+
+1. SSH to server
+2. Run `dokku enter [applicationname]`
+3. Run `su -u herokuishuser` to become herokuishuser
+4. Run your desired commands (for example `php bin/console doctrine:migrations:migrate`)
+
+#### Postgres management
+
+In order to manage the postgres instance, do the following:
+
+1. `dokku postgres:enter [applicationname]`
+2. `psql -U postgres`
+
