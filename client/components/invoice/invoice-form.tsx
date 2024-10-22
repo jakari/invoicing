@@ -101,7 +101,7 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
   }
 
   return (
-    <form onSubmit={submitForm} autoComplete="nope" ref={formEl}>
+    <form onSubmit={submitForm} autoComplete="off" ref={formEl}>
       <div className="ui form stackable grid">
         <div className="ui sixteen wide column">
           <FormattedMessage id="invoice.template">
