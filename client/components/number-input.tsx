@@ -36,8 +36,9 @@ export function TaxInput({value, onChange, required}: {value: number, onChange: 
         thousandSeparator=""
         decimalSeparator=","
         value={value}
-        onValueChange={({floatValue}) => {
-            floatValue !== undefined && onChange(floatValue)
+        onValueChange={({floatValue, value}) => {
+            const actualValue = value === "" ? 0 : floatValue
+            actualValue !== undefined && onChange(actualValue)
         }}
     />
 }

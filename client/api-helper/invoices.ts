@@ -16,8 +16,6 @@ export const useInvoiceApi = () => {
         items: invoiceWithoutTotals.items.map(recalcItem)
       }
 
-      console.log(invoiceWithItemTotals.items.map(a => a.tax))
-
       return {
         ...invoiceWithItemTotals,
         total: calculateTotal(invoiceWithItemTotals.items),
