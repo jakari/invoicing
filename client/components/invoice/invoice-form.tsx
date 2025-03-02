@@ -1,5 +1,5 @@
 import React, { FormEvent, useRef, useState } from "react"
-import { calculateTotal } from "../../utilities/invoice"
+import {calculateTotal, calculateTotalWithoutTax} from "../../utilities/invoice"
 import {Button} from 'semantic-ui-react'
 import {SelectCustomer} from './select-customer'
 import Loader from '../loader'
@@ -64,6 +64,7 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
   const [template, templateInput] = useInput(injectedInvoice.template)
 
   const total = calculateTotal(items)
+  const totalWithoutTax = calculateTotalWithoutTax(items)
 
   const submitForm = (e: FormEvent) => {
     e.preventDefault()
@@ -233,6 +234,16 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
             {items.length === 0 && <div className="ui left pointing red label">
               <FormattedMessage id="invoice.form.error.at_least_one_item_required" />
             </div>}
+            <h4 className="ui right floated header">
+              <FormattedMessage id="invoice.total_without_vat" />
+            </h4>
+          </td>
+          <td className="footer value">
+            { moneyFormatter.format(totalWithoutTax) }
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={4} className="footer header">
             <h4 className="ui right floated header">
               <FormattedMessage id="invoice.total" />
             </h4>

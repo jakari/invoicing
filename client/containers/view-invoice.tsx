@@ -9,6 +9,7 @@ import { Invoice } from "../records"
 import { useSettings } from "../state/user-settings"
 import { useInvoiceApi } from "../api-helper/invoices"
 import {moneyFormatter} from "../utilities/money-formatter"
+import {calculateTotalWithoutTax} from "../utilities/invoice";
 
 export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
   const [invoice, setInvoice] = useState<Invoice | undefined>()
@@ -24,6 +25,7 @@ export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
   }
 
   const customer = invoice.customer!
+  const totalWithoutVat = calculateTotalWithoutTax(invoice.items)
 
   return <div>
     <h1 className="ui header">
@@ -151,6 +153,14 @@ export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
         </tr>))}
       </tbody>
       <tfoot>
+      <tr>
+        <th colSpan={4} className="footer header">
+          <h4 className="ui right floated header">
+            <FormattedMessage id="invoice.total_without_vat" />
+          </h4>
+        </th>
+        <th className="footer value">{ moneyFormatter.format(totalWithoutVat) }</th>
+      </tr>
       <tr>
         <th colSpan={4} className="footer header">
           <h4 className="ui right floated header">

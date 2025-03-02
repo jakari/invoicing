@@ -13,6 +13,20 @@ export function calculateTotal(items: InvoiceItem[]): number {
   return roundToTwo(value)
 }
 
+
+export function calculateTotalWithoutTax(items: InvoiceItem[]): number {
+  const value = items.reduce(
+    (acc, item) => {
+      if (isNaN(acc) || isNaN(item.totalWithoutTax)) return NaN;
+      return acc + item.totalWithoutTax
+    },
+    0
+  );
+
+  if (isNaN(value)) return 0
+  return roundToTwo(value)
+}
+
 export function recalcItem(item: InvoiceItem): InvoiceItem {
   const price = item.price || 0
   // @ts-ignore Sanitize input from API with parsefloat

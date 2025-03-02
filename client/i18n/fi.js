@@ -44,6 +44,7 @@ export default {
   'invoice.items.header.amount': 'Määrä',
   'invoice.items.header.tax': 'ALV %',
   'invoice.total': 'Yhteensä',
+  'invoice.total_without_vat': 'Yhteensä ALV 0%',
   'invoice.print': 'Tulosta',
   'invoice.send_email': 'Lähetä lasku asiakkaan sähköpostiin',
   'invoice.new': 'Uusi lasku',

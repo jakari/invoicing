@@ -13,7 +13,7 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/uuid": "^8.3.0",
     "fomantic-ui-css": "^2.8.6",
-    "puppeteer": "^19.4.1",
+    "puppeteer": "^24.3.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^17.0.1",
@@ -26,8 +26,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^3.0.1",
-    "vite": "^4.0.4"
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.2.0"
   },
   "engines": {
     "node": ">=20",

@@ -34,6 +34,7 @@ export default {
   'invoice.items.header.amount': 'Amount',
   'invoice.items.header.tax': 'Tax %',
   'invoice.total': 'Total',
+  'invoice.total_without_vat': 'Total without VAT',
   'invoice.print': 'Print',
   'invoice.send_email': 'Send invoice email',
   'invoice.new': 'New invoice',
