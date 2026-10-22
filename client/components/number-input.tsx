@@ -1,7 +1,7 @@
 import React from 'react';
 import {NumericFormat} from 'react-number-format';
 
-export function NumberInput({value, onChange, required}: {value: number, onChange: (value: number) => void, required: boolean}) {
+export function NumberInput({value, onChange, required, decimalScale = 2}: {value: string, onChange: (value: string) => void, required: boolean, decimalScale?: number}) {
     const inputProps: any = {};
 
     if (required) {
@@ -14,15 +14,16 @@ export function NumberInput({value, onChange, required}: {value: number, onChang
         {...inputProps}
         thousandSeparator=" "
         decimalSeparator=","
-        decimalScale={2}
+        decimalScale={decimalScale}
         value={value}
-        onValueChange={({floatValue}) => {
-            floatValue !== undefined && onChange(floatValue)
+        valueIsNumericString
+        onValueChange={({floatValue, value}) => {
+            floatValue !== undefined && onChange(value)
         }}
     />
 }
 
-export function TaxInput({value, onChange, required}: {value: number, onChange: (value: number) => void, required: boolean}) {
+export function TaxInput({value, onChange, required}: {value: string, onChange: (value: string) => void, required: boolean}) {
     const inputProps: any = {};
 
     if (required) {
@@ -36,8 +37,9 @@ export function TaxInput({value, onChange, required}: {value: number, onChange: 
         thousandSeparator=""
         decimalSeparator=","
         value={value}
+        valueIsNumericString
         onValueChange={({floatValue, value}) => {
-            const actualValue = value === "" ? 0 : floatValue
+            const actualValue = value === "" ? "0" : floatValue !== undefined ? value : undefined
             actualValue !== undefined && onChange(actualValue)
         }}
     />

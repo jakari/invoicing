@@ -19,6 +19,8 @@ import { isAuthenticatedState } from "./state/auth"
 import { isCompanySelectedValue } from "./state/user-settings"
 import { mainLoadingState } from "./state/atoms"
 import { fetchUserSettings } from "./api-helper/user"
+import Big from 'big.js'
+Big.strict = true
 
 const RootApp = () => {
   const isCompanySelected = isCompanySelectedValue()

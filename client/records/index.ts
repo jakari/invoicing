@@ -56,20 +56,20 @@ export const defaultInvoiceList: InvoiceList = {
 export type InvoiceItem = Readonly<{
   id?: number
   description: string
-  amount: number
-  price: number
-  tax: number
-  total: number
-  totalWithoutTax: number
+  amount: string
+  price: string
+  tax: string
+  total: string
+  totalWithoutTax: string
 }>
 
 export const defaultInvoiceItem: InvoiceItem = {
   description: '',
-  amount: 1,
-  price: 0,
-  tax: 25.5,
-  total: 0,
-  totalWithoutTax: 0
+  amount: '1',
+  price: '0',
+  tax: '25.5',
+  total: '0',
+  totalWithoutTax: '0'
 }
 
 export type Invoice = Readonly<{
@@ -84,7 +84,7 @@ export type Invoice = Readonly<{
   invoiceNumber: number
   referenceNumber: number
   items: InvoiceItem[]
-  total: number
+  total: string
   remarkingTime: number
   interestOnArrears: number
   customerReference: string
@@ -105,7 +105,7 @@ export const defaultInvoice: Invoice = {
   invoiceNumber: 0,
   referenceNumber: 0,
   items: [defaultInvoiceItem],
-  total: 0,
+  total: '0',
   remarkingTime: 0,
   interestOnArrears: 0,
   customerReference: "",

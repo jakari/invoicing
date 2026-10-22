@@ -35,6 +35,7 @@ export function InvoiceItem({index, item, edit, remove}: Props) {
       <div className="ui fluid transparent input">
         <NumberInput
           required={true}
+          decimalScale={0}
           value={item.amount}
           onChange={changeValue(index, "amount")}
         />

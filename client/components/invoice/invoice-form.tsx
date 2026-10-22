@@ -87,7 +87,7 @@ function InvoiceForm({invoice: injectedInvoice, submit, cancel: cancelInvoice, i
       conditionsOfPayment,
       customerReference,
       template,
-      total
+      total: total.toString()
     })
   }
 
