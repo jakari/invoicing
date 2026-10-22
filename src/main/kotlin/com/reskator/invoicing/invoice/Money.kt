@@ -7,26 +7,26 @@ import java.math.RoundingMode
 data class Money(val cents: Long) {
     operator fun plus(other: Money) = Money(cents + other.cents)
 
-    /** Euros for JSON: whole euros without decimals, like PHP's `cents / 100` serialized them. */
+    /** Euros for JSON: whole euros without decimals (100, not 100.00). */
     fun toEuros(): BigDecimal = BigDecimal.valueOf(cents, 2).stripTrailingZeros().let { if (it.signum() == 0) BigDecimal.ZERO else it }
 
     /** "1 234,56", as the invoice templates show amounts. */
-    fun format(): String = phpNumberFormat(BigDecimal.valueOf(cents, 2), 2, ",", " ")
+    fun format(): String = formatNumber(BigDecimal.valueOf(cents, 2), 2, ",", " ")
 
     override fun toString() = format()
 
     companion object {
         val ZERO = Money(0)
 
-        /** Rounds to whole cents half away from zero, like the PHP app's `round($value * 100)`. */
+        /** Rounds to whole cents half away from zero. */
         fun fromEuros(euros: BigDecimal) = Money(euros.movePointRight(2).setScale(0, RoundingMode.HALF_UP).longValueExact())
     }
 }
 
 /**
- * PHP's `number_format`: rounds half away from zero to [decimals] places and groups thousands with [thousandsSeparator].
+ * Rounds half away from zero to [decimals] places and groups thousands with [thousandsSeparator].
  */
-fun phpNumberFormat(value: BigDecimal, decimals: Int, decimalPoint: String, thousandsSeparator: String): String {
+fun formatNumber(value: BigDecimal, decimals: Int, decimalPoint: String, thousandsSeparator: String): String {
     val rounded = value.setScale(decimals, RoundingMode.HALF_UP)
     val digits = rounded.abs().toPlainString()
     val whole = digits.substringBefore('.')

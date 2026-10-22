@@ -10,7 +10,7 @@ import java.io.File
 
 /**
  * The deployment's settings file (default-settings.yml): default invoice values, company and bank details for the
- * templates, e-mail texts and the template list. Read on every use, as the PHP app did, so edits apply without a restart.
+ * templates, e-mail texts and the template list. Read on every use, so edits apply without a restart.
  */
 class InvoiceSettings(private val path: String) {
     fun load(): Map<String, Any?> = File(path).reader().use { Yaml().load<Map<String, Any?>>(it) } ?: emptyMap()

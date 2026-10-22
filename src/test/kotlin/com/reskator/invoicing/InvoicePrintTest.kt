@@ -59,9 +59,8 @@ class InvoicePrintTest {
         assertContains(response.bodyAsText(), "Asiakas Oy")
     }
 
-    /** The output the PHP app's Twig templates gave. */
     @Test
-    fun `renders the templates like the php app did`() = printTest { client ->
+    fun `renders the templates`() = printTest { client ->
         client.create(
             companyA,
             invoice(

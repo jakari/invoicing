@@ -7,7 +7,7 @@ data class Violation(val property: String, val message: String)
 
 class ValidationException(val violations: List<Violation>) : RuntimeException("Validation failed")
 
-/** Collects violations with Symfony's messages, so all of them are reported at once. */
+/** Collects violations, so all of them are reported at once. */
 class Violations {
     private val list = mutableListOf<Violation>()
 

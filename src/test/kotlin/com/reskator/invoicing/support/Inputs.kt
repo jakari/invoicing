@@ -6,7 +6,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonArray
 
-/** Request bodies like the client sends them, as in the PHP tests' ApiTestCase. */
+/** Request bodies like the client sends them. */
 object Inputs {
     fun customer(vararg overrides: Pair<String, Any?>): Map<String, Any?> = mapOf(
         "id" to 0,

@@ -7,6 +7,5 @@ build
 dist
 node_modules
 storage
-var
-vendor
 .env
+*.tgz

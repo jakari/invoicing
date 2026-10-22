@@ -6,7 +6,7 @@ import org.jdbi.v3.core.kotlin.withHandleUnchecked
 
 data class User(val id: Int, val username: String, val password: String)
 
-/** The `users` table of the Symfony app; passwords are bcrypt hashes. */
+/** The `users` table; passwords are bcrypt hashes. */
 class UserRepository(private val jdbi: Jdbi) {
     fun findByUsername(username: String): User? = jdbi.withHandleUnchecked {
         it.createQuery("SELECT id, username, password FROM users WHERE username = :username")

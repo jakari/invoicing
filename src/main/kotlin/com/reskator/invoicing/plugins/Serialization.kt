@@ -5,7 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import kotlinx.serialization.json.Json
 
-/** Nulls are left out of responses, as the PHP app's serializer did. */
+/** Nulls are left out of responses. */
 val json = Json {
     explicitNulls = false
     ignoreUnknownKeys = true

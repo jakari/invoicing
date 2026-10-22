@@ -46,7 +46,7 @@ class SmtpInvoiceSenderTest {
         sender.send(invoice)
 
         val message = mail.receivedMessages.single()
-        // B5: the PHP app mailed the customer's current address instead of the one saved on the invoice
+        // B5: the address saved on the invoice, not the customer's current one
         assertEquals("saved@example.local", message.allRecipients.single().toString())
         assertEquals("Firma Oy - Laskut <laskut@firma.local>", message.from.single().toString())
         assertEquals("Firma Oy, Lasku", message.subject)

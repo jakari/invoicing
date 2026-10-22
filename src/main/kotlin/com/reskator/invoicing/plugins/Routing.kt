@@ -23,7 +23,7 @@ fun Application.configureRouting(env: Env) {
         route("/api/{...}") {
             handle { call.respond(HttpStatusCode.NotFound, "") }
         }
-        // The built client; its routes fall back to index.html (replaces dokku/nginx_app.conf)
+        // The built client; its routes fall back to index.html
         staticFiles("/", File(env.webRoot)) {
             default("index.html")
         }

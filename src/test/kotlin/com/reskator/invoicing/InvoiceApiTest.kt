@@ -80,7 +80,7 @@ class InvoiceApiTest {
     }
 
     @Test
-    fun `responses match the php app`() = appTest {
+    fun `responses have the json the client expects`() = appTest {
         val client = sessionClient().login()
 
         val created = client.post("/api/company/$companyA/invoice") {
@@ -101,7 +101,6 @@ class InvoiceApiTest {
             )
         )
 
-        // All captured from the PHP app
         assertEquals("""{"invoiceNumber":1}""", created.bodyAsText())
         assertEquals(
             """{"created":"2026-01-01","due":"2026-01-15","customer":{"id":1,"name":"Asiakas Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local"},"invoiceNumber":1,"referenceNumber":1009,"items":[{"id":1,"description":"Työ","amount":3,"price":12.34,"tax":"25.50"},{"id":2,"description":"Tarvike","amount":1,"price":100,"tax":"24.00"}],"remarkingTime":14,"interestOnArrears":18,"template":"finnish"}""",
@@ -353,6 +352,19 @@ class InvoiceApiTest {
         assertEquals(
             """{"violations":[{"property":"items[0].description","message":"This value should not be blank."},{"property":"items[0].tax","message":"This value should be 99.99 or less."}]}""",
             response.bodyAsText()
+        )
+    }
+
+    /** The client sends prices and taxes as strings, and amounts as numbers. */
+    @Test
+    fun `accepts prices and taxes as strings`() = appTest {
+        val client = sessionClient().login()
+
+        client.create(companyA, invoice("items" to listOf(item("Työ", 3, "12.345", "25.5"))))
+
+        assertEquals(
+            listOf(mapOf("amount" to 3, "price" to 1235, "tax" to java.math.BigDecimal("25.50"))),
+            query("SELECT amount, price, tax FROM invoice_item")
         )
     }
 

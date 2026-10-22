@@ -8,7 +8,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 
 /**
  * A Postgres container whose schema is created by the app's migrations. MigrationTest checks those
- * match the schema the Symfony app's Doctrine migrations created (src/test/resources/doctrine-schema.sql).
+ * match the schema of the existing databases (src/test/resources/baseline-schema.sql).
  */
 object TestDatabase {
     private val container = PostgreSQLContainer("postgres:10-alpine").apply { start() }
@@ -28,9 +28,9 @@ object TestDatabase {
         return createJdbi(config.copy(database = name))
     }
 
-    /** Loads the schema as the Symfony app's Doctrine migrations left it. */
-    fun loadDoctrineSchema(jdbi: Jdbi) {
-        val dump = TestDatabase::class.java.getResource("/doctrine-schema.sql")!!.readText()
+    /** Loads the schema the existing databases have. */
+    fun loadBaselineSchema(jdbi: Jdbi) {
+        val dump = TestDatabase::class.java.getResource("/baseline-schema.sql")!!.readText()
         jdbi.useHandle<Exception> { handle ->
             dump.lines().filterNot { it.startsWith("--") }.joinToString("\n")
                 .split(";\n")

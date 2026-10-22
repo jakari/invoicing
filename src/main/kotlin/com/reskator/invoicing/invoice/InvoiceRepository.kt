@@ -90,7 +90,7 @@ class InvoiceRepository {
         handle.createQuery("SELECT MAX(invoice_number) FROM invoice WHERE company = :company")
             .bind("company", company).mapTo<Int>().findOne().orElse(null)?.takeIf { it != 0 }
 
-    /** Doctrine generated invoice ids from the sequence itself, so invoice.id has no default. */
+    /** invoice.id has no default, so ids are taken from invoice_id_seq here. */
     fun insert(handle: Handle, company: Int, customer: Int, invoiceNumber: Int, referenceNumber: Long, invoice: ValidInvoice): Int =
         handle.createQuery(
             """

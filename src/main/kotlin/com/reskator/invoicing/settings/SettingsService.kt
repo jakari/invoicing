@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 
-/** The settings the client loads after login, in the PHP app's snake_case shape. */
+/** The settings the client loads after login, with snake_case keys. */
 class SettingsService(private val settings: InvoiceSettings, private val companies: CompanyRepository) {
     fun response(selectedCompanyId: Int?): JsonObject {
         val file = settings.load()
@@ -18,7 +18,7 @@ class SettingsService(private val settings: InvoiceSettings, private val compani
             put("default_values", yamlToJson(file["default"]))
             put("templates", yamlToJson(file["templates"]))
             put("companies", JsonArray(companies.getAll().map { Json.encodeToJsonElement(it) }))
-            // Left out when no company is selected, as the PHP serializer skipped nulls
+            // Left out when no company is selected
             if (selected != null) put("selected_company", Json.encodeToJsonElement<Company>(selected))
         }
     }

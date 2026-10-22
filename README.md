@@ -17,7 +17,7 @@ The templates are [Pebble](https://pebbletemplates.io) templates. They get `invo
 
 ## Database migrations
 
-Schema changes are SQL files in `src/main/resources/migrations`, named `version-up-<yyyyMMddHHmmss>.sql`. The first ones are the Symfony app's Doctrine migrations under their original versions, recorded in Doctrine's `migration_versions` table, so a database the PHP app migrated carries on where it left off.
+Schema changes are SQL files in `src/main/resources/migrations`, named `version-up-<yyyyMMddHHmmss>.sql`. The installed versions are recorded in the `migration_versions` table.
 
 They are installed by hand with the `migrate` command:
 
@@ -35,7 +35,7 @@ podman compose exec app java -jar invoicing.jar user create
 dokku run <app> java -jar invoicing.jar user create
 ```
 
-The command asks for the username and password. Users created by the PHP app keep their passwords.
+The command asks for the username and password.
 
 ## Development with podman/docker
 
@@ -66,7 +66,7 @@ Client with hot reload: `npm install && npm start` (Vite proxies `/api` to `loca
 ./gradlew test
 ```
 
-Tests start Postgres with Testcontainers and create the schema with the migrations; `MigrationTest` checks it matches the schema the Doctrine migrations created (`src/test/resources/doctrine-schema.sql`). On macOS the podman machine socket is used automatically when `DOCKER_HOST` is not set. The PDF tests download Chromium on their first run.
+Tests start Postgres with Testcontainers and create the schema with the migrations; `MigrationTest` checks it matches the schema of the existing databases (`src/test/resources/baseline-schema.sql`). On macOS the podman machine socket is used automatically when `DOCKER_HOST` is not set. The PDF tests download Chromium on their first run.
 
 ## Deployment (Dokku)
 
@@ -77,16 +77,3 @@ dokku storage:mount <app> /var/lib/dokku/data/storage/<app>:/storage
 ```
 
 Run `migrate` after deploying a release that adds migrations.
-
-### Moving from the PHP app
-
-1. Back up the database.
-2. Copy the deployed `default-settings.yml` and the templates with their images (`src/Invoicing/Bundle/AppBundle/Resources/views/invoice/`) to the storage directory, under `templates/`. Rename the templates from `.twig` to `.peb` and change their Twig-only parts:
-   - `date("d.m.Y")` → `date("dd.MM.yyyy")`
-   - remove `{% set difference = date(invoice.due).diff(invoice.created) %}`, and replace `{{ difference.days }}` with `{{ invoice.paymentTermDays }}`
-   - `number_format(2, ",", "")` → `numberformat("0.00")`
-   - `"@InvoicingAppBundle/Resources/views/invoice/aaa.gif"|base64image` → `"aaa.gif"|base64image`
-3. Set `APP_SECRET`, `USE_MOCK_MAILER`, and for e-mail `MAILER_HOST`, `MAILER_PORT`, `MAILER_USER` and `MAILER_PASSWORD` (Gmail: `smtp.gmail.com`, port 465). The `DATABASE_*`, `MAILER_TRANSPORT`, `SERVER_NAME` and `NODE_BIN` variables are no longer used.
-4. Deploy, and run `migrate`: it installs only the migrations the PHP app had not run.
-
-Everyone logs in again after the switch.

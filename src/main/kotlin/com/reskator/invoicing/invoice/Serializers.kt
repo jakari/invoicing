@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-/** Money as a JSON number of euros, as the PHP app's MoneyHandler sent and received it. */
+/** Money as a JSON number of euros. */
 object EurosSerializer : KSerializer<Money> {
     override val descriptor = PrimitiveSerialDescriptor("Euros", PrimitiveKind.DOUBLE)
 

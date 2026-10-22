@@ -7,8 +7,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MigrationTest {
-    /** The Doctrine migrations under app/DoctrineMigrations, by version. */
-    private val doctrineVersions = listOf(
+    /** The migrations the existing databases have installed. */
+    private val baselineVersions = listOf(
         20180703190343, 20180722205127, 20200304090647, 20200310134819, 20200315201311,
         20200815201613, 20210212085350, 20240629203743, 20261022120000
     )
@@ -47,42 +47,42 @@ class MigrationTest {
     }
 
     @Test
-    fun `migrations create the schema Doctrine created`() {
-        val doctrine = TestDatabase.createDatabase().also { TestDatabase.loadDoctrineSchema(it) }
+    fun `migrations create the schema of the existing databases`() {
+        val existing = TestDatabase.createDatabase().also { TestDatabase.loadBaselineSchema(it) }
         val fresh = TestDatabase.createDatabase()
 
         MigrationService(fresh).migrate()
         MigrationService(fresh).migrate()
 
-        assertEquals(schema(doctrine), schema(fresh))
-        assertEquals(doctrineVersions, versions(fresh))
+        assertEquals(schema(existing), schema(fresh))
+        assertEquals(baselineVersions, versions(fresh))
     }
 
     @Test
-    fun `a database Doctrine migrated is up to date`() {
-        val doctrine = TestDatabase.createDatabase().also { TestDatabase.loadDoctrineSchema(it) }
-        doctrine.useHandle<Exception> { handle ->
-            doctrineVersions.forEach { handle.execute("INSERT INTO migration_versions (version) VALUES (?)", it.toString()) }
+    fun `an existing database is up to date`() {
+        val existing = TestDatabase.createDatabase().also { TestDatabase.loadBaselineSchema(it) }
+        existing.useHandle<Exception> { handle ->
+            baselineVersions.forEach { handle.execute("INSERT INTO migration_versions (version) VALUES (?)", it.toString()) }
         }
-        val before = schema(doctrine)
+        val before = schema(existing)
 
-        MigrationService(doctrine).migrate()
+        MigrationService(existing).migrate()
 
-        assertEquals(before, schema(doctrine))
-        assertEquals(doctrineVersions, versions(doctrine))
+        assertEquals(before, schema(existing))
+        assertEquals(baselineVersions, versions(existing))
     }
 
     @Test
-    fun `installs only the migrations Doctrine had not run`() {
-        val doctrine = TestDatabase.createDatabase().also { TestDatabase.loadDoctrineSchema(it) }
-        doctrine.useHandle<Exception> { handle ->
+    fun `installs only the migrations a database has not run`() {
+        val existing = TestDatabase.createDatabase().also { TestDatabase.loadBaselineSchema(it) }
+        existing.useHandle<Exception> { handle ->
             handle.execute("DROP INDEX invoice_company_invoice_number")
-            doctrineVersions.dropLast(1).forEach { handle.execute("INSERT INTO migration_versions (version) VALUES (?)", it.toString()) }
+            baselineVersions.dropLast(1).forEach { handle.execute("INSERT INTO migration_versions (version) VALUES (?)", it.toString()) }
         }
 
-        MigrationService(doctrine).migrate()
+        MigrationService(existing).migrate()
 
-        assertEquals(schema(TestDatabase.createDatabase().also { MigrationService(it).migrate() }), schema(doctrine))
-        assertEquals(doctrineVersions, versions(doctrine))
+        assertEquals(schema(TestDatabase.createDatabase().also { MigrationService(it).migrate() }), schema(existing))
+        assertEquals(baselineVersions, versions(existing))
     }
 }

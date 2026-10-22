@@ -10,7 +10,7 @@ import kotlin.io.path.writeText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/** The built client, as nginx served it with dokku/nginx_app.conf. */
+/** The built client. */
 class StaticContentTest {
     private fun dirs() = TestDirs().apply {
         web.resolve("index.html").writeText("<html>app</html>")

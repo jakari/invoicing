@@ -19,7 +19,7 @@ data class UserSession(val userId: Int, val issuedAt: Long, val companyId: Int? 
 @Serializable
 data class LoginInput(val username: String = "", val password: String = "")
 
-/** Logs in the users of the `users` table (replaces Symfony's json_login with the entity user provider). */
+/** Logs in the users of the `users` table. */
 class AuthService(private val users: UserRepository) {
     fun authenticate(username: String, password: String): UserSession? {
         val user = users.findByUsername(username)
@@ -32,7 +32,7 @@ class AuthService(private val users: UserRepository) {
     companion object {
         private val DUMMY_HASH = hash("dummy password")
 
-        /** Cost 12, as the Symfony app's encoder used. */
+        /** bcrypt with cost 12. */
         fun hash(password: String): String = BCrypt.withDefaults().hashToString(12, password.toCharArray())
     }
 }

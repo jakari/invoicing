@@ -3,7 +3,7 @@ package com.reskator.invoicing.invoice
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-/** Invoice sums as the PHP app's InvoiceCalculator made them: the tax is rounded to cents per item. */
+/** Invoice sums: the tax is rounded to cents per item, half away from zero. */
 object InvoiceCalculator {
     private val HUNDRED = BigDecimal(100)
 

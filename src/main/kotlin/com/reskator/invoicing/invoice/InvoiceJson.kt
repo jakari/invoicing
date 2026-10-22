@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDate
 
-/** An invoice as the API sends it; the null optional fields are left out, as the PHP app did. */
+/** An invoice as the API sends it; null optional fields are left out. */
 @Serializable
 data class InvoiceOutput(
     @Serializable(IsoDateSerializer::class) val created: LocalDate,
@@ -83,8 +83,8 @@ val TEMPLATE_NAME = Regex("^[A-Za-z0-9_-]+$")
 private val MAX_TAX = BigDecimal("99.99")
 
 /**
- * The InvoiceModel constraints of the PHP app, with Symfony's messages. Unlike the PHP app, the customer and the
- * items are validated too: it didn't cascade into them and failed with a 500 on what the database rejected.
+ * Validates the invoice with its customer and items, so that what the database would reject is a 400 listing
+ * every violation.
  */
 fun InvoiceInput.validate(): ValidInvoice {
     val violations = Violations()

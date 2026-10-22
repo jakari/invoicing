@@ -1,4 +1,3 @@
--- Doctrine migration Version20200310134819
 ALTER TABLE invoice RENAME COLUMN invoice_number TO id;
 ALTER SEQUENCE invoice_invoice_number_seq RENAME TO invoice_id_seq;
 ALTER TABLE invoice ADD invoice_number INT NOT NULL;

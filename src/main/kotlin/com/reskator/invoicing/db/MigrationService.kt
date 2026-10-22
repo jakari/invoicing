@@ -14,9 +14,6 @@ import kotlin.io.path.name
 /**
  * Installs the `migrations/version-up-<14 digit version>.sql` resources newer than the latest version in
  * `migration_versions`, all in one transaction (ported from verkkokauppa-ktor's MigrationService).
- *
- * The migrations are the Symfony app's Doctrine migrations under their original versions, and the versions are
- * kept in Doctrine's own table, so a database Doctrine migrated carries on where it left off.
  */
 class MigrationService(private val jdbi: Jdbi) {
     private val log = LoggerFactory.getLogger(MigrationService::class.java)
@@ -29,7 +26,7 @@ class MigrationService(private val jdbi: Jdbi) {
         }
     }
 
-    /** Same definition as the table this app's Doctrine created: it has no executed_at column. */
+    /** Same definition as in the existing databases: there is no executed_at column. */
     private fun createVersionTableIfNeeded(handle: Handle) {
         handle.execute("create table if not exists migration_versions(version varchar(255) not null primary key)")
     }

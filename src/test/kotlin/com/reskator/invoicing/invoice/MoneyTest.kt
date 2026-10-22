@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class MoneyTest {
     @Test
-    fun `euros from json round to cents half away from zero like php round`() {
+    fun `euros from json round to cents half away from zero`() {
         assertEquals(Money(1234), Money.fromEuros(BigDecimal("12.34")))
         assertEquals(Money(1235), Money.fromEuros(BigDecimal("12.345")))
         assertEquals(Money(-1235), Money.fromEuros(BigDecimal("-12.345")))
@@ -14,7 +14,7 @@ class MoneyTest {
     }
 
     @Test
-    fun `euros for json drop trailing zeros like php's division`() {
+    fun `euros for json drop trailing zeros`() {
         assertEquals("100", Money(10000).toEuros().toPlainString())
         assertEquals("125.5", Money(12550).toEuros().toPlainString())
         assertEquals("0.06", Money(6).toEuros().toPlainString())

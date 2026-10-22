@@ -19,7 +19,7 @@ fun Route.printing() {
     val pdfRenderer by inject<PdfRenderer>()
     val sender by inject<InvoiceSender>()
 
-    // The HTML the PDF is made of, for previewing a template. The PHP app's /print was the same and unused.
+    // The HTML the PDF is made of, for previewing a template
     get("/invoice/{number}/print_html") {
         val invoice = invoiceService.get(call.company.id, intParam("number"))
         call.respondText(renderer.render(invoice), ContentType.Text.Html)

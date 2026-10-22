@@ -8,8 +8,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
 /**
- * Prints HTML to an A4 PDF with headless Chromium, with the settings of the PHP app's scripts/makepdf.js
- * (Puppeteer). Playwright objects may only be used from the thread that created them, so one thread owns the
+ * Prints HTML to an A4 PDF with headless Chromium, laid out in a 1588×2244 viewport at scale 2. Playwright objects may only be used from the thread that created them, so one thread owns the
  * browser and renders one PDF at a time. The browser starts on the first PDF and is restarted if it dies.
  */
 class PdfRenderer : AutoCloseable {

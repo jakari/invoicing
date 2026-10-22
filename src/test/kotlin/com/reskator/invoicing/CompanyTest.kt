@@ -34,14 +34,14 @@ class CompanyTest {
         val response = client.post("/api/select-company/$companyA")
 
         assertEquals(HttpStatusCode.NoContent, response.status)
-        // Captured from the PHP app
+        // The settings the client expects
         assertEquals(
             """{"default_values":{"default_due":14,"late_interest":18,"remarking_time":8,"initial_reference_number":100,"initial_invoice_number":1},"templates":[{"name":"finnish","title":"Suomi"},{"name":"english","title":"Englanti"}],"companies":[{"id":1,"name":"Company A"},{"id":2,"name":"Company B"}],"selected_company":{"id":1,"name":"Company A"}}""",
             client.get("/api/invoice/settings").bodyAsText()
         )
     }
 
-    /** B9: the PHP app accepted any id and then failed every request with a 500. */
+    /** B9: an unknown company used to be accepted, and every request after it failed. */
     @Test
     fun `selecting an unknown company is not found`() = appTest {
         val client = sessionClient().login()

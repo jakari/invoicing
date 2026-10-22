@@ -10,7 +10,7 @@ import kotlinx.serialization.SerializationException
 fun RoutingContext.intParam(name: String) =
     call.parameters[name]?.toIntOrNull() ?: throw NotFoundException()
 
-/** Parses the JSON body whatever the Content-Type, as the PHP app did. */
+/** Parses the JSON body whatever the Content-Type. */
 suspend inline fun <reified T> RoutingContext.jsonBody(): T = try {
     json.decodeFromString<T>(call.receiveText())
 } catch (e: SerializationException) {

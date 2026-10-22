@@ -34,7 +34,7 @@ class UserCommand : CliktCommand(name = "user") {
     override fun run() = Unit
 }
 
-/** Adds a user who can log in (replaces the Symfony app's user:create). */
+/** Adds a user who can log in. */
 class CreateUser(
     private val users: () -> UserRepository = { UserRepository(createJdbi(Env.load().db)) }
 ) : CliktCommand(name = "create") {

@@ -25,7 +25,7 @@ fun Route.customers() {
         call.respond(customerService.get(call.company.id, intParam("id")))
     }
 
-    // Updates the customer in the URL; the PHP app used the id in the body
+    // Updates the customer in the URL, whatever id the body has
     patch("/customer/{id}") {
         customerService.update(call.company.id, intParam("id"), jsonBody<CustomerInput>())
         call.respond(HttpStatusCode.NoContent)

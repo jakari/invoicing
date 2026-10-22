@@ -45,7 +45,7 @@ class CustomerApiTest {
         val response = client.get("/api/company/$companyA/customers")
 
         assertEquals(HttpStatusCode.OK, response.status)
-        // Captured from the PHP app (with the ids of this test): nulls are left out
+        // Nulls are left out
         assertEquals(
             """[{"id":3,"name":"Asiakas Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local"},{"id":1,"name":"Toinen Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local","vat":"FI123","phone":"040"}]""",
             response.bodyAsText()
@@ -86,7 +86,7 @@ class CustomerApiTest {
 
         val response = client.get("/api/company/$companyA/customer/$customer")
 
-        // Captured from the PHP app
+        // Totals without tax
         assertEquals(
             """{"id":1,"name":"Asiakas Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local","invoices":[{"customer":"Asiakas Oy","invoiceNumber":1,"referenceNumber":1009,"created":"01.01.2026","due":"15.01.2026","total":137.02}]}""",
             response.bodyAsText()
@@ -121,7 +121,6 @@ class CustomerApiTest {
         )
     }
 
-    /** The PHP app updated the customer whose id was in the body, whatever the URL said. */
     @Test
     fun `updates the customer in the url, not the id in the body`() = appTest {
         val first = InvoiceFixtures.customer(companyA, "First")

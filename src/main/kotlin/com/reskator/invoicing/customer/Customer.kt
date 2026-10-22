@@ -64,7 +64,7 @@ data class CustomerDetails(
     val phone: String?
 )
 
-/** The CustomerModel constraints of the PHP app, plus the column lengths it failed on with a 500. */
+/** Required fields and the lengths of their columns. */
 fun CustomerInput.validate(violations: Violations, prefix: String = "") = CustomerDetails(
     name = violations.notBlank(prefix + "name", name),
     additionalName = violations.notNull(prefix + "additionalName", additionalName),

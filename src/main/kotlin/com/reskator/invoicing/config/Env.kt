@@ -30,7 +30,7 @@ data class DbConfig(
     }
 }
 
-/** SMTP server the invoices are e-mailed through (replaces Swiftmailer's MAILER_* parameters). */
+/** SMTP server the invoices are e-mailed through. */
 data class MailerConfig(
     val host: String,
     val port: Int,

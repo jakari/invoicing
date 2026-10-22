@@ -1,4 +1,3 @@
--- Doctrine migration Version20200315201311
 ALTER TABLE customer ADD vat VARCHAR(255) DEFAULT NULL;
 ALTER TABLE customer ADD phone VARCHAR(255) DEFAULT NULL;
 ALTER TABLE invoice ADD customer_name VARCHAR(255) NOT NULL;

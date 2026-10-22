@@ -53,7 +53,7 @@ class AuthTest {
 
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals(ContentType.Application.Json, response.contentType()?.withoutParameters())
-        // Captured from the PHP app
+        // The settings the client expects
         assertEquals(
             """{"default_values":{"default_due":14,"late_interest":18,"remarking_time":8,"initial_reference_number":100,"initial_invoice_number":1},"templates":[{"name":"finnish","title":"Suomi"},{"name":"english","title":"Englanti"}],"companies":[{"id":1,"name":"Company A"},{"id":2,"name":"Company B"}]}""",
             response.bodyAsText()
@@ -61,11 +61,11 @@ class AuthTest {
     }
 
     @Test
-    fun `users created by the php app can log in`() = appTest {
-        // password_hash("php-password", PASSWORD_BCRYPT, ["cost" => 4]) from the PHP app
-        Fixtures.userWithHash("php-user", "\$2y\$04\$QJ9YrwUsCFig6/aecqPJ0Otxjdz/Zv.PMJmYlqnEvwMwXrEfWSzGa")
+    fun `users with 2y bcrypt hashes can log in`() = appTest {
+        // The existing users' hashes have the $2y$ prefix; this one is of "legacy-password" with cost 4
+        Fixtures.userWithHash("legacy-user", "\$2y\$04\$b9qDaJzkDQm/HLih9Y3FIegeMxCZLRrbT3XsgulwD52p.VCMBfk76")
 
-        sessionClient().login("php-user", "php-password")
+        sessionClient().login("legacy-user", "legacy-password")
     }
 
     @Test
