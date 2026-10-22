@@ -18,7 +18,7 @@ use Xi\Collections\Collection\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Invoicing\Repository\InvoiceRepository")
- * @ORM\Table(name="invoice")
+ * @ORM\Table(name="invoice", uniqueConstraints={@ORM\UniqueConstraint(name="invoice_company_invoice_number", columns={"company", "invoice_number"})})
  */
 class Invoice
 {

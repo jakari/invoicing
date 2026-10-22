@@ -136,7 +136,7 @@ class InvoiceController
     public function printInvoiceAction($invoiceId)
     {
         try {
-            $invoice = $this->invoiceRepository->get($invoiceId);
+            $invoice = $this->invoiceService->getInvoiceEntity($invoiceId);
 
             return new Response(
                 $this->invoiceRendererService->render($invoice),
@@ -156,7 +156,7 @@ class InvoiceController
     public function printInvoiceHtmlAction($invoiceId)
     {
         try {
-            $invoice = $this->invoiceRepository->get($invoiceId);
+            $invoice = $this->invoiceService->getInvoiceEntity($invoiceId);
 
             return new Response(
                 $this->invoiceRendererService->render($invoice),
@@ -176,7 +176,7 @@ class InvoiceController
     public function printInvoicePdfAction($invoiceId)
     {
         try {
-            $invoice = $this->invoiceRepository->get($invoiceId);
+            $invoice = $this->invoiceService->getInvoiceEntity($invoiceId);
 
             return new Response(
                 $this->invoiceRendererService->renderPdf($invoice),
@@ -197,7 +197,7 @@ class InvoiceController
     public function sendInvoiceEmail($invoiceId)
     {
         try {
-            $invoice = $this->invoiceRepository->get($invoiceId);
+            $invoice = $this->invoiceService->getInvoiceEntity($invoiceId);
 
             $this->invoiceSenderService->send($invoice);
 

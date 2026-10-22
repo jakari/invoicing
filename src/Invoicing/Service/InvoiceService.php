@@ -82,6 +82,7 @@ class InvoiceService
         $company = $this->currentCompanyService->get();
 
         return $this->repository->transactional(function () use ($model, $company) {
+            $this->repository->lockCompany($company);
             $customer = $this->customerService->saveCustomer($model->getCustomer());
 
             $base = null;
@@ -128,7 +129,7 @@ class InvoiceService
     public function updateInvoice($id, InvoiceModel $model)
     {
         $this->repository->transactional(function () use ($id, $model) {
-            $invoice = $this->repository->get($id);
+            $invoice = $this->getInvoiceEntity($id);
             // Update customer
             $customer = $this->customerService
                 ->saveCustomer($model->getCustomer());
@@ -154,7 +155,17 @@ class InvoiceService
      */
     public function getInvoice($invoiceId)
     {
-        return $this->repository->get($invoiceId)->createOutputModel();
+        return $this->getInvoiceEntity($invoiceId)->createOutputModel();
+    }
+
+    /**
+     * @param  integer                  $invoiceNumber
+     * @return Invoice
+     * @throws InvoiceNotFoundException
+     */
+    public function getInvoiceEntity($invoiceNumber): Invoice
+    {
+        return $this->repository->get($this->currentCompanyService->get(), $invoiceNumber);
     }
 
     /**
@@ -162,14 +173,7 @@ class InvoiceService
      */
     public function remove($invoiceId)
     {
-        $invoice = $this->getInvoice($invoiceId);
-
-        foreach ($invoice->getItems() as $item) {
-            $this->itemService->removeItem($item);
-        }
-
-        $this->conn->prepare('DELETE FROM invoice WHERE invoice_number = :id')
-            ->execute([':id' => $invoiceId]);
+        $this->repository->remove($this->getInvoiceEntity($invoiceId));
     }
 
     public function getSettings()

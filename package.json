@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "sass": "^1.106.1",
     "vite": "^6.2.0"
   },
   "engines": {

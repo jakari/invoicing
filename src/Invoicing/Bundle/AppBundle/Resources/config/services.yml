@@ -123,6 +123,7 @@ services:
         arguments:
             - '@invoicing.service.current_company'
             - '@invoicing.repository.parameters'
+            - '%invoice_settings%'
 
     invoicing.service.current_company:
         class: Invoicing\Service\CurrentCompanyService

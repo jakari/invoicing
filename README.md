@@ -38,6 +38,17 @@ To use the application, first install it according to the guide below, and add a
 10. Add a company to the database: `INSERT INTO company(name) VALUES('Yritys Oy');`
 11. Application is ready to use.
 
+### Tests
+
+The tests run against their own database, `invoicing_test` (set in `phpunit.xml.dist`). With the docker-compose setup:
+
+```
+podman compose up -d db php
+podman compose exec db psql -U invoicing -d postgres -c "CREATE DATABASE invoicing_test"
+podman compose exec -e DATABASE_NAME=invoicing_test php bin/console doctrine:migrations:migrate --env=test -n
+podman compose exec php vendor/bin/simple-phpunit
+```
+
 ### Adding a user
 
 To add a user to the application, run `php bin/console user:create`. The guide will ask for username and password. After user creation you may log in.

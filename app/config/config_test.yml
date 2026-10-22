@@ -17,7 +17,7 @@ swiftmailer:
 
 invoicing_app:
     database_host: "%database_host%"
-    database_name: "%test_database_name%"
+    database_name: "%database_name%"
     database_user: "%database_user%"
     database_password: "%database_password%"
 

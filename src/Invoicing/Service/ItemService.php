@@ -59,9 +59,4 @@ class ItemService
             $this->repository->findBy(['invoice' => $invoice])
         );
     }
-
-    public function removeItem(ItemModel $item)
-    {
-        $this->repository->remove($this->repository->get($item->getId()));
-    }
 }

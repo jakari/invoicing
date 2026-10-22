@@ -57,7 +57,7 @@ class InvoiceEmailSenderService implements InvoiceSenderService
             $this->settings['email']['from']['address'],
             $this->settings['email']['from']['name']
         );
-        $message->addTo($invoice->getCustomer()->getEmail());
+        $message->addTo($invoice->getCustomerEmail());
         $message->setSubject($this->settings['email']['subject']);
         $message->setBody($this->settings['email']['body']);
         $this->mailer->send($message);

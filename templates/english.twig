@@ -505,11 +505,11 @@
                             <div class="spec">Credit transfer</div>
                             Payer's name<br /> and <br/> address</td>
                         <td class="left content customer-name">
-                            {{ invoice.customer.name }}<br />
+                            {{ invoice.customerName }}<br />
                             {% if invoice.customerAdditionalName %}{{ invoice.customerAdditionalName }}<br />{% endif %}
                             {% if invoice.customerVat %}{{ invoice.customerVat }}<br />{% endif %}
-                            {{ invoice.customer.streetName }}<br />
-                            {{ invoice.customer.postCode }} {{ invoice.customer.city }}<br />
+                            {{ invoice.customerStreetName }}<br />
+                            {{ invoice.customerPostCode }} {{ invoice.customerCity }}<br />
                         </td>
                     </tr>
                     <tr>

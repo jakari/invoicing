@@ -10,6 +10,9 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <server name="KERNEL_DIR" value="app/" />
+        <!-- Create the database and migrate it with the migrations command, env test and this DATABASE_NAME (see README) -->
+        <env name="DATABASE_NAME" value="invoicing_test" />
+        <env name="USE_MOCK_MAILER" value="true" />
     </php>
 
     <testsuites>

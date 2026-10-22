@@ -3,6 +3,7 @@
 namespace Invoicing\Service;
 
 use Invoicing\Entity\Company;
+use Invoicing\Exception\CompanyNotFoundException;
 use Invoicing\Exception\CompanyNotSelectedException;
 use Invoicing\Repository\CompanyRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -19,8 +20,12 @@ class CurrentCompanyService
         $this->session = $session;
     }
 
+    /**
+     * @throws CompanyNotFoundException
+     */
     public function set(int $companyId)
     {
+        $this->repository->get($companyId);
         $this->session->set('current_company', $companyId);
     }
 

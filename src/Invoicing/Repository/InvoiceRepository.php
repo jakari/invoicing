@@ -26,6 +26,24 @@ class InvoiceRepository extends EntityRepository
         $this->_em->flush();
     }
 
+    public function remove(Invoice $invoice)
+    {
+        // orphanRemoval on Invoice::$items removes the items too
+        $this->_em->remove($invoice);
+        $this->_em->flush();
+    }
+
+    /**
+     * Serializes invoice creation per company, so concurrent invoices don't get the same number.
+     */
+    public function lockCompany(Company $company)
+    {
+        $this->_em->getConnection()->executeQuery(
+            'SELECT id FROM company WHERE id = :company FOR UPDATE',
+            ['company' => $company->getId()]
+        );
+    }
+
     /**
      * @param  Company $company
      * @return InvoiceListItemModel[]
@@ -42,10 +60,11 @@ class InvoiceRepository extends EntityRepository
                 created,
                 due,
                 status,
-                COALESCE(SUM(item.amount * (1 + (item.tax / 100)) * item.price), 0) AS total
+                -- Rounds the tax of each item like InvoiceCalculator does for the printed invoice
+                COALESCE(SUM(item.amount * item.price + ROUND(item.amount * item.price * item.tax / 100)), 0) AS total
             FROM invoice
             JOIN customer ON invoice.customer = customer.id
-            LEFT JOIN invoice_item item ON invoice.invoice_number = item.invoice
+            LEFT JOIN invoice_item item ON invoice.id = item.invoice
             WHERE invoice.company = :company
             GROUP BY invoice.id, customer.id
             ORDER BY created DESC, invoice_number DESC
@@ -59,18 +78,22 @@ class InvoiceRepository extends EntityRepository
                 $invoice['reference_number'],
                 new \DateTime($invoice['created']),
                 new \DateTime($invoice['due']),
-                new Money($invoice['total'])
+                new Money((int) $invoice['total'])
             );
         }, $stmt->fetchAll(\PDO::FETCH_ASSOC));
     }
 
-    public function get($invoiceNumber)
+    /**
+     * Invoice numbers run per company, so the same number exists in several companies.
+     *
+     * @throws InvoiceNotFoundException
+     */
+    public function get(Company $company, $invoiceNumber): Invoice
     {
         /** @var Invoice $invoice */
-        if ($invoice = $this->findOneBy(['invoiceNumber' => $invoiceNumber])) {
+        if ($invoice = $this->findOneBy(['company' => $company, 'invoiceNumber' => $invoiceNumber])) {
             return $invoice;
         }
-
 
         throw new InvoiceNotFoundException();
     }

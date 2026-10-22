@@ -66,7 +66,7 @@ class CustomerService
      */
     public function updateCustomer(CustomerModel $model): Customer
     {
-        $customer = $this->repository->get($model->getId());
+        $customer = $this->repository->get($this->currentCompanyService->get(), $model->getId());
         $customer->updateFromModel($model);
         $this->repository->update($customer);
 
@@ -91,7 +91,7 @@ class CustomerService
 
     public function get(int $customerId)
     {
-        return $this->repository->get($customerId)->createFullOutputModel();
+        return $this->repository->get($this->currentCompanyService->get(), $customerId)->createFullOutputModel();
     }
 
     /**

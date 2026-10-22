@@ -16,10 +16,10 @@ class CustomerRepository extends EntityRepository
      * @return Customer
      * @throws CustomerNotFoundException
      */
-    public function get(int $id): Customer
+    public function get(Company $company, int $id): Customer
     {
         /** @var Customer $customer */
-        if ($customer = $this->find($id)) {
+        if ($customer = $this->findOneBy(['company' => $company, 'id' => $id])) {
             return $customer;
         }
 
