@@ -11,7 +11,7 @@ import org.testcontainers.containers.PostgreSQLContainer
  * match the schema of the existing databases (src/test/resources/baseline-schema.sql).
  */
 object TestDatabase {
-    private val container = PostgreSQLContainer("postgres:10-alpine").apply { start() }
+    private val container = PostgreSQLContainer("postgres:14-alpine").apply { start() }
 
     val config = DbConfig(container.host, container.firstMappedPort, container.databaseName, container.username, container.password)
 

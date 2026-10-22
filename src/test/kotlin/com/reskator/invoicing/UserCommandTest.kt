@@ -21,7 +21,7 @@ class UserCommandTest {
 
     @Test
     fun `creates a user that can log in`() {
-        val result = CreateUser { users }.test("--username matti", stdin = "salasana\nsalasana\n")
+        val result = CreateUser { users }.test("--username matti", stdin = "salasana\nsalasana\n", inputInteractive = true)
 
         assertEquals(0, result.statusCode, result.output)
         assertContains(result.output, "User matti created")
@@ -33,7 +33,7 @@ class UserCommandTest {
     fun `refuses an existing username`() {
         Fixtures.user("matti")
 
-        val result = CreateUser { users }.test("--username matti", stdin = "salasana\nsalasana\n")
+        val result = CreateUser { users }.test("--username matti", stdin = "salasana\nsalasana\n", inputInteractive = true)
 
         assertEquals(1, result.statusCode)
         assertContains(result.output, "already exists")

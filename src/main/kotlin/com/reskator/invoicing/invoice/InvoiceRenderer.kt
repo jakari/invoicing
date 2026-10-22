@@ -13,7 +13,7 @@ import java.util.Locale
  */
 class InvoiceRenderer(private val templateDir: String, private val settings: InvoiceSettings) {
     private val engine = PebbleEngine.Builder()
-        .loader(FileLoader().apply { prefix = templateDir })
+        .loader(FileLoader(templateDir))
         .newLineTrimming(false)
         .cacheActive(false)
         // Finnish number formats: numberformat("0.00") gives "25,50"

@@ -1,5 +1,5 @@
 # Client
-FROM docker.io/library/node:20 AS frontend
+FROM docker.io/library/node:24 AS frontend
 WORKDIR /app
 COPY package.json package-lock.json vite.config.js tsconfig.json ./
 RUN npm ci

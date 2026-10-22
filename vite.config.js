@@ -5,7 +5,7 @@ export default defineConfig({
     root: 'client',
     resolve: {
         alias: {
-            '/*': path.resolve(__dirname, './client'),
+            '/*': path.resolve(import.meta.dirname, './client'),
         },
     },
     build: {
