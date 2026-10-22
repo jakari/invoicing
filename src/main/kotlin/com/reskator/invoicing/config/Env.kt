@@ -1,6 +1,7 @@
 package com.reskator.invoicing.config
 
 import io.github.cdimascio.dotenv.Dotenv
+import java.io.File
 import java.net.URI
 import java.net.URLDecoder
 
@@ -55,6 +56,12 @@ data class Env(
     /** The built client (`npm run build`), served at `/`. */
     val webRoot: String
 ) {
+    /** Fails at startup instead of on the first request when the deployment's settings or templates are missing. */
+    fun checkFiles() {
+        check(File(invoiceSettings).isFile) { "INVOICE_SETTINGS: no settings file at $invoiceSettings" }
+        check(File(invoiceTemplateDir).isDirectory) { "INVOICE_TEMPLATE_DIR: no template directory at $invoiceTemplateDir" }
+    }
+
     companion object {
         private val REQUIRED = listOf("APP_SECRET", "DATABASE_URL", "INVOICE_SETTINGS", "INVOICE_TEMPLATE_DIR")
         private val REQUIRED_FOR_SMTP = listOf("MAILER_HOST", "MAILER_USER", "MAILER_PASSWORD")

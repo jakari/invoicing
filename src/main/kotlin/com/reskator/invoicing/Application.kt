@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module(env: Env, jdbi: Jdbi? = null) {
+    env.checkFiles()
     install(CallLogging)
     install(SecurityHeaders)
     configureKoin(env, jdbi)

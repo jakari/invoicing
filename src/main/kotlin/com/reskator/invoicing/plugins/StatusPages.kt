@@ -5,6 +5,7 @@ import com.reskator.invoicing.ValidationException
 import com.reskator.invoicing.Violation
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
@@ -20,5 +21,9 @@ fun Application.configureStatusPages() {
             call.respond(HttpStatusCode.BadRequest, ValidationErrors(e.violations))
         }
         exception<BadRequestException> { call, _ -> call.respond(HttpStatusCode.BadRequest, "") }
+        exception<Throwable> { call, cause ->
+            call.application.log.error("Unhandled: ${call.request.httpMethod.value} ${call.request.uri}", cause)
+            call.respond(HttpStatusCode.InternalServerError, "")
+        }
     }
 }
