@@ -9,8 +9,9 @@ export default defineConfig({
         },
     },
     build: {
-        // Relative to the root
-        outDir: '../build',
+        // Relative to the root; Ktor serves it (WEB_ROOT)
+        outDir: '../dist',
+        emptyOutDir: true,
         rollupOptions: {
             output: {
                 assetFileNames: "assets/[name].[ext]",
@@ -20,8 +21,8 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '/api/': 'http://invoicing.tunk.io:8081',
-            '/bundles': 'http://invoicing.tunk.io:8081',
+            // ./gradlew run
+            '/api/': 'http://localhost:8080',
         }
     }
 });

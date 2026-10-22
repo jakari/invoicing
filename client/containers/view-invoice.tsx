@@ -14,7 +14,7 @@ import {calculateTotalWithoutTax} from "../utilities/invoice";
 export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
   const [invoice, setInvoice] = useState<Invoice | undefined>()
   const {templates} = useSettings()
-  const {get} = useInvoiceApi()
+  const {get, pdfUrl} = useInvoiceApi()
 
   useEffect(() => {
      get(match.params.invoice).then(invoice => setInvoice(invoice))
@@ -174,7 +174,7 @@ export function ViewInvoice({match}: RouteComponentProps<{invoice: string}>) {
 
     <div className="ui hidden divider" />
 
-    <a href={`/api/invoice/lasku-${invoice.invoiceNumber}.pdf`} target="_blank">
+    <a href={pdfUrl(invoice.invoiceNumber)} target="_blank">
       <Button primary>
         <FormattedMessage id="invoice.print" />
       </Button>

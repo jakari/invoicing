@@ -1,72 +1,92 @@
 # invoicing
 
-Invoicing  is a invoicing system that's easy to use and simple. 
+Invoicing is an invoicing system that's easy to use and simple.
 
 It's intended for small companies and it doesn't have many special features but it should be quite good and simple for that since as an small business you'll would more likely use your time to something more valuable than invoicing bullshit.
 
-## System requirements
+Kotlin/Ktor on PostgreSQL, with a React client (`client/`). Invoices are printed to PDF with Playwright's headless Chromium.
 
-- A web server (Nginx or apache for example)
-- PHP 5.6
-- PostgreSQL 9.4
+## Settings and templates
 
-## Development
+Each deployment has its own settings file and invoice templates, outside the repository:
 
-The Invoicing is built using Symfony3 and React, but all of this might change in the future.
- 
-### Basic structure
+- `INVOICE_SETTINGS`: the settings file, copied from `default-settings.example.yml`: default invoice values, company and bank details, e-mail texts, and the list of templates.
+- `INVOICE_TEMPLATE_DIR`: the invoice templates, `<template name>.peb`, and the images they embed with `base64image`. `templates/` has examples.
 
-Frontend code is in the `client` folder.
+The templates are [Pebble](https://pebbletemplates.io) templates. They get `invoice`, `company` and `bank` (the settings file's sections), and these filters besides Pebble's own: `money` ("1 234,56"), `itemTotal`, `itemTotalWithoutTax`, `total`, `totalWithoutTax`, `taxTotal`, and `base64image` for an image file in the template directory. Numbers are formatted in Finnish (`numberformat("0.00")` gives "25,50"). The settings and templates are read on every use, so edits apply without a restart.
 
-Symfony is built with the Standard edition structure.
+## Database migrations
 
-## Usage
+Schema changes are SQL files in `src/main/resources/migrations`, named `version-up-<yyyyMMddHHmmss>.sql`. The first ones are the Symfony app's Doctrine migrations under their original versions, recorded in Doctrine's `migration_versions` table, so a database the PHP app migrated carries on where it left off.
 
-To use the application, first install it according to the guide below, and add a user to be able to login. You should also add a company into the database to be able to use it.
-
-## Installation
-
-1. Download sources from Github.
-2. Create a database in PostgreSQL
-3. Run `composer install` and answer to the questions the installation script asks. This creates automatically the required configuration to run the application
-4. Run database migrations using the command `php bin/console doctrine:migrations:migrate`.
-5. Point your webserver to the `web/` folder (look at the example nginx configuration `doc/nginx.example.conf`)
-6. Copy `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.example.yml` to `src/Invoicing/Bundle/AppBundle/Resources/invoice/default-settings.yml` and modify settings accordingly.
-7. Copy `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template-example.html` to `src/Invoicing/Bundle/AppBundle/Resources/views/invoice/invoice-template.html` and modify according to your needs. 
-8. Initialize the frontend by running `npm install` and `npm start` in the `client` folder.
-9. Add a user using the command below.
-10. Add a company to the database: `INSERT INTO company(name) VALUES('Yritys Oy');`
-11. Application is ready to use.
-
-### Tests
-
-The tests run against their own database, `invoicing_test` (set in `phpunit.xml.dist`). With the docker-compose setup:
+They are installed by hand with the `migrate` command:
 
 ```
-podman compose up -d db php
-podman compose exec db psql -U invoicing -d postgres -c "CREATE DATABASE invoicing_test"
-podman compose exec -e DATABASE_NAME=invoicing_test php bin/console doctrine:migrations:migrate --env=test -n
-podman compose exec php vendor/bin/simple-phpunit
+./gradlew run --args=migrate                                  # locally
+podman compose exec app java -jar invoicing.jar migrate       # podman/docker
+dokku run <app> java -jar invoicing.jar migrate               # production
 ```
 
-### Adding a user
+## Adding a user
 
-To add a user to the application, run `php bin/console user:create`. The guide will ask for username and password. After user creation you may log in.
+```
+./gradlew run --args="user create"
+podman compose exec app java -jar invoicing.jar user create
+dokku run <app> java -jar invoicing.jar user create
+```
 
-### Deployment in dokku
+The command asks for the username and password. Users created by the PHP app keep their passwords.
 
-Run `git push [environment]` to push to the desired environment. 
-Applications are ran as `herokuishuser`, so if you need to run migration or other commands on the server do the following:
+## Development with podman/docker
 
-1. SSH to server
-2. Run `dokku enter [applicationname]`
-3. Run `su -u herokuishuser` to become herokuishuser
-4. Run your desired commands (for example `php bin/console doctrine:migrations:migrate`)
+Put your settings file at `storage/default-settings.yml` and your templates in `storage/templates/` (`storage/` is not committed), then:
 
-#### Postgres management
+```
+podman compose up -d --build
+podman compose exec app java -jar invoicing.jar migrate
+podman compose exec app java -jar invoicing.jar user create
+podman compose exec db psql -U invoicing -c "INSERT INTO company(name) VALUES('Yritys Oy')"
+```
 
-In order to manage the postgres instance, do the following:
+The application is at http://localhost:8080. Invoices are not e-mailed (`USE_MOCK_MAILER`).
 
-1. `dokku postgres:enter [applicationname]`
-2. `psql -U postgres`
+## Running locally
 
+Copy `.env.example` to `.env`, fill it in and run:
+
+```
+./gradlew run
+```
+
+Client with hot reload: `npm install && npm start` (Vite proxies `/api` to `localhost:8080`). `npm run build` builds it into `dist/`, which the application serves.
+
+## Tests
+
+```
+./gradlew test
+```
+
+Tests start Postgres with Testcontainers and create the schema with the migrations; `MigrationTest` checks it matches the schema the Doctrine migrations created (`src/test/resources/doctrine-schema.sql`). On macOS the podman machine socket is used automatically when `DOCKER_HOST` is not set. The PDF tests download Chromium on their first run.
+
+## Deployment (Dokku)
+
+The `Dockerfile` builds the client and the application, and installs Chromium. Set the environment variables from `.env.example` (`DATABASE_URL` comes from the postgres plugin), and mount a storage directory at `/storage` with `default-settings.yml` and `templates/`:
+
+```
+dokku storage:mount <app> /var/lib/dokku/data/storage/<app>:/storage
+```
+
+Run `migrate` after deploying a release that adds migrations.
+
+### Moving from the PHP app
+
+1. Back up the database.
+2. Copy the deployed `default-settings.yml` and the templates with their images (`src/Invoicing/Bundle/AppBundle/Resources/views/invoice/`) to the storage directory, under `templates/`. Rename the templates from `.twig` to `.peb` and change their Twig-only parts:
+   - `date("d.m.Y")` → `date("dd.MM.yyyy")`
+   - remove `{% set difference = date(invoice.due).diff(invoice.created) %}`, and replace `{{ difference.days }}` with `{{ invoice.paymentTermDays }}`
+   - `number_format(2, ",", "")` → `numberformat("0.00")`
+   - `"@InvoicingAppBundle/Resources/views/invoice/aaa.gif"|base64image` → `"aaa.gif"|base64image`
+3. Set `APP_SECRET`, `USE_MOCK_MAILER`, and for e-mail `MAILER_HOST`, `MAILER_PORT`, `MAILER_USER` and `MAILER_PASSWORD` (Gmail: `smtp.gmail.com`, port 465). The `DATABASE_*`, `MAILER_TRANSPORT`, `SERVER_NAME` and `NODE_BIN` variables are no longer used.
+4. Deploy, and run `migrate`: it installs only the migrations the PHP app had not run.
+
+Everyone logs in again after the switch.

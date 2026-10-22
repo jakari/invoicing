@@ -361,18 +361,17 @@
                         </tr>
                         <tr>
                             <td>Laskun päivämäärä:</td>
-                            <td>{{ invoice.created | date("d.m.Y") }}</td>
+                            <td>{{ invoice.created | date("dd.MM.yyyy") }}</td>
                         </tr>
                         <tr>
                             <td>Eräpäivä</td>
-                            <td>{{ invoice.due | date("d.m.Y") }}</td>
+                            <td>{{ invoice.due | date("dd.MM.yyyy") }}</td>
                         </tr>
                     </table>
-                    {% set difference = date(invoice.due).diff(invoice.created) %}
                     <table class="invoice-info">
                         <tr>
                             <td>Maksuehdot</td>
-                            <td>{{ difference.days }} pv</td>
+                            <td>{{ invoice.paymentTermDays }} pv</td>
                         </tr>
                         <tr>
                             <td>Viivästyskorko</td>
@@ -405,7 +404,7 @@
                     <tr>
                         <td class="name">{{ item.description }}</td>
                         <td class="amount">{{ item.amount }}</td>
-                        <td class="tax">{{ item.tax|number_format(2, ",", "") }}</td>
+                        <td class="tax">{{ item.tax|numberformat("0.00") }}</td>
                         <td class="price">{{ item.price|money }}</td>
                         <td class="price">{{ item | itemTotalWithoutTax }}</td>
                     </tr>
@@ -416,7 +415,7 @@
             <section class="summary">
                 <div class="summary-left">
                     <div class="aaa-logo">
-                        <img src="{{ "@InvoicingAppBundle/Resources/views/invoice/aaa.gif"|base64image }}" />
+                        <img src="{{ "aaa.gif"|base64image }}" />
                     </div>
                 </div>
                 <div class="summary-right">
@@ -523,7 +522,7 @@
                         <td class="left help from-account">Tililtä nro<br />Från konto nr</td>
                         <td class="left content"></td>
                         <td class="right guide border-bottom">Eräpäivä<br />Förfallodag</td>
-                        <td class="right border-bottom guided content due">{{ invoice.due | date("d.m.Y") }}</td>
+                        <td class="right border-bottom guided content due">{{ invoice.due | date("dd.MM.yyyy") }}</td>
                         <td class="right guided content amount border-bottom">
                             <div class="guide">Euro</div>
                             {{ invoice|total }}

@@ -1,0 +1,35 @@
+default:
+  default_due: 14
+  late_interest: 18
+  remarking_time: 8
+  initial_reference_number: 100
+  initial_invoice_number: 1
+
+company:
+  marketing_name: firma
+  name: Firma Oy
+  street: Yritystie 1
+  postcode: "01234"
+  city: Kaupunki
+  country: Suomi
+  telephone: +358 400 123 123
+  vat: 1234567-8
+  www: https://www.firma.local
+
+email:
+  from:
+    address: laskut@firma.local
+    name: Firma Oy - Laskut
+  subject: 'Firma Oy, Lasku'
+  body: 'Hei! Liitteenä laskunne.'
+
+bank:
+  name: Nordea
+  iban: FI00 1234 5600 0007 85
+  bic: NDEAFIHH
+
+templates:
+  - name: finnish
+    title: Suomi
+  - name: english
+    title: Englanti

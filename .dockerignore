@@ -1,0 +1,12 @@
+.git
+.gradle
+.idea
+.kotlin
+.superpowers
+build
+dist
+node_modules
+storage
+var
+vendor
+.env

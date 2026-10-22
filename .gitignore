@@ -22,3 +22,8 @@ composer.phar
 /.cache/
 /.idea
 .npm
+/.gradle/
+/.kotlin/
+/dist/
+/storage/
+/.superpowers/
