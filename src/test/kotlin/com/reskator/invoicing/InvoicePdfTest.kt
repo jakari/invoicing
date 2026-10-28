@@ -43,6 +43,17 @@ class InvoicePdfTest {
         assertTrue(Regex("/MediaBox \\[0 0 595(\\.\\d+)? 842(\\.\\d+)?]").containsMatchIn(String(pdf, Charsets.ISO_8859_1)))
     }
 
+    /** Cloudflare caches .pdf by extension, keyed by URL only, unless told not to */
+    @Test
+    fun `the pdf is not cached`() = appTest(TestDirs().withProjectTemplates()) {
+        val client = sessionClient().login()
+        client.post("/api/company/$companyA/invoice") { json(Inputs.json(Inputs.invoice())) }
+
+        val response = client.get("/api/company/$companyA/invoice/lasku-1.pdf")
+
+        assertEquals("no-store", response.headers[HttpHeaders.CacheControl])
+    }
+
     /** B2 */
     @Test
     fun `another company's invoice is not downloaded or sent`() = appTest(TestDirs().withProjectTemplates()) {

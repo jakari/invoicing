@@ -50,6 +50,7 @@ class CustomerApiTest {
             """[{"id":3,"name":"Asiakas Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local"},{"id":1,"name":"Toinen Oy","additionalName":"","contactPerson":"","streetName":"Katu 1","postCode":"00100","city":"Helsinki","email":"asiakas@example.local","vat":"FI123","phone":"040"}]""",
             response.bodyAsText()
         )
+        assertEquals("no-store", response.headers[HttpHeaders.CacheControl])
     }
 
     @Test

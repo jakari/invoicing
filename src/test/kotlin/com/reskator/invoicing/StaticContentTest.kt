@@ -38,4 +38,11 @@ class StaticContentTest {
         assertEquals(HttpStatusCode.NotFound, response.status)
         assertEquals("", response.bodyAsText())
     }
+
+    /** Cloudflare caches by file extension, keyed by URL only, unless told not to */
+    @Test
+    fun `api responses are not cached but the client may be`() = appTest(dirs()) {
+        assertEquals("no-store", client.get("/api/nothing-here.css").headers[HttpHeaders.CacheControl])
+        assertEquals(null, client.get("/assets/index.css").headers[HttpHeaders.CacheControl])
+    }
 }
